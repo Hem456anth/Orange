@@ -37,6 +37,16 @@ public static partial class Native
     [DllImport("user32.dll")] public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode)] public static extern IntPtr GetModuleHandle(string? lpModuleName);
     [DllImport("user32.dll")] public static extern short GetAsyncKeyState(int vKey);
+    [DllImport("dwmapi.dll")] public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int value, int size);
+    public const int DWMWA_NCRENDERING_POLICY = 2, DWMWA_WINDOW_CORNER_PREFERENCE = 33, DWMWA_BORDER_COLOR = 34;
+    public const int DWMNCRP_DISABLED = 1, DWMWCP_DONOTROUND = 1, DWMWA_COLOR_NONE = unchecked((int)0xFFFFFFFE);
+    /// <summary>Removes the Windows 11 frame line, rounded corners and shadow so only the window region (the circle) shows.</summary>
+    public static void StripFrame(IntPtr hwnd)
+    {
+        int v = DWMWCP_DONOTROUND; DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, ref v, 4);
+        v = DWMWA_COLOR_NONE; DwmSetWindowAttribute(hwnd, DWMWA_BORDER_COLOR, ref v, 4);
+        v = DWMNCRP_DISABLED; DwmSetWindowAttribute(hwnd, DWMWA_NCRENDERING_POLICY, ref v, 4);
+    }
     [DllImport("user32.dll")] public static extern int GetSystemMetrics(int nIndex);
     [DllImport("user32.dll")] public static extern bool GetCursorPos(out POINT lpPoint);
     [DllImport("user32.dll")] public static extern IntPtr WindowFromPoint(POINT p);

@@ -73,6 +73,7 @@ public sealed class WheelWindow : Window
         AppWindow.IsShownInSwitchers = false;
         var ex = (long)Native.GetWindowLongPtr(_hwnd, Native.GWL_EXSTYLE);
         Native.SetWindowLongPtr(_hwnd, Native.GWL_EXSTYLE, new IntPtr(ex | Native.WS_EX_TOOLWINDOW | Native.WS_EX_TOPMOST));
+        Native.StripFrame(_hwnd);
         Closed += (_, _) => { _closed = true; _watcher?.SetWheelOpen(false, _kind); if (Active == this) Active = null; Diagnostics.Event("wheel-closed"); };
         if (_watcher != null)
         {
@@ -113,6 +114,9 @@ public sealed class WheelWindow : Window
             w._a11yList.Focus(FocusState.Keyboard);
             if (w._a11yList.Items.Count > 0) w._a11yList.SelectedIndex = 0;
         }
+        // Showing can re-apply the system frame and drop the region on Windows 11; clip again once visible.
+        Native.StripFrame(w._hwnd);
+        w.ApplyRegion();
         watcher?.SetWheelOpen(true, kind);
         _ = w.LoadThumbnailAsync();
         Native.GetWindowRect(w._hwnd, out var r);
@@ -132,7 +136,14 @@ public sealed class WheelWindow : Window
         int y = Math.Clamp(at.Y - size / 2, mi.rcWork.Top, mi.rcWork.Bottom - size);
         AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(x, y, size, size));
         // Round window: everything outside the circle is not part of the window (no click/drop dead zones).
-        Native.SetWindowRgn(_hwnd, Native.CreateEllipticRgn(0, 0, size + 1, size + 1), true);
+        ApplyRegion();
+    }
+
+    private void ApplyRegion()
+    {
+        Native.GetWindowRect(_hwnd, out var r);
+        int w = r.Right - r.Left, h = r.Bottom - r.Top;
+        if (w > 0 && h > 0) Native.SetWindowRgn(_hwnd, Native.CreateEllipticRgn(0, 0, w + 1, h + 1), true);
     }
 
     public void SetKind(WheelKind kind)
@@ -161,7 +172,7 @@ public sealed class WheelWindow : Window
                     group == OperationGroup.Convert ? $"Convert to {o.Title}" : o.Title));
             if (ordered.Count > MaxWedges) items.Add(new WheelItem("More", "\uE712", "more", $"{ordered.Count - shown.Count} more options"));
             if (ops.Count == 0)
-                idle = _files.Count == 0 ? "No files" : files.Count != _files.Count ? "Folders: use Actions" :
+                idle = _files.Count == 0 ? "No files" : files.Count != _files.Count ? "Folder: tap Alt for actions" :
                        FileTypeDetector.Detect(files[0]) == FileKind.Unknown ? "Unsupported file" :
                        files.Select(FileTypeDetector.Detect).Distinct().Count() > 1 ? "Mixed file types" : kind == WheelKind.Tools ? "No tools" : "No conversions";
         }
