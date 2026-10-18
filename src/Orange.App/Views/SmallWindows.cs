@@ -181,15 +181,20 @@ public sealed class ProgressWindow : Window
             var dlg = new ContentDialog { Title = "Details", Content = new ScrollViewer { Content = new TextBlock { Text = _detailText, IsTextSelectionEnabled = true, TextWrapping = TextWrapping.Wrap, FontFamily = new FontFamily("Cascadia Mono,Consolas") }, MaxHeight = 320 }, CloseButtonText = "Close", XamlRoot = Content.XamlRoot };
             await dlg.ShowAsync();
         };
+        Diagnostics.Event("pw-compact");
         WindowHelpers.Compact(this, "Orange", topmost: true);
+        Diagnostics.Event("pw-place");
         WindowHelpers.Place(this, 380, 170, bottomRight: true);
     }
 
     public static ProgressWindow Show(OperationDescriptor op, IReadOnlyList<Job> jobs)
     {
+        Diagnostics.Event("pw-ctor");
         var w = new ProgressWindow(op.Group == OperationGroup.Convert ? $"Converting to {op.Title}" : op.Title, op);
         w._status.Text = jobs.Count == 1 ? jobs[0].DisplayName : $"0 of {jobs.Count} done";
+        Diagnostics.Event("pw-activate");
         w.Activate();
+        Diagnostics.Event("pw-shown");
         return w;
     }
 

@@ -90,8 +90,10 @@ public sealed class DragWatcher : IDisposable
         return Native.CallNextHookEx(_mouseHook, nCode, wParam, lParam);
     }
 
+    public int EventsSeen;
     private void MouseCore(int nCode, IntPtr wParam, IntPtr lParam)
     {
+        Interlocked.Increment(ref EventsSeen);
         if (nCode >= 0 && Enabled)
         {
             var ms = Marshal.PtrToStructure<Native.MSLLHOOKSTRUCT>(lParam);
@@ -209,35 +211,25 @@ public sealed class DragWatcher : IDisposable
 public static class Diagnostics
 {
     private static readonly string? PathOut = Environment.GetEnvironmentVariable("ORANGE_TEST_EVENTS");
-    private static readonly System.Collections.Concurrent.BlockingCollection<string> Queue = new();
+    private static readonly object Gate = new();
     public static bool Enabled => PathOut is not null;
 
-    static Diagnostics()
-    {
-        if (PathOut is null) return;
-        // A writer thread so callers (including the input hooks) never block on, or fail because of, file I/O.
-        new Thread(() =>
-        {
-            foreach (var line in Queue.GetConsumingEnumerable())
-            {
-                for (int attempt = 0; attempt < 20; attempt++)
-                {
-                    try
-                    {
-                        using var fs = new FileStream(PathOut, FileMode.Append, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
-                        using var w = new StreamWriter(fs);
-                        w.WriteLine(line);
-                        break;
-                    }
-                    catch (IOException) { Thread.Sleep(10); }
-                }
-            }
-        }) { IsBackground = true, Name = "orange-diagnostics" }.Start();
-    }
-
+    /// <summary>Synchronous (survives a crash right after), shared-read friendly, never throws.</summary>
     public static void Event(string what)
     {
         if (PathOut is null) return;
-        Queue.Add($"{DateTime.UtcNow:O} {what}");
+        lock (Gate)
+            for (int attempt = 0; attempt < 20; attempt++)
+            {
+                try
+                {
+                    using var fs = new FileStream(PathOut, FileMode.Append, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
+                    var b = System.Text.Encoding.UTF8.GetBytes($"{DateTime.UtcNow:O} {what}{Environment.NewLine}");
+                    fs.Write(b); fs.Flush(true);
+                    return;
+                }
+                catch (IOException) { Thread.Sleep(5); }
+                catch { return; }
+            }
     }
 }

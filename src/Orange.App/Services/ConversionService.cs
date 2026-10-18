@@ -57,7 +57,9 @@ public sealed class ConversionService
         try { win = ProgressWindow.Show(op, jobs); win.CancelRequested += cts.Cancel; }
         catch (Exception e) { Diagnostics.Event("progress-window-failed " + Flat(e)); }
         var progress = new Progress<BatchProgress>(p => { try { win?.Update(p); } catch (Exception e) { Diagnostics.Event("progress-update-failed " + Flat(e)); } });
+        Diagnostics.Event("jobs-running");
         await Runner.RunAsync(jobs, progress, cts.Token);
+        Diagnostics.Event("jobs-finished " + string.Join(',', jobs.Select(j => j.State)));
         try { win?.Complete(jobs); } catch (Exception e) { Diagnostics.Event("progress-complete-failed " + Flat(e)); }
 
         var outputs = jobs.Where(j => j.State == JobState.Succeeded).SelectMany(j => j.Result!.Outputs).ToList();

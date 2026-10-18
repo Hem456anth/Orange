@@ -18,6 +18,15 @@ namespace Orange.App;
 /// context-aware items, screenshots of the wheel in light and dark theme, Explorer selection reading, and
 /// end-to-end conversions through the same service the wheel uses. Writes selftest.json; exit code 0 = all required passed.
 /// </summary>
+internal static class Inject
+{
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)] private struct MI { public int dx, dy; public uint data, flags, time; public IntPtr extra; }
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)] private struct IN { public uint type; public MI mi; }
+    [System.Runtime.InteropServices.DllImport("user32.dll")] private static extern uint SendInput(uint n, IN[] i, int size);
+    [System.Runtime.InteropServices.DllImport("user32.dll")] private static extern bool SetCursorPos(int x, int y);
+    public static void Move(int x, int y) { SetCursorPos(x, y); SendInput(1, [new IN { type = 0, mi = new MI { flags = 1 } }], System.Runtime.InteropServices.Marshal.SizeOf<IN>()); }
+}
+
 public static class SelfTest
 {
     private sealed record Check(string Name, bool Passed, bool Required, string Detail);
@@ -47,6 +56,15 @@ public static class SelfTest
         await Try("low-level mouse+keyboard hooks install", true, () =>
         {
             using var w = new DragWatcher(ui); w.Start(); return Task.FromResult("SetWindowsHookEx WH_MOUSE_LL/WH_KEYBOARD_LL ok");
+        });
+        await Try("hooks receive injected mouse input", true, async () =>
+        {
+            using var w = new DragWatcher(ui); w.Start();
+            Native.GetCursorPos(out var p0);
+            for (int i = 0; i < 10; i++) { Inject.Move(p0.X + i * 5, p0.Y + i * 3); await Task.Delay(30); }
+            await Task.Delay(300);
+            if (w.EventsSeen == 0) throw new Exception("hook installed but received no mouse events");
+            return $"{w.EventsSeen} events";
         });
         await Try("global hotkey registers", false, () =>
         {
