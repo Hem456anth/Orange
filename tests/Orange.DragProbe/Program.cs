@@ -33,6 +33,9 @@ internal static class Probe
         File.WriteAllText(Path.Combine(settingsDir, "settings.json"),
             "{\"DragSources\":\"AnyApp\",\"RevealWhenDone\":false,\"NotifyWhenDone\":false,\"AskOptionsForTools\":false,\"PlaySounds\":false}");
 
+        Record("control: this probe's own low-level mouse hook sees SendInput", HookControl.Run(out var hookDetail) , hookDetail);
+        Record("environment: integrity / session", true, $"session={Process.GetCurrentProcess().SessionId} elevated={new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator)} interactive={Environment.UserInteractive}");
+
         var psi = new ProcessStartInfo(orangeExe, "--background") { UseShellExecute = false };
         psi.Environment["ORANGE_TEST_EVENTS"] = _events;
         var orange = Process.Start(psi)!;
@@ -245,4 +248,36 @@ internal static class Input
     public static void LeftDown() => Mouse(0x0002);
     public static void LeftUp() => Mouse(0x0004);
     public static void TapShift() { Key(0x10, false); Thread.Sleep(80); Key(0x10, true); }
+}
+
+internal static class HookControl
+{
+    private delegate IntPtr Proc(int n, IntPtr w, IntPtr l);
+    [DllImport("user32.dll", SetLastError = true)] private static extern IntPtr SetWindowsHookEx(int id, Proc p, IntPtr mod, uint tid);
+    [DllImport("user32.dll")] private static extern bool UnhookWindowsHookEx(IntPtr h);
+    [DllImport("user32.dll")] private static extern IntPtr CallNextHookEx(IntPtr h, int n, IntPtr w, IntPtr l);
+    [DllImport("kernel32.dll")] private static extern IntPtr GetModuleHandle(string? n);
+    [DllImport("user32.dll")] private static extern int PeekMessage(out MSG m, IntPtr h, uint a, uint b, uint r);
+    [StructLayout(LayoutKind.Sequential)] private struct MSG { public IntPtr h; public uint m; public IntPtr w, l; public uint t; public int x, y; }
+
+    public static bool Run(out string detail)
+    {
+        int seen = 0; IntPtr hook = IntPtr.Zero; int err = 0;
+        Proc p = (n, w, l) => { Interlocked.Increment(ref seen); return CallNextHookEx(hook, n, w, l); };
+        var t = new Thread(() =>
+        {
+            hook = SetWindowsHookEx(14, p, GetModuleHandle(null), 0); err = Marshal.GetLastWin32Error();
+            var sw = Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < 2500) { PeekMessage(out _, IntPtr.Zero, 0, 0, 1); Thread.Sleep(5); }
+            UnhookWindowsHookEx(hook);
+        });
+        t.Start();
+        Thread.Sleep(300);
+        Native.GetCursorPos(out var c);
+        for (int i = 0; i < 10; i++) { Input.MoveTo(c.X + i * 4, c.Y + i * 2); Thread.Sleep(40); }
+        t.Join();
+        GC.KeepAlive(p);
+        detail = $"hook={(hook != IntPtr.Zero)} err={err} events={seen}";
+        return seen > 0;
+    }
 }

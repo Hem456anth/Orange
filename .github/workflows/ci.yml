@@ -97,6 +97,9 @@ jobs:
           $p = Start-Process out/Orange/Orange.exe -ArgumentList '--selftest', "$PWD\evidence\selftest" -PassThru -Wait
           Get-Content evidence/selftest/selftest.json -ErrorAction SilentlyContinue | Write-Host
           "selftest exit=$($p.ExitCode)" | Tee-Object -Append evidence/summary.txt
+          Get-WinEvent -FilterHashtable @{LogName='Application'; StartTime=(Get-Date).AddMinutes(-15)} -ErrorAction SilentlyContinue |
+            Where-Object { $_.ProviderName -in 'Application Error','.NET Runtime','Windows Error Reporting' } |
+            Select-Object -First 12 | ForEach-Object { "[$($_.TimeCreated)] $($_.ProviderName)`n$($_.Message)`n" } | Out-File evidence/selftest/windows-events.txt
           if ($p.ExitCode -ne 0) { exit 1 }
       - name: Real drag probe (SendInput + OLE + File Explorer)
         if: always()
