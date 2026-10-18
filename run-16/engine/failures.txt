@@ -1,0 +1,47 @@
+[xUnit.net 00:00:00.42]       Assert.Contains() Failure: Item not found in collection
+[xUnit.net 00:00:00.42]       Collection: []
+[xUnit.net 00:00:00.42]       Not found:  "audio.to.mp3"
+[xUnit.net 00:00:00.42]       Stack Trace:
+[xUnit.net 00:00:00.42]         D:\a\Orange\Orange\tests\Orange.Core.Tests\UnitTests.cs(125,0): at Orange.Core.Tests.RegistryTests.Search_understands_plain_words()
+[xUnit.net 00:00:00.42]            at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+[xUnit.net 00:00:00.42]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Orange.Core.Tests.RegistryTests.Search_understands_plain_words [70 ms]
+  Error Message:
+   Assert.Contains() Failure: Item not found in collection
+Collection: []
+Not found:  "audio.to.mp3"
+  Stack Trace:
+     at Orange.Core.Tests.RegistryTests.Search_understands_plain_words() in D:\a\Orange\Orange\tests\Orange.Core.Tests\UnitTests.cs:line 125
+  Error Message:
+   Assert.Contains() Failure: Item not found in collection
+Collection: []
+Not found:  "audio.to.mp3"
+  Stack Trace:
+     at Orange.Core.Tests.RegistryTests.Search_understands_plain_words() in D:\a\Orange\Orange\tests\Orange.Core.Tests\UnitTests.cs:line 125
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   Assert.Contains() Failure: Item not found in collection
+Collection: []
+Not found:  "audio.to.mp3"
+  Stack Trace:
+     at Orange.Core.Tests.RegistryTests.Search_understands_plain_words() in D:\a\Orange\Orange\tests\Orange.Core.Tests\UnitTests.cs:line 125
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.md", ext: "epub") [305 ms]
+  Passed Orange.Core.Tests.MediaConversionTests.Wav_converts(ext: "wma") [1 s]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [230 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_video_is_an_actionable_error [349 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "bmp") [32 ms]
+  Passed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.txt", ext: "docx") [330 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [107 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "gif") [45 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [65 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [3 ms]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [109 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_bomb_is_rejected [14 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_slip_is_stopped_and_nothing_escapes [6 ms]
+Total tests: 106
+     Passed: 104
+     Failed: 1
+    Skipped: 1
+ Total time: 16.3784 Seconds
