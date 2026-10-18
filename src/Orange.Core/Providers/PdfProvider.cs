@@ -32,8 +32,12 @@ public sealed class PdfProvider(ToolLocator tools) : IOperationProvider
         yield return T("pdf.extract-pages", "Extract pages", "Extract", "pages", [Pages with { Default = "1" }], ["select", "pick pages", "subset"], single: true);
         yield return T("pdf.rotate", "Rotate", "Rotated", "rotate",
             [new("angle", "Rotate", OptionType.Choice, "90", Choices: ["90", "180", "270"]), Pages], ["turn", "orientation", "landscape"]);
+        yield return T("pdf.reorder", "Reorder pages", "Reordered", "reorder",
+            [new("order", "New page order", OptionType.Text, "", Help: "Every page you want, in the new order, e.g. 3,1,2 or 5-1 to reverse. Pages left out are dropped.")],
+            ["rearrange", "sort pages", "move pages", "reverse"], single: true);
         yield return T("pdf.compress", "Compress", "Compressed", "compress",
-            [new("level", "Compression", OptionType.Choice, "ebook", Choices: ["printer", "ebook", "screen"], Help: "screen is smallest; printer keeps the most quality.")],
+            [new("level", "Compression", OptionType.Choice, "ebook", Choices: ["printer", "ebook", "screen"], Help: "screen is smallest; printer keeps the most quality."),
+             new("targetMB", "Target size (MB, 0 = off)", OptionType.Number, "0", 0, 100000, Help: "Orange tries printer → ebook → screen → 72 dpi and keeps the best one that fits.")],
             ["smaller", "reduce", "optimize", "size"], tool: "ghostscript");
         yield return T("pdf.extract-images", "Extract images", "Images", "images", [], ["pictures", "photos", "embedded"], folder: true);
         yield return T("pdf.strip-metadata", "Remove metadata", "Clean", "metadata", [], ["author", "privacy", "properties"]);
@@ -114,6 +118,17 @@ public sealed class PdfProvider(ToolLocator tools) : IOperationProvider
                 var o = tmp.File("pdf"); outDoc.Save(o); ValidatePdf(o);
                 return OperationResult.Ok(CommitFile(o, "pdf"));
             }
+            case "pdf.reorder":
+            {
+                using var src = Open(input, PdfDocumentOpenMode.Import);
+                var spec = r.Opt("order");
+                if (string.IsNullOrWhiteSpace(spec)) throw new OrangeException("Type the new page order, like 3,1,2.");
+                var pages = PageSelection.ParseOrdered(spec, src.PageCount);
+                using var outDoc = new PdfDocument();
+                foreach (var p in pages) outDoc.AddPage(src.Pages[p - 1]);
+                var o = tmp.File("pdf"); outDoc.Save(o); ValidatePdf(o);
+                return OperationResult.Ok(CommitFile(o, "pdf"));
+            }
             case "pdf.rotate":
             {
                 using var doc = Open(input, PdfDocumentOpenMode.Modify);
@@ -185,6 +200,29 @@ public sealed class PdfProvider(ToolLocator tools) : IOperationProvider
             case "pdf.compress":
             {
                 var o = tmp.File("pdf");
+                var targetMB = r.OptDouble("targetMB");
+                if (targetMB > 0)
+                {
+                    long target = (long)(targetMB * 1024 * 1024);
+                    string? fit = null; long best = long.MaxValue; int i = 0;
+                    foreach (var (lvl, dpi) in new[] { ("printer", 0), ("ebook", 0), ("screen", 0), ("screen", 72), ("screen", 50) })
+                    {
+                        ct.ThrowIfCancellationRequested();
+                        var t = tmp.File("pdf");
+                        var args = new List<string> { "-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.6", $"-dPDFSETTINGS=/{lvl}", "-dDetectDuplicateImages=true", "-dCompressFonts=true" };
+                        if (dpi > 0) args.AddRange(["-dDownsampleColorImages=true", "-dDownsampleGrayImages=true", "-dColorImageResolution=" + dpi, "-dGrayImageResolution=" + dpi, "-dColorImageDownsampleThreshold=1.0"]);
+                        args.AddRange(["-o", t, input]);
+                        await Gs(args, ct);
+                        progress?.Report(0.1 + 0.18 * ++i);
+                        var len = new FileInfo(t).Length;
+                        best = Math.Min(best, len);
+                        if (len <= target) { fit = t; break; }
+                    }
+                    if (fit is null) throw new OrangeException($"Orange couldn't get this PDF under {targetMB:0.##} MB.", $"The smallest it got was {best / 1048576.0:0.##} MB. Text and vector pages don't shrink much.");
+                    ValidatePdf(fit);
+                    var c = CommitFile(fit, "pdf");
+                    return new OperationResult(true, [c], Detail: $"{new FileInfo(c).Length / 1048576.0:0.##} MB (target {targetMB:0.##} MB)");
+                }
                 await Gs(["-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.6", $"-dPDFSETTINGS=/{r.Opt("level")}", "-dDetectDuplicateImages=true",
                           "-dCompressFonts=true", "-o", o, input], ct);
                 ValidatePdf(o);
@@ -329,6 +367,25 @@ public static class PageSelection
         if (set.Count == 0) throw Bad(spec);
         return set.ToList();
     }
+    /// <summary>Like <see cref="Parse"/> but keeps the order given, allows descending ranges (5-1), and rejects repeats.</summary>
+    public static List<int> ParseOrdered(string spec, int count)
+    {
+        var list = new List<int>();
+        foreach (var part in spec.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var ab = part.Split('-', 2, StringSplitOptions.TrimEntries);
+            int a = ParseOne(ab[0], spec), b = ab.Length == 2 ? ParseOne(ab[1], spec) : a;
+            if (a < 1 || b < 1 || a > count || b > count) throw new OrangeException($"Page {Math.Max(a, b)} doesn't exist. This PDF has {count} pages.");
+            for (int p = a; a <= b ? p <= b : p >= b; p += a <= b ? 1 : -1)
+            {
+                if (list.Contains(p)) throw new OrangeException($"Page {p} is listed twice.");
+                list.Add(p);
+            }
+        }
+        if (list.Count == 0) throw new OrangeException("Type the new page order, like 3,1,2.");
+        return list;
+    }
+
     private static int ParseOne(string s, string spec) => int.TryParse(s, out var v) ? v : throw Bad(spec);
     private static OrangeException Bad(string spec) => new($"\"{spec}\" isn't a page list. Use something like 1-3,5.");
 }

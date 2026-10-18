@@ -96,10 +96,12 @@ public sealed partial class SubtitleProvider : IOperationProvider
 
 /// <summary>
 /// ZIP / TAR / GZIP extraction with zip-slip, link, entry-count and expansion-size guards; ZIP creation from several files.
-/// RAR is not supported (no permissively licensed decoder is bundled).
+/// RAR (and 7z) extraction is offered only when 7-Zip is installed; Orange lists the archive first and applies the
+/// same path, link, count and size guards before letting 7-Zip write anything.
 /// </summary>
-public sealed class ArchiveProvider : IOperationProvider
+public sealed class ArchiveProvider(ToolLocator? tools = null) : IOperationProvider
 {
+    private readonly ToolLocator _tools = tools ?? ToolLocator.Default;
     public string Name => "Archives";
     public IEnumerable<OperationDescriptor> Describe()
     {
@@ -108,6 +110,11 @@ public sealed class ArchiveProvider : IOperationProvider
             Id = "archive.extract", Title = "Extract", Category = FileKind.Archive, Group = OperationGroup.Tool, InputExtensions = new HashSet<string> { "zip", "tar", "gz" },
             ProducesFolder = true, Icon = "extract", Keywords = ["unzip", "decompress", "open", "untar", "suffix:"],
         };
+        yield return new OperationDescriptor
+        {
+            Id = "archive.extract-rar", Title = "Extract", Category = FileKind.Archive, Group = OperationGroup.Tool, InputExtensions = new HashSet<string> { "rar", "7z" },
+            ProducesFolder = true, Icon = "extract", RequiresTool = "7zip", Keywords = ["unrar", "rar", "7z", "decompress", "open", "suffix:"],
+        };
         foreach (var (ext, title) in new[] { ("zip", "ZIP"), ("tar", "TAR") })
             yield return new OperationDescriptor
             {
@@ -115,11 +122,19 @@ public sealed class ArchiveProvider : IOperationProvider
                 OutputExtension = ext, Keywords = [ext, "repack", "archive"],
             };
     }
-    public bool IsAvailable(OperationDescriptor op) => true;
+    public bool IsAvailable(OperationDescriptor op) => op.RequiresTool is null || _tools.Has(op.RequiresTool);
 
     public async Task<OperationResult> ExecuteAsync(OperationRequest r, IProgress<double>? progress, CancellationToken ct)
     {
         var input = r.Inputs[0];
+        if (r.Operation.Id == "archive.extract-rar")
+        {
+            using var t = new SafePaths.TempWorkspace();
+            var d = t.Dir("x");
+            await SevenZipExtractAsync(_tools.Require("7zip"), input, d, ct, progress);
+            var fin = SafePaths.PlanOutput(input, r.OutputDirectory, Path.GetFileNameWithoutExtension(input), null, "", r.Overwrite, r.Inputs, isFolder: true);
+            return OperationResult.Ok(SafePaths.CommitFolder(d, fin));
+        }
         var stem = Path.GetFileNameWithoutExtension(input);
         if (stem.EndsWith(".tar", StringComparison.OrdinalIgnoreCase)) stem = stem[..^4];
         using var tmp = new SafePaths.TempWorkspace();
@@ -225,6 +240,77 @@ public sealed class ArchiveProvider : IOperationProvider
         }
         catch (InvalidDataException e) { throw new OrangeException("This archive is damaged.", e.Message, e); }
         finally { await stream.DisposeAsync(); }
+    }
+
+    /// <summary>Lists with -slt, refuses absolute/../link entries and oversize totals, then extracts with -snl- (no links) into an empty folder.</summary>
+    public static async Task SevenZipExtractAsync(string sevenZip, string archive, string dest, CancellationToken ct, IProgress<double>? progress = null)
+    {
+        var limits = EngineLimits.Current;
+        var list = await ProcessRunner.RunAsync(sevenZip, ["l", "-slt", "-ba", "-p", "--", archive], ct, timeout: TimeSpan.FromMinutes(2));
+        if (list.ExitCode != 0)
+            throw new OrangeException(list.StdErr.Contains("password", StringComparison.OrdinalIgnoreCase) || list.StdOut.Contains("Wrong password", StringComparison.OrdinalIgnoreCase)
+                ? "This archive is password-protected." : "7-Zip couldn't read this archive. It may be damaged.", ProcessRunner.Tail(list.StdErr));
+        long total = 0; int entries = 0;
+        foreach (var block in list.StdOut.Replace("\r", "").Split("\n\n", StringSplitOptions.RemoveEmptyEntries))
+        {
+            var kv = block.Split('\n').Select(l => l.Split(" = ", 2)).Where(x => x.Length == 2).ToDictionary(x => x[0].Trim(), x => x[1], StringComparer.OrdinalIgnoreCase);
+            if (!kv.TryGetValue("Path", out var path)) continue;
+            var norm = path.Replace('\\', '/');
+            if (norm.StartsWith('/') || norm.Contains(':') || norm.Split('/').Any(p => p == ".."))
+                throw new OrangeException($"The archive tried to write outside its folder (\"{path}\"), so Orange stopped.");
+            if (kv.ContainsKey("Symbolic Link") && kv["Symbolic Link"].Length > 0 || kv.ContainsKey("Hard Link") && kv["Hard Link"].Length > 0)
+                throw new OrangeException("This archive contains links, which Orange doesn't extract.");
+            if (kv.TryGetValue("Size", out var sz) && long.TryParse(sz, out var n)) total += n;
+            if (++entries > limits.MaxArchiveEntries) throw new OrangeException("This archive has too many files to extract safely.");
+            if (total > limits.MaxArchiveExpandedBytes) throw new OrangeException("This archive expands to more than the size limit. It may be a zip bomb.");
+        }
+        var res = await ProcessRunner.RunAsync(sevenZip, ["x", "-y", "-snl-", "-p", "-bso0", "-bsp0", "-o" + dest, "--", archive], ct, timeout: TimeSpan.FromHours(1));
+        if (res.ExitCode != 0) throw new OrangeException("7-Zip couldn't extract this archive.", ProcessRunner.Tail(res.StdErr));
+        // Belt and braces: nothing may have landed outside, and no reparse points survive.
+        foreach (var f in Directory.EnumerateFileSystemEntries(dest, "*", SearchOption.AllDirectories))
+        {
+            var info = new FileInfo(f);
+            if (!SafePaths.IsInside(dest, Path.GetFullPath(f)) || info.Attributes.HasFlag(FileAttributes.ReparsePoint))
+            { try { File.Delete(f); } catch { } throw new OrangeException("This archive contained a link or an unsafe path, so Orange stopped."); }
+        }
+        progress?.Report(1);
+    }
+
+    /// <summary>"Compress to ZIP" for any files and folders (Actions wheel). Folders keep their names inside the zip.</summary>
+    public static async Task<string> CreateZipAsync(IReadOnlyList<string> paths, string? outputDir, CancellationToken ct, IProgress<double>? progress = null)
+    {
+        if (paths.Count == 0) throw new OrangeException("Nothing to compress.");
+        var full = paths.Select(Path.GetFullPath).ToList();
+        foreach (var p in full) if (!File.Exists(p) && !Directory.Exists(p)) throw new OrangeException($"\"{Path.GetFileName(p)}\" no longer exists.");
+        var files = new List<(string Src, string Entry)>();
+        foreach (var p in full)
+        {
+            if (File.Exists(p)) { files.Add((p, Path.GetFileName(p))); continue; }
+            var root = Path.GetDirectoryName(p.TrimEnd(Path.DirectorySeparatorChar))!;
+            foreach (var f in Directory.EnumerateFiles(p, "*", new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = FileAttributes.ReparsePoint | FileAttributes.System, IgnoreInaccessible = true }))
+                files.Add((f, Path.GetRelativePath(root, f).Replace('\\', '/')));
+        }
+        using var tmp = new SafePaths.TempWorkspace();
+        var o = tmp.File("zip");
+        await using (var fs = new FileStream(o, FileMode.CreateNew))
+        using (var zip = new ZipArchive(fs, ZipArchiveMode.Create))
+        {
+            int i = 0;
+            foreach (var (src, entry) in files)
+            {
+                ct.ThrowIfCancellationRequested();
+                var e = zip.CreateEntry(entry, CompressionLevel.Optimal);
+                e.LastWriteTime = File.GetLastWriteTime(src);
+                await using var es = e.Open();
+                await using var ss = File.OpenRead(src);
+                await ss.CopyToAsync(es, ct);
+                progress?.Report(++i / (double)Math.Max(1, files.Count));
+            }
+        }
+        var first = full[0];
+        var name = full.Count == 1 ? Path.GetFileName(first.TrimEnd(Path.DirectorySeparatorChar)) : $"{Path.GetFileNameWithoutExtension(first)} and {full.Count - 1} more";
+        var final = SafePaths.PlanOutput(first, outputDir, name, null, "zip", OverwritePolicy.KeepBoth, full);
+        return SafePaths.Commit(o, final, OverwritePolicy.KeepBoth);
     }
 
     private static async Task CopyCapped(Stream src, Stream dst, long declared, CancellationToken ct)

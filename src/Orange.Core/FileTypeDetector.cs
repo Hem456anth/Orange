@@ -11,7 +11,7 @@ public static class FileTypeDetector
         // images
         ["png"] = FileKind.Image, ["jpg"] = FileKind.Image, ["jpeg"] = FileKind.Image, ["webp"] = FileKind.Image,
         ["heic"] = FileKind.Image, ["heif"] = FileKind.Image, ["tif"] = FileKind.Image, ["tiff"] = FileKind.Image,
-        ["bmp"] = FileKind.Image, ["gif"] = FileKind.Image, ["avif"] = FileKind.Image, ["ico"] = FileKind.Image,
+        ["bmp"] = FileKind.Image, ["gif"] = FileKind.Image, ["avif"] = FileKind.Image, ["ico"] = FileKind.Image, ["svg"] = FileKind.Image,
         // video
         ["mp4"] = FileKind.Video, ["m4v"] = FileKind.Video, ["mov"] = FileKind.Video, ["mkv"] = FileKind.Video,
         ["webm"] = FileKind.Video, ["avi"] = FileKind.Video, ["wmv"] = FileKind.Video,
@@ -29,6 +29,7 @@ public static class FileTypeDetector
         ["srt"] = FileKind.Subtitle, ["vtt"] = FileKind.Subtitle,
         // archives
         ["zip"] = FileKind.Archive, ["tar"] = FileKind.Archive, ["gz"] = FileKind.Archive, ["tgz"] = FileKind.Archive,
+        ["rar"] = FileKind.Archive, ["7z"] = FileKind.Archive,
     };
 
     public static string Ext(string path) => Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
@@ -67,6 +68,8 @@ public static class FileTypeDetector
         if (Ascii(0, "%PDF-")) return FileKind.Pdf;
         if (At(0, 0x50, 0x4B, 0x03, 0x04) || At(0, 0x50, 0x4B, 0x05, 0x06)) return FileKind.Archive; // zip container (docx/epub/odt too)
         if (At(0, 0x1F, 0x8B)) return FileKind.Archive;
+        if (Ascii(0, "Rar!\x1A\x07")) return FileKind.Archive;                                   // RAR 4/5
+        if (At(0, 0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C)) return FileKind.Archive;                  // 7z
         if (h.Length >= 262 && Ascii(257, "ustar")) return FileKind.Archive;
         if (Ascii(0, "{\\rtf")) return FileKind.Document;
         return FileKind.Unknown;
@@ -90,6 +93,7 @@ public static class FileTypeDetector
             // Text-based formats have no signature. Only trust the extension for those, and only if it looks like text.
             if (byExt is FileKind.Document or FileKind.Subtitle && LooksLikeText(head[..n]))
                 return byExt;
+            if (Ext(path) == "svg" && LooksLikeText(head[..n]) && SvgSafety.LooksLikeSvg(path)) return FileKind.Image;
             if (Ext(path) == "mp3" && n > 0) return FileKind.Audio;   // raw MPEG frames without ID3 sync quirks; ffprobe validates
             return FileKind.Unknown;
         }

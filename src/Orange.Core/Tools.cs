@@ -21,6 +21,7 @@ public sealed class ToolLocator
         ["ghostscript"] = ["gswin64c", "gswin32c", "gs"],
         ["pandoc"] = ["pandoc"],
         ["libreoffice"] = ["soffice", "soffice.com"],
+        ["7zip"] = ["7z", "7zz", "7za"],
     };
 
     public void Override(string tool, string path) { _overrides[tool] = path; _cache.Remove(tool); }
@@ -38,6 +39,7 @@ public sealed class ToolLocator
         {
             var pf = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             if (tool.Equals("libreoffice", StringComparison.OrdinalIgnoreCase)) dirs.Add(Path.Combine(pf, "LibreOffice", "program"));
+            if (tool.Equals("7zip", StringComparison.OrdinalIgnoreCase)) dirs.Add(Path.Combine(pf, "7-Zip"));
             if (tool.Equals("ghostscript", StringComparison.OrdinalIgnoreCase) && Directory.Exists(Path.Combine(pf, "gs")))
                 dirs.AddRange(Directory.GetDirectories(Path.Combine(pf, "gs")).OrderDescending().Select(d => Path.Combine(d, "bin")));
         }
@@ -74,6 +76,7 @@ public static class ToolNames
         "ghostscript" => "Ghostscript",
         "pandoc" => "Pandoc",
         "libreoffice" => "LibreOffice",
+        "7zip" => "7-Zip",
         _ => tool,
     };
 }

@@ -30,7 +30,11 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
                 OutputExtension = ext, RequiresTool = "ffmpeg", Keywords = [ext, "convert", "video", "transcode"],
                 Options = ext == "gif"
                     ? [new("fps", "Frames per second", OptionType.Integer, "12", 1, 30), new("width", "Width (px)", OptionType.Integer, "480", 64, 1920)]
-                    : [new("quality", "Quality", OptionType.Choice, "high", Choices: ["high", "balanced", "small"])],
+                    : [new("quality", "Quality", OptionType.Choice, "high", Choices: ["high", "balanced", "small"]),
+                       new("resolution", "Resolution", OptionType.Choice, "keep", Choices: ["keep", "2160", "1440", "1080", "720", "480"]),
+                       new("bitrate", "Video bitrate (Mbps, 0 = by quality)", OptionType.Number, "0", 0, 200),
+                       new("codec", "Video codec", OptionType.Choice, "h264", Choices: ext == "webm" ? ["vp9"] : ["h264", "hevc"],
+                           Help: "HEVC makes smaller files but plays on fewer devices.")],
             };
         foreach (var (ext, title) in new[] { ("mp3", "MP3"), ("m4a", "M4A"), ("wav", "WAV") })
             yield return new OperationDescriptor
@@ -42,7 +46,8 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
         // ---- video tools
         yield return VTool("video.compress", "Compress", "Compressed", "compress",
             [new("level", "Compression", OptionType.Choice, "medium", Choices: ["light", "medium", "strong"]),
-             new("maxHeight", "Max height", OptionType.Choice, "keep", Choices: ["keep", "2160", "1080", "720", "480"])], ["smaller", "reduce", "size"]);
+             new("maxHeight", "Max height", OptionType.Choice, "keep", Choices: ["keep", "2160", "1080", "720", "480"]),
+             new("targetMB", "Target size (MB, 0 = off)", OptionType.Number, "0", 0, 100000, Help: "Orange works out the bitrate from the length and re-encodes until it fits.")], ["smaller", "reduce", "size"]);
         yield return VTool("video.trim", "Trim", "Trimmed", "trim", [Start, End], ["cut", "clip", "shorten"], single: true);
         yield return VTool("video.mute", "Mute", "Muted", "mute", [], ["remove audio", "silent", "no sound"]);
         yield return VTool("video.resize", "Resize", "Resized", "resize",
@@ -56,6 +61,7 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
         yield return VTool("video.split", "Split", "Clips", "split",
             [new("every", "Clip length (seconds)", OptionType.Number, "60", 1, 36000)], ["segments", "chunks", "parts"], single: true, folder: true);
         yield return VTool("video.strip-metadata", "Remove metadata", "Clean", "metadata", [], ["privacy", "gps", "location", "exif"]);
+        yield return VTool("video.metadata", "Metadata", "Tagged", "metadata", MetadataOptions, ["tags", "title", "edit metadata", "location"]);
         yield return new OperationDescriptor
         {
             Id = "video.join", Title = "Join videos", Category = FileKind.Video, Group = OperationGroup.Tool, InputExtensions = VideoIn.ToHashSet(),
@@ -77,7 +83,19 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
         yield return ATool("audio.channels", "Channels", "Mono", "channels",
             [new("channels", "Channels", OptionType.Choice, "mono", Choices: ["mono", "stereo"])], ["mono", "stereo", "downmix"]);
         yield return ATool("audio.compress", "Compress", "Compressed", "compress",
-            [new("bitrate", "Bitrate (kbps)", OptionType.Choice, "96", Choices: ["64", "96", "128"])], ["smaller", "reduce", "size"]);
+            [new("bitrate", "Bitrate (kbps)", OptionType.Choice, "96", Choices: ["64", "96", "128"]),
+             new("targetMB", "Target size (MB, 0 = off)", OptionType.Number, "0", 0, 100000)], ["smaller", "reduce", "size"]);
+        yield return ATool("audio.bleep", "Bleep", "Bleeped", "bleep",
+            [new("ranges", "Sections", OptionType.Text, "", Help: "start-end in seconds or mm:ss, separated by commas: 0:05-0:07, 1:10-1:12"),
+             new("sound", "Replace with", OptionType.Choice, "beep", Choices: ["beep", "silence"]),
+             new("frequency", "Beep pitch (Hz)", OptionType.Integer, "1000", 200, 4000)], ["censor", "beep", "swear", "mute section", "redact"], single: true);
+        yield return ATool("audio.silence-trim", "Trim silence", "Trimmed", "silence",
+            [new("threshold", "Silence below (dB)", OptionType.Integer, "-50", -90, -10)], ["silent ends", "dead air", "auto trim"]);
+        yield return ATool("audio.split", "Split", "Parts", "split",
+            [new("every", "Part length (seconds)", OptionType.Number, "60", 1, 36000)], ["segments", "chunks", "parts"], single: true, folder: true);
+        yield return ATool("audio.speed", "Speed", "Speed", "speed",
+            [new("factor", "Speed ×", OptionType.Number, "1.5", 0.25, 4)], ["fast", "slow", "tempo", "playback speed"], single: true);
+        yield return ATool("audio.metadata", "Metadata", "Tagged", "metadata", MetadataOptions, ["tags", "id3", "title", "artist", "album", "edit metadata"]);
         yield return ATool("audio.strip-metadata", "Remove metadata", "Clean", "metadata", [], ["tags", "id3", "privacy"]);
         yield return new OperationDescriptor
         {
@@ -92,10 +110,16 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
         Options = opts, RequiresTool = "ffmpeg", Icon = icon, ProducesFolder = folder,
         Keywords = kw.Append("suffix:" + suffix).Concat(single ? ["single-only"] : Array.Empty<string>()).ToArray(),
     };
-    private static OperationDescriptor ATool(string id, string title, string suffix, string icon, OptionSpec[] opts, string[] kw, bool single = false) => new()
+    private static OptionSpec[] MetadataOptions =>
+    [
+        new("remove", "Remove first", OptionType.Choice, "none", Choices: ["none", "location", "all"], Help: "location removes GPS/location tags only; all clears every tag and chapter before writing the fields below."),
+        new("title", "Title", OptionType.Text, ""), new("artist", "Artist", OptionType.Text, ""), new("album", "Album", OptionType.Text, ""),
+        new("date", "Year/date", OptionType.Text, ""), new("genre", "Genre", OptionType.Text, ""), new("comment", "Comment", OptionType.Text, ""),
+    ];
+    private static OperationDescriptor ATool(string id, string title, string suffix, string icon, OptionSpec[] opts, string[] kw, bool single = false, bool folder = false) => new()
     {
         Id = id, Title = title, Category = FileKind.Audio, Group = OperationGroup.Tool, InputExtensions = AudioIn.ToHashSet(), Options = opts,
-        RequiresTool = "ffmpeg", Icon = icon, Keywords = kw.Append("suffix:" + suffix).Concat(single ? ["single-only"] : Array.Empty<string>()).ToArray(),
+        ProducesFolder = folder, RequiresTool = "ffmpeg", Icon = icon, Keywords = kw.Append("suffix:" + suffix).Concat(single ? ["single-only"] : Array.Empty<string>()).ToArray(),
     };
 
     public bool IsAvailable(OperationDescriptor op)
@@ -172,6 +196,53 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
 
     public async Task<OperationResult> ExecuteAsync(OperationRequest r, IProgress<double>? progress, CancellationToken ct)
     {
+        if (r.Operation.Id is "video.compress" or "audio.compress" && r.OptDouble("targetMB") > 0)
+            return await CompressToSizeAsync(r, progress, ct);
+        return await ExecuteOnceAsync(r, progress, ct);
+    }
+
+    /// <summary>
+    /// Target size: bitrate = (target bits − audio bits) / duration, encoded, measured, then corrected (up to 4 tries)
+    /// toward 97% of the target. A container overhead and encoder variance mean "exact" is "at or just under".
+    /// </summary>
+    private async Task<OperationResult> CompressToSizeAsync(OperationRequest r, IProgress<double>? progress, CancellationToken ct)
+    {
+        var input = r.Inputs[0];
+        var info = await ProbeAsync(input, ct);
+        if (info.DurationSeconds <= 0) throw new OrangeException("Orange can't read this file's length, so it can't aim for a size.");
+        long target = (long)(r.OptDouble("targetMB") * 1024 * 1024);
+        bool video = r.Operation.Category == FileKind.Video;
+        double audioKbps = video ? (info.HasAudio ? 96 : 0) : 0;
+        double totalKbps = target * 8 / 1000.0 / info.DurationSeconds * 0.97;
+        double kbps = totalKbps - audioKbps;
+        if (video && kbps < 50 || !video && totalKbps < 16)
+            throw new OrangeException($"{r.OptDouble("targetMB"):0.##} MB is too small for {info.DurationSeconds:0} seconds of {(video ? "video" : "audio")}.",
+                $"It would need {(video ? kbps : totalKbps):0} kbps. Trim it first or pick a bigger size.");
+        if (!video) kbps = totalKbps;
+        using var tmp = new SafePaths.TempWorkspace();
+        string? produced = null; long size = 0;
+        for (int attempt = 0; attempt < 4; attempt++)
+        {
+            ct.ThrowIfCancellationRequested();
+            var opts = new Dictionary<string, string>(r.Options) { ["targetMB"] = "0", ["_kbps"] = ((int)kbps).ToString(CultureInfo.InvariantCulture), ["_akbps"] = ((int)audioKbps).ToString(CultureInfo.InvariantCulture) };
+            var dir = tmp.Dir("try" + attempt);
+            int at = attempt; var sub = new Progress<double>(v => progress?.Report(Math.Min(0.99, at == 0 ? v * 0.9 : 0.9 + v * 0.09)));
+            var res = await ExecuteOnceAsync(new OperationRequest { Operation = r.Operation, Inputs = r.Inputs, Options = opts, OutputDirectory = dir, Overwrite = OverwritePolicy.Replace }, sub, ct);
+            produced = res.Outputs[0]; size = new FileInfo(produced).Length;
+            if (size <= target && size >= target * 0.85) break;
+            kbps *= target * 0.96 / size;
+            if (video && kbps < 30 || !video && kbps < 8) break;
+        }
+        if (produced is null || size > target)
+            throw new OrangeException($"Orange couldn't get this under {r.OptDouble("targetMB"):0.##} MB.", $"The closest try was {size / 1048576.0:0.##} MB.");
+        var ext = Path.GetExtension(produced).TrimStart('.');
+        var final = SafePaths.PlanOutput(input, r.OutputDirectory, Path.GetFileNameWithoutExtension(input), ImageProvider.SuffixOf(r.Operation), ext, r.Overwrite, r.Inputs);
+        progress?.Report(1);
+        return new OperationResult(true, [SafePaths.Commit(produced, final, r.Overwrite)], Detail: $"{size / 1048576.0:0.##} MB (target {r.OptDouble("targetMB"):0.##} MB)");
+    }
+
+    private async Task<OperationResult> ExecuteOnceAsync(OperationRequest r, IProgress<double>? progress, CancellationToken ct)
+    {
         var op = r.Operation;
         var input = r.Inputs[0];
         var stem = Path.GetFileNameWithoutExtension(input);
@@ -219,6 +290,14 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
                 int crf = r.Opt("level") switch { "light" => 23, "strong" => 32, _ => 28 };
                 var vf = r.Opt("maxHeight") is var mh && mh != "keep" && info.Height > int.Parse(mh) ? $"scale=-2:{mh}" : null;
                 if (vf != null) a.AddRange(["-vf", vf]);
+                if (r.Options.TryGetValue("_kbps", out var vk))
+                {
+                    a.AddRange(["-c:v", H264(), "-b:v", vk + "k", "-maxrate", (int.Parse(vk) * 3 / 2) + "k", "-bufsize", (int.Parse(vk) * 2) + "k", "-pix_fmt", "yuv420p"]);
+                    if (H264() == "libx264") a.AddRange(["-preset", "medium"]);
+                    if (info.HasAudio) a.AddRange(["-c:a", "aac", "-b:a", r.Options["_akbps"] + "k"]); else a.Add("-an");
+                    a.AddRange(["-movflags", "+faststart"]);
+                    break;
+                }
                 H264Args(a, crf);
                 a.AddRange(["-c:a", "aac", "-b:a", r.Opt("level") == "strong" ? "96k" : "128k", "-movflags", "+faststart"]);
                 break;
@@ -292,9 +371,71 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
             case "audio.compress":
                 In(input); a.Add("-vn");
                 outExt = srcExt is "wav" or "aiff" ? "flac" : srcExt is "flac" ? "flac" : srcExt;   // lossless sources compress losslessly (observed: WAV → FLAC)
+                if (r.Options.TryGetValue("_kbps", out var ak)) { outExt = srcExt is "wav" or "aiff" or "flac" or "wma" ? "m4a" : srcExt; outFile = tmp.File(outExt); AudioTarget(a, outExt, Math.Max(8, int.Parse(ak))); break; }
                 outFile = tmp.File(outExt);
                 AudioTarget(a, outExt, r.OptInt("bitrate"));
                 break;
+            case "audio.bleep":
+            {
+                var ranges = ParseRanges(r.Opt("ranges"), info.DurationSeconds);
+                var en = string.Join("+", ranges.Select(x => $"between(t,{Inv.F(x.S)},{Inv.F(x.E)})"));
+                In(input);
+                if (r.Opt("sound") == "silence")
+                    a.AddRange(["-af", $"volume=0:enable='{en}'"]);
+                else
+                    a.AddRange(["-filter_complex",
+                        $"[0:a:0]volume=0:enable='{en}'[m];sine=frequency={r.OptInt("frequency")}:sample_rate=48000:duration={Inv.F(Math.Max(1, info.DurationSeconds))},volume=0.5,volume=0:enable='not({en})'[b];[m][b]amix=inputs=2:duration=first:normalize=0[a]",
+                        "-map", "[a]"]);
+                AudioTarget(a, outExt, 192, keepQuality: true);
+                break;
+            }
+            case "audio.silence-trim":
+            {
+                var th = r.OptInt("threshold");
+                var sr = $"silenceremove=start_periods=1:start_threshold={th}dB:start_silence=0.1";
+                In(input); a.AddRange(["-af", $"{sr},areverse,{sr},areverse"]);
+                AudioTarget(a, outExt, 192, keepQuality: true);
+                break;
+            }
+            case "audio.split":
+            {
+                In(input);
+                var every = r.OptDouble("every");
+                if (info.DurationSeconds / every > 500) throw new OrangeException("That would make more than 500 parts. Use a longer part length.");
+                outDir = tmp.Dir("parts");
+                AudioTarget(a, srcExt, 192, keepQuality: true);
+                a.AddRange(["-f", "segment", "-segment_time", Inv.F(every), "-reset_timestamps", "1"]);
+                outFile = Path.Combine(outDir, $"{SafePaths.SanitizeFileName(stem).Replace("%", "")} %03d.{srcExt}");
+                break;
+            }
+            case "audio.speed":
+            {
+                var f = r.OptDouble("factor");
+                In(input); a.AddRange(["-filter:a", Atempo(f)]); AudioTarget(a, outExt, 192, keepQuality: true);
+                expected = info.DurationSeconds / f; break;
+            }
+            case "audio.metadata":
+            case "video.metadata":
+            {
+                In(input);
+                var remove = r.Opt("remove");
+                a.AddRange(["-map", "0", "-c", "copy"]);
+                if (remove == "all") a.AddRange(["-map_metadata", "-1", "-map_chapters", "-1"]);
+                if (remove == "location") a.AddRange(["-metadata", "location=", "-metadata", "location-eng=", "-metadata", "com.apple.quicktime.location.ISO6709="]);
+                bool any = remove != "none";
+                foreach (var key in new[] { "title", "artist", "album", "date", "genre", "comment" })
+                {
+                    var v = r.Opt(key);
+                    if (v.Length == 0) continue;
+                    if (v.Length > 1000) throw new OrangeException($"The {key} is limited to 1000 characters.");
+                    a.AddRange(["-metadata", $"{key}={v.Replace("\r", " ").Replace("\n", " ")}"]);
+                    any = true;
+                }
+                if (!any) throw new OrangeException("Choose what to remove or fill in a field to change.");
+                if (srcExt is "mp4" or "mov" or "m4a" or "m4v") a.AddRange(["-movflags", "+faststart+use_metadata_tags"]);
+                if (srcExt == "mp3") a.AddRange(["-id3v2_version", "3"]);
+                break;
+            }
             case "audio.merge":
             {
                 foreach (var i in r.Inputs) In(i);
@@ -352,7 +493,29 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
 
     private void VideoTarget(List<string> a, string ext, OperationRequest r, ProbeInfo info)
     {
-        int crf = r.Operation.Options.Any(o => o.Name == "quality") ? r.Opt("quality") switch { "balanced" => 26, "small" => 30, _ => 20 } : 20;
+        bool tunable = r.Operation.Options.Any(o => o.Name == "quality");
+        int crf = tunable ? r.Opt("quality") switch { "balanced" => 26, "small" => 30, _ => 20 } : 20;
+        if (tunable)
+        {
+            var res = r.Opt("resolution");
+            if (res != "keep" && info.Height > int.Parse(res)) a.AddRange(["-vf", $"scale=-2:{res}"]);
+            var mbps = r.OptDouble("bitrate");
+            if (ext != "webm" && r.Opt("codec") == "hevc")
+            {
+                var hevc = Has("libx265") ? "libx265" : Has("hevc_mf") ? "hevc_mf" : throw new OrangeException("This FFmpeg build has no HEVC encoder. Use H.264.");
+                a.AddRange(["-c:v", hevc, "-pix_fmt", "yuv420p"]);
+                if (mbps > 0) a.AddRange(["-b:v", Inv.F(mbps) + "M"]); else if (hevc == "libx265") a.AddRange(["-crf", (crf + 4).ToString(), "-preset", "medium"]);
+                if (ext is "mp4" or "mov") a.AddRange(["-tag:v", "hvc1"]);
+                a.AddRange(["-c:a", "aac", "-b:a", "192k"]); if (ext is "mp4" or "mov") a.AddRange(["-movflags", "+faststart"]);
+                return;
+            }
+            if (mbps > 0 && ext != "webm")
+            {
+                a.AddRange(["-c:v", H264(), "-b:v", Inv.F(mbps) + "M", "-maxrate", Inv.F(mbps * 1.5) + "M", "-bufsize", Inv.F(mbps * 2) + "M", "-pix_fmt", "yuv420p"]);
+                a.AddRange(["-c:a", ext == "avi" ? Mp3() : "aac", "-b:a", "192k"]); if (ext is "mp4" or "mov") a.AddRange(["-movflags", "+faststart"]);
+                return;
+            }
+        }
         switch (ext)
         {
             case "mp4": case "mov": H264Args(a, crf); a.AddRange(["-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart"]); break;
@@ -401,6 +564,52 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
             default: throw new OrangeException($"Orange can't write .{ext} audio.");
         }
         a.Add("-vn");
+    }
+
+    public static List<(double S, double E)> ParseRanges(string spec, double duration)
+    {
+        var list = new List<(double, double)>();
+        foreach (var part in spec.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var se = part.Split('-', 2, StringSplitOptions.TrimEntries);
+            var s = se.Length == 2 ? OptionValidator.ParseTime(se[0]) : null; var e = se.Length == 2 ? OptionValidator.ParseTime(se[1]) : null;
+            if (s is null || e is null || e <= s) throw new OrangeException($"\"{part}\" isn't a section. Use start-end, like 0:05-0:07.");
+            if (duration > 0 && s.Value.TotalSeconds >= duration) throw new OrangeException($"\"{part}\" starts after the end of the audio.");
+            list.Add((s.Value.TotalSeconds, Math.Min(e.Value.TotalSeconds, duration > 0 ? duration : e.Value.TotalSeconds)));
+        }
+        if (list.Count == 0) throw new OrangeException("Mark at least one section to bleep.");
+        if (list.Count > 200) throw new OrangeException("Up to 200 sections can be bleeped at once.");
+        return list;
+    }
+
+    /// <summary>Peak envelope for the waveform view: <paramref name="buckets"/> values 0–1, from 8 kHz mono PCM piped out of FFmpeg.</summary>
+    public async Task<float[]> WaveformAsync(string path, int buckets, CancellationToken ct)
+    {
+        var info = await ProbeAsync(path, ct);
+        if (!info.HasAudio) throw new OrangeException($"\"{Path.GetFileName(path)}\" has no audio track.");
+        var psi = new System.Diagnostics.ProcessStartInfo(tools.Require("ffmpeg")) { RedirectStandardOutput = true, RedirectStandardError = true, RedirectStandardInput = true, UseShellExecute = false, CreateNoWindow = true };
+        foreach (var x in new[] { "-hide_banner", "-nostdin", "-loglevel", "error", "-protocol_whitelist", "file,pipe", "-i", "file:" + path, "-vn", "-ac", "1", "-ar", "8000", "-f", "s16le", "pipe:1" }) psi.ArgumentList.Add(x);
+        using var p = System.Diagnostics.Process.Start(psi)!;
+        p.StandardInput.Close();
+        _ = p.StandardError.ReadToEndAsync(ct);
+        long totalSamples = (long)Math.Max(1, info.DurationSeconds * 8000);
+        double per = Math.Max(1, totalSamples / (double)buckets);
+        var peaks = new float[buckets];
+        var buf = new byte[65536]; long idx = 0; int read; int carry = -1;
+        var s = p.StandardOutput.BaseStream;
+        using var reg = ct.Register(() => { try { p.Kill(true); } catch { } });
+        while ((read = await s.ReadAsync(buf, ct)) > 0)
+        {
+            int i = 0;
+            if (carry >= 0) { Add((short)(carry | (buf[0] << 8))); i = 1; carry = -1; }
+            for (; i + 1 < read; i += 2) Add((short)(buf[i] | (buf[i + 1] << 8)));
+            if (i < read) carry = buf[i];
+        }
+        await p.WaitForExitAsync(ct);
+        float max = peaks.Max();
+        if (max > 0) for (int i = 0; i < peaks.Length; i++) peaks[i] /= max;
+        return peaks;
+        void Add(short v) { int b = (int)Math.Min(buckets - 1, idx++ / per); float m = Math.Abs(v / 32768f); if (m > peaks[b]) peaks[b] = m; }
     }
 
     private static string Atempo(double f)

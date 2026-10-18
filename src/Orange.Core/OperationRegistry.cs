@@ -15,11 +15,12 @@ public sealed class OperationRegistry
         tools ??= ToolLocator.Default;
         var r = new OperationRegistry();
         r.Add(new ImageProvider());
+        r.Add(new ImageStudioProvider());
         r.Add(new MediaProvider(tools));
         r.Add(new PdfProvider(tools));
         r.Add(new DocumentProvider(tools));
         r.Add(new SubtitleProvider());
-        r.Add(new ArchiveProvider());
+        r.Add(new ArchiveProvider(tools));
         return r;
     }
 

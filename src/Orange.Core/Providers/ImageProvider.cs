@@ -10,7 +10,8 @@ namespace Orange.Core.Providers;
 public sealed class ImageProvider : IOperationProvider
 {
     public string Name => "Images (Magick.NET)";
-    private static readonly string[] Inputs = ["png", "jpg", "webp", "heic", "tiff", "bmp", "gif", "avif", "ico"];
+    private static readonly string[] Inputs = ["png", "jpg", "webp", "heic", "tiff", "bmp", "gif", "avif", "ico", "svg"];
+    public static readonly HashSet<string> InputExtensionsSet = Inputs.ToHashSet();
     private static readonly (string Ext, string Title, MagickFormat Fmt, bool Lossy)[] Targets =
     [
         ("png", "PNG", MagickFormat.Png, false), ("jpg", "JPG", MagickFormat.Jpeg, true), ("webp", "WebP", MagickFormat.WebP, true),
@@ -46,7 +47,8 @@ public sealed class ImageProvider : IOperationProvider
         };
 
         yield return Tool("image.compress", "Compress", "Compressed", "compress",
-            [Quality with { Default = "70" }, new("maxSide", "Longest side (px, 0 = keep)", OptionType.Integer, "0", 0, 20000)], ["smaller", "reduce", "optimize", "size"]);
+            [Quality with { Default = "70" }, new("maxSide", "Longest side (px, 0 = keep)", OptionType.Integer, "0", 0, 20000),
+             new("targetKB", "Target size (KB, 0 = off)", OptionType.Integer, "0", 0, 1_000_000, Help: "Orange searches quality, then size, to land at or just under this.")], ["smaller", "reduce", "optimize", "size"]);
         yield return Tool("image.resize", "Resize", "Resized", "resize",
             [new("mode", "Resize by", OptionType.Choice, "percent", Choices: ["percent", "width", "height", "longest"]),
              new("value", "Amount", OptionType.Number, "50", 1, 20000, Help: "Percent, or pixels for width/height/longest side.")], ["scale", "dimensions", "smaller", "bigger"]);
@@ -103,12 +105,15 @@ public sealed class ImageProvider : IOperationProvider
         if (A(0, 4) == "RIFF" && A(8, 4) == "WEBP") return MagickFormat.WebP;
         if (h[0] == 0 && h[1] == 0 && h[2] == 1 && h[3] == 0) return MagickFormat.Ico;
         if (A(4, 4) == "ftyp") return A(8, 4).StartsWith("avi") ? MagickFormat.Avif : MagickFormat.Heic;
+        if (SvgSafety.LooksLikeSvg(path)) { SvgSafety.EnsureSafe(path); return MagickFormat.Svg; }
         throw new OrangeException($"\"{Path.GetFileName(path)}\" isn't an image Orange can read.", "Its contents don't match a supported image format.");
     }
 
-    private static MagickImageCollection Load(string path)
+    public static MagickImageCollection Load(string path)
     {
-        var settings = new MagickReadSettings { Format = DecoderFor(path) };
+        var fmt = DecoderFor(path);
+        var settings = new MagickReadSettings { Format = fmt };
+        if (fmt == MagickFormat.Svg) { settings.BackgroundColor = MagickColors.Transparent; settings.Density = new Density(144); }
         var col = new MagickImageCollection();
         try { col.Read(path, settings); }
         catch (MagickException e) { col.Dispose(); throw new OrangeException($"\"{Path.GetFileName(path)}\" couldn't be opened. It may be damaged.", e.Message, e); }
@@ -171,9 +176,7 @@ public sealed class ImageProvider : IOperationProvider
         }
 
         // Tools keep the input format (HEIC/AVIF fall back to JPG when this build can't write them).
-        outExt = srcExt;
-        var fmt = FormatForExt(srcExt);
-        if (!CanWrite(fmt)) { outExt = "jpg"; fmt = MagickFormat.Jpeg; }
+        (outExt, var fmt) = WritableFormatFor(srcExt);
         suffix = SuffixOf(op);
         foreach (var img in col)
         {
@@ -224,6 +227,15 @@ public sealed class ImageProvider : IOperationProvider
         }
         progress?.Report(0.8);
         var o = tmp.File(outExt);
+        if (op.Id == "image.compress" && r.OptInt("targetKB") > 0)
+        {
+            var (bytes, note) = HitTargetSize((MagickImage)col[0], fmt, r.OptInt("targetKB") * 1024L, ct);
+            File.WriteAllBytes(o, bytes);
+            ValidateOutput(o);
+            var tf = SafePaths.PlanOutput(input, r.OutputDirectory, stem, suffix, outExt, r.Overwrite, r.Inputs);
+            progress?.Report(1);
+            return new OperationResult(true, [SafePaths.Commit(o, tf, r.Overwrite)], Detail: note);
+        }
         if (col.Count > 1 && fmt is MagickFormat.Gif or MagickFormat.WebP or MagickFormat.Tiff) col.Write(o, fmt); else col[0].Write(o, fmt);
         return Finish(o);
 
@@ -234,6 +246,41 @@ public sealed class ImageProvider : IOperationProvider
             progress?.Report(1);
             return OperationResult.Ok(SafePaths.Commit(produced, final, r.Overwrite));
         }
+    }
+
+    /// <summary>
+    /// Binary-searches encoder quality (lossy formats), then shrinks the pixel size in 10% steps, until the encoded
+    /// file is at or under the target. Lossless formats only have the size step. Returns the bytes and a plain note.
+    /// </summary>
+    public static (byte[] Bytes, string Note) HitTargetSize(MagickImage src, MagickFormat fmt, long target, CancellationToken ct)
+    {
+        bool lossy = fmt is MagickFormat.Jpeg or MagickFormat.WebP or MagickFormat.Avif or MagickFormat.Heic;
+        byte[] Encode(MagickImage im, uint q) { using var c = (MagickImage)im.Clone(); c.Strip(); if (lossy) c.Quality = q; else if (fmt == MagickFormat.Png) c.Settings.SetDefine(MagickFormat.Png, "compression-level", "9"); return c.ToByteArray(fmt); }
+        double scale = 1.0;
+        byte[]? best = null; uint bestQ = 0;
+        for (int step = 0; step < 25; step++)
+        {
+            ct.ThrowIfCancellationRequested();
+            using var scaled = (MagickImage)src.Clone();
+            if (scale < 1) scaled.Resize(new MagickGeometry((uint)Math.Max(1, src.Width * scale), (uint)Math.Max(1, src.Height * scale)));
+            if (lossy)
+            {
+                uint lo = 10, hi = 95; byte[]? fit = null; uint fitQ = 0;
+                while (lo <= hi)
+                {
+                    uint mid = (lo + hi) / 2; var b = Encode(scaled, mid);
+                    if (b.Length <= target) { fit = b; fitQ = mid; lo = mid + 1; } else hi = mid - 1;
+                }
+                if (fit != null) { best = fit; bestQ = fitQ; break; }
+            }
+            else { var b = Encode(scaled, 0); if (b.Length <= target) { best = b; break; } }
+            scale *= 0.9;
+            if (src.Width * scale < 16 || src.Height * scale < 16) break;
+        }
+        if (best is null) throw new OrangeException($"Orange couldn't get this image down to {target / 1024} KB.", "Even at the smallest size the file stays bigger. Try a lossy format like JPG or WebP.");
+        var w = (uint)Math.Round(src.Width * scale); var h = (uint)Math.Round(src.Height * scale);
+        var note = $"{best.Length / 1024.0:0.#} KB (target {target / 1024} KB)" + (lossy ? $", quality {bestQ}" : "") + (scale < 1 ? $", resized to {w}×{h}" : "");
+        return (best, note);
     }
 
     public static MagickGeometry CropGeometry(uint w, uint h, OperationRequest r)
@@ -251,6 +298,14 @@ public sealed class ImageProvider : IOperationProvider
         uint nw = w, nh = h;
         if ((double)w / h > target) nw = (uint)Math.Round(h * target); else nh = (uint)Math.Round(w / target);
         return new MagickGeometry((int)((w - nw) / 2), (int)((h - nh) / 2), nw, nh);   // centred
+    }
+
+    /// <summary>Tools keep the input format; HEIC/AVIF fall back to JPG when unwritable, SVG (vector) becomes PNG.</summary>
+    public static (string Ext, MagickFormat Fmt) WritableFormatFor(string srcExt)
+    {
+        if (srcExt == "svg") return ("png", MagickFormat.Png);
+        var f = FormatForExt(srcExt);
+        return CanWrite(f) ? (srcExt, f) : ("jpg", MagickFormat.Jpeg);
     }
 
     private static MagickFormat FormatForExt(string ext) => ext switch
