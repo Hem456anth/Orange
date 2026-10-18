@@ -1,0 +1,9 @@
+selftest exit=0
+probe exit=2
+
+Name                                 Length
+----                                 ------
+Orange-0.1.0-win-x64-portable.zip 280232207
+Orange-0.1.0-win-x64-setup.exe    190205016
+
+

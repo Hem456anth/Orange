@@ -1,0 +1,11 @@
+{
+  "os": "Microsoft Windows NT 10.0.26100.0",
+  "results": [
+    {
+      "name": "startup",
+      "passed": false,
+      "skipped": false,
+      "detail": "Orange didn\u0027t report ready: 2026-10-18T15:44:04.1064499Z unhandled COMException: Element not found. /  / Element not found. / "
+    }
+  ]
+}
