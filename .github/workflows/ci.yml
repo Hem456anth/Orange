@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  engine:
+    name: Engine tests (Windows, real converters)
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Install converters
+        shell: pwsh
+        run: |
+          choco install -y --no-progress ffmpeg pandoc ghostscript libreoffice-fresh
+          $gs = Get-ChildItem 'C:\Program Files\gs' -Directory | Sort-Object Name -Descending | Select-Object -First 1
+          "$($gs.FullName)\bin" | Out-File -Append $env:GITHUB_PATH
+          'C:\Program Files\LibreOffice\program' | Out-File -Append $env:GITHUB_PATH
+      - name: Test
+        shell: pwsh
+        env:
+          ORANGE_REQUIRE_TOOLS: '1'
+        run: |
+          dotnet run --project src/Orange.Cli -c Release -- tools
+          dotnet test tests/Orange.Core.Tests -c Release --logger "trx;LogFileName=engine.trx" --logger "console;verbosity=normal" 2>&1 | Tee-Object -FilePath engine-test.log
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+      - name: Operation matrix
+        if: always()
+        shell: pwsh
+        run: dotnet run --project src/Orange.Cli -c Release -- matrix | Tee-Object -FilePath operation-matrix.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: engine-results
+          path: |
+            engine-test.log
+            operation-matrix.md
+            tests/**/TestResults/*.trx
+      - name: Report (for remote debugging)
+        if: always()
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $log = if (Test-Path engine-test.log) { Get-Content engine-test.log -Tail 150 | Out-String } else { 'no log' }
+          $m = if (Test-Path operation-matrix.md) { Get-Content operation-matrix.md | Out-String } else { '' }
+          $body = "Run: ${{ github.run_id }} / ${{ github.sha }}`n`n### Test log tail`n``````n$log`n```````n`n### Matrix`n$m"
+          $body | Out-File -Encoding utf8 report.md
+          gh issue create --repo ${{ github.repository }} --title "CI engine report ${{ github.run_number }} (${{ job.status }})" --body-file report.md --label ci-report 2>$null
+          if ($LASTEXITCODE -ne 0) { gh label create ci-report --repo ${{ github.repository }} --color FF7A00 2>$null; gh issue create --repo ${{ github.repository }} --title "CI engine report ${{ github.run_number }} (${{ job.status }})" --body-file report.md --label ci-report }
