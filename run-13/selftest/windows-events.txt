@@ -1,0 +1,65 @@
+[10/18/2026 16:33:09] Application Error
+Faulting application name: Orange.exe, version: 0.1.0.0, time stamp: 0x6a870000
+Faulting module name: Microsoft.UI.Xaml.dll, version: 3.1.8.0, time stamp: 0x28741835
+Exception code: 0xc000027b
+Fault offset: 0x00000000003a7515
+Faulting process id: 0x268
+Faulting application start time: 0x1DD5F1E5956E614
+Faulting application path: D:\a\Orange\Orange\out\Orange\Orange.exe
+Faulting module path: D:\a\Orange\Orange\out\Orange\Microsoft.UI.Xaml.dll
+Report Id: e36f1bfb-8f9e-4b41-83da-ba24302c0604
+Faulting package full name: 
+Faulting package-relative application ID: 
+
+[10/18/2026 16:33:03] Application Error
+Faulting application name: Orange.exe, version: 0.1.0.0, time stamp: 0x6a870000
+Faulting module name: Microsoft.UI.Xaml.dll, version: 3.1.8.0, time stamp: 0x28741835
+Exception code: 0xc000027b
+Fault offset: 0x00000000003a7515
+Faulting process id: 0x23F4
+Faulting application start time: 0x1DD5F1E58708C1A
+Faulting application path: D:\a\Orange\Orange\out\Orange\Orange.exe
+Faulting module path: D:\a\Orange\Orange\out\Orange\Microsoft.UI.Xaml.dll
+Report Id: 3495b893-a23f-4500-a371-2464ca62c057
+Faulting package full name: 
+Faulting package-relative application ID: 
+
+[10/18/2026 16:33:02] Application Error
+Faulting application name: Orange.exe, version: 0.1.0.0, time stamp: 0x6a870000
+Faulting module name: Microsoft.UI.Xaml.dll, version: 3.1.8.0, time stamp: 0x28741835
+Exception code: 0xc000027b
+Fault offset: 0x00000000003a7515
+Faulting process id: 0x21FC
+Faulting application start time: 0x1DD5F1E57D2AB4D
+Faulting application path: D:\a\Orange\Orange\out\Orange\Orange.exe
+Faulting module path: D:\a\Orange\Orange\out\Orange\Microsoft.UI.Xaml.dll
+Report Id: 5f137ee8-fb3f-4318-8a87-54c3684d7c8b
+Faulting package full name: 
+Faulting package-relative application ID: 
+
+[10/18/2026 16:32:44] Application Error
+Faulting application name: Orange.exe, version: 0.1.0.0, time stamp: 0x6a870000
+Faulting module name: Microsoft.UI.Xaml.dll, version: 3.1.8.0, time stamp: 0x28741835
+Exception code: 0xc000027b
+Fault offset: 0x00000000003a7515
+Faulting process id: 0x1840
+Faulting application start time: 0x1DD5F1E4CF54F20
+Faulting application path: D:\a\Orange\Orange\out\Orange\Orange.exe
+Faulting module path: D:\a\Orange\Orange\out\Orange\Microsoft.UI.Xaml.dll
+Report Id: 434a3c7b-1775-44d1-b466-0c5ca041a6b3
+Faulting package full name: 
+Faulting package-relative application ID: 
+
+[10/18/2026 16:32:42] Application Error
+Faulting application name: Orange.exe, version: 0.1.0.0, time stamp: 0x6a870000
+Faulting module name: Microsoft.UI.Xaml.dll, version: 3.1.8.0, time stamp: 0x28741835
+Exception code: 0xc000027b
+Fault offset: 0x00000000003a7515
+Faulting process id: 0x568
+Faulting application start time: 0x1DD5F1E4BFC6123
+Faulting application path: D:\a\Orange\Orange\out\Orange\Orange.exe
+Faulting module path: D:\a\Orange\Orange\out\Orange\Microsoft.UI.Xaml.dll
+Report Id: a533eee6-74a8-45f4-9cfa-bf833204d228
+Faulting package full name: 
+Faulting package-relative application ID: 
+

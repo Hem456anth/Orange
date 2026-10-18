@@ -1,0 +1,6 @@
+  Determining projects to restore...
+  Restored D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj (in 33.23 sec).
+  Restored D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj (in 37.27 sec).
+  Orange.Core -> D:\a\Orange\Orange\src\Orange.Core\bin\x64\Release\net8.0\Orange.Core.dll
+  Orange.App -> D:\a\Orange\Orange\src\Orange.App\bin\x64\Release\net8.0-windows10.0.19041.0\win-x64\Orange.dll
+  Orange.App -> D:\a\Orange\Orange\out\Orange\

@@ -1,0 +1,13 @@
+uitest plain exit=0
+uitest bar exit=-1073741189
+uitest value exit=-1073741189
+uitest button exit=0
+uitest live exit=0
+uitest mica exit=0
+uitest acrylic exit=0
+uitest presenter exit=0
+uitest icon exit=0
+uitest mica-presenter-icon-bar-button-live exit=-1073741189
+uitest full exit=-1073741189
+selftest exit=-1073741189
+probe exit=1
