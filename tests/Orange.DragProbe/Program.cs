@@ -150,8 +150,12 @@ internal static class Probe
         if (!WaitFor("wheel-shown", 5000, mark)) { Shot(Path.Combine(outDir, $"{tag}-no-wheel.png")); outcome = "wheel did not appear after Shift: " + Tail(); return false; }
         var line = File.ReadAllLines(_events).Skip(mark).First(l => l.Contains("wheel-shown"));
         var rect = Field(line, "rect").Split(',').Select(int.Parse).ToArray();
-        var items = Field(line, "items").Split('|');
-        // The wheel may refine its items when the drag enters it; re-read the latest kind line.
+        // The wheel learns the dragged files on DragEnter (or from the Explorer selection): nudge the cursor and re-read.
+        Native.GetCursorPos(out var c0);
+        for (int i = 0; i < 8; i++) { Input.MoveTo(c0.X + (i % 2) * 3, c0.Y + (i % 2) * 2); Thread.Sleep(80); }
+        Thread.Sleep(500);
+        var kindLine = File.ReadAllLines(_events).Skip(mark).LastOrDefault(l => l.Contains("wheel-kind")) ?? line;
+        var items = Field(kindLine, "items").Split('|');
         int idx = Array.IndexOf(items, wedge);
         if (idx < 0) { outcome = $"wedge {wedge} not in [{string.Join(",", items)}]"; return false; }
         int cx = (rect[0] + rect[2]) / 2, cy = (rect[1] + rect[3]) / 2, d = rect[2] - rect[0];
