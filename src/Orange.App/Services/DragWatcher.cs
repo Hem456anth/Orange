@@ -24,9 +24,9 @@ public sealed class DragWatcher : IDisposable
     private readonly Native.HookProc _mouseProc, _keyProc;   // kept alive: the OS holds raw pointers to these
     private IntPtr _mouseHook, _keyHook;
     private Native.POINT _downAt;
-    private bool _buttonDown, _dragging, _eligible, _wheelOpen;
+    private volatile bool _buttonDown, _dragging, _eligible, _wheelOpen;
     private IntPtr _sourceWindow;
-    private WheelKind _current;
+    private volatile WheelKind _current;
 
     public event Action<WheelKind, Native.POINT, IntPtr>? WheelRequested;   // kind, cursor (physical px), drag source window
     public event Action<WheelKind>? WheelKindChanged;
@@ -43,15 +43,43 @@ public sealed class DragWatcher : IDisposable
         _keyProc = KeyHook;
     }
 
+    private Thread? _thread;
+    private uint _threadId;
+
+    /// <summary>
+    /// Installs the hooks on a dedicated thread that does nothing but pump messages, so hook callbacks are
+    /// answered immediately even while the UI thread is busy (Windows silently drops hooks that answer slowly).
+    /// </summary>
     public void Start()
     {
-        var mod = Native.GetModuleHandle(null);
-        _mouseHook = Native.SetWindowsHookEx(Native.WH_MOUSE_LL, _mouseProc, mod, 0);
-        _keyHook = Native.SetWindowsHookEx(Native.WH_KEYBOARD_LL, _keyProc, mod, 0);
-        if (_mouseHook == IntPtr.Zero || _keyHook == IntPtr.Zero)
-            throw new InvalidOperationException($"Couldn't watch for drags (error {Marshal.GetLastWin32Error()}). Use the shortcut or the context menu instead.");
+        using var ready = new ManualResetEventSlim();
+        Exception? error = null;
+        _thread = new Thread(() =>
+        {
+            _threadId = GetCurrentThreadId();
+            var mod = Native.GetModuleHandle(null);
+            _mouseHook = Native.SetWindowsHookEx(Native.WH_MOUSE_LL, _mouseProc, mod, 0);
+            _keyHook = Native.SetWindowsHookEx(Native.WH_KEYBOARD_LL, _keyProc, mod, 0);
+            if (_mouseHook == IntPtr.Zero || _keyHook == IntPtr.Zero)
+                error = new InvalidOperationException($"Couldn't watch for drags (error {Marshal.GetLastWin32Error()}). Use the shortcut or the context menu instead.");
+            ready.Set();
+            if (error != null) return;
+            while (GetMessage(out var msg, IntPtr.Zero, 0, 0) > 0) { TranslateMessage(ref msg); DispatchMessage(ref msg); }
+            Native.UnhookWindowsHookEx(_mouseHook); Native.UnhookWindowsHookEx(_keyHook);
+            _mouseHook = _keyHook = IntPtr.Zero;
+        }) { IsBackground = true, Name = "orange-input-hooks", Priority = ThreadPriority.AboveNormal };
+        _thread.Start();
+        ready.Wait(TimeSpan.FromSeconds(5));
+        if (error != null) throw error;
         Diagnostics.Event("hooks-installed");
     }
+
+    [StructLayout(LayoutKind.Sequential)] private struct MSG { public IntPtr hwnd; public uint message; public IntPtr wParam, lParam; public uint time; public Native.POINT pt; }
+    [DllImport("user32.dll")] private static extern int GetMessage(out MSG m, IntPtr h, uint min, uint max);
+    [DllImport("user32.dll")] private static extern bool TranslateMessage(ref MSG m);
+    [DllImport("user32.dll")] private static extern IntPtr DispatchMessage(ref MSG m);
+    [DllImport("user32.dll")] private static extern bool PostThreadMessage(uint id, uint msg, IntPtr w, IntPtr l);
+    [DllImport("kernel32.dll")] private static extern uint GetCurrentThreadId();
 
     /// <summary>The wheel window tells the watcher whether it's open so key taps switch wheels instead of reopening.</summary>
     public void SetWheelOpen(bool open, WheelKind kind) { _wheelOpen = open; _current = kind; }
@@ -70,6 +98,7 @@ public sealed class DragWatcher : IDisposable
             switch ((int)wParam)
             {
                 case Native.WM_LBUTTONDOWN:
+                    if (Diagnostics.Enabled) Diagnostics.Event($"lbutton-down {ms.pt.X},{ms.pt.Y} injected={(ms.flags & 1) != 0}");
                     _buttonDown = true; _dragging = false; _downAt = ms.pt;
                     _sourceWindow = Native.WindowFromPoint(ms.pt);
                     _eligible = AppSettings.Current.DragSources == DragSourceFilter.AnyApp || IsExplorerFast(_sourceWindow);
@@ -170,9 +199,9 @@ public sealed class DragWatcher : IDisposable
 
     public void Dispose()
     {
-        if (_mouseHook != IntPtr.Zero) Native.UnhookWindowsHookEx(_mouseHook);
-        if (_keyHook != IntPtr.Zero) Native.UnhookWindowsHookEx(_keyHook);
-        _mouseHook = _keyHook = IntPtr.Zero;
+        if (_threadId != 0) PostThreadMessage(_threadId, 0x0012 /*WM_QUIT*/, IntPtr.Zero, IntPtr.Zero);
+        _thread?.Join(TimeSpan.FromSeconds(2));
+        _threadId = 0;
     }
 }
 

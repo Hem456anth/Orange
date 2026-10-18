@@ -24,6 +24,8 @@ public partial class App : Application
         InitializeComponent();
         // Orange lives in the tray: closing the wheel or a progress window must never quit the app.
         DispatcherShutdownMode = DispatcherShutdownMode.OnExplicitShutdown;
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => Diagnostics.Event("domain-unhandled " + e.ExceptionObject.ToString()!.Replace(Environment.NewLine, " | "));
+        TaskScheduler.UnobservedTaskException += (_, e) => { e.SetObserved(); Diagnostics.Event("task-unobserved " + e.Exception.ToString().Replace(Environment.NewLine, " | ")); };
         UnhandledException += (_, e) =>
         {
             e.Handled = true;

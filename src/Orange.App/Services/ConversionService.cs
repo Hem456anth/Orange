@@ -51,13 +51,14 @@ public sealed class ConversionService
         }
         if (options.Count > 0) { s.LastOptions[op.Id] = options.ToDictionary(); s.Save(); }
 
-        var win = ProgressWindow.Show(op, jobs);
         Diagnostics.Event($"run-start {op.Id} {jobs.Count}");
         using var cts = new CancellationTokenSource();
-        win.CancelRequested += cts.Cancel;
-        var progress = new Progress<BatchProgress>(p => win.Update(p));   // Progress<T> captures the UI context
+        ProgressWindow? win = null;
+        try { win = ProgressWindow.Show(op, jobs); win.CancelRequested += cts.Cancel; }
+        catch (Exception e) { Diagnostics.Event("progress-window-failed " + Flat(e)); }
+        var progress = new Progress<BatchProgress>(p => { try { win?.Update(p); } catch (Exception e) { Diagnostics.Event("progress-update-failed " + Flat(e)); } });
         await Runner.RunAsync(jobs, progress, cts.Token);
-        win.Complete(jobs);
+        try { win?.Complete(jobs); } catch (Exception e) { Diagnostics.Event("progress-complete-failed " + Flat(e)); }
 
         var outputs = jobs.Where(j => j.State == JobState.Succeeded).SelectMany(j => j.Result!.Outputs).ToList();
         var failed = jobs.Where(j => j.State == JobState.Failed).ToList();
@@ -72,6 +73,8 @@ public sealed class ConversionService
         if (s.NotifyWhenDone) Toast(op, outputs, failed);
         return jobs;
     }
+
+    private static string Flat(Exception e) => e.ToString().Replace(Environment.NewLine, " | ");
 
     private static void Toast(OperationDescriptor op, List<string> outputs, List<Job> failed)
     {
