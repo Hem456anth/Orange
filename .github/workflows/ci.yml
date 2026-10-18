@@ -47,6 +47,28 @@ jobs:
             operation-matrix.md
             tests/**/TestResults/*.trx
 
+      - name: Publish engine evidence
+        if: always()
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          New-Item -ItemType Directory -Force engine-evidence | Out-Null
+          if (Test-Path engine-test.log) { Select-String -Path engine-test.log -Pattern 'Failed |Error Message|Assert|Skipped |Passed!|Failed!|Total tests' -Context 0,6 | ForEach-Object { $_.Line; $_.Context.PostContext } | Select-Object -First 400 | Out-File engine-evidence/failures.txt }
+          Copy-Item operation-matrix.md engine-evidence/ -ErrorAction SilentlyContinue
+          $url = "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
+          for ($i = 0; $i -lt 5; $i++) {
+            $repo = "$env:RUNNER_TEMP\evrepo$i"
+            git clone -q --depth 1 -b ci-evidence $url $repo 2>$null
+            if (-not (Test-Path "$repo\.git")) { git init -q -b ci-evidence $repo; git -C $repo remote add origin $url }
+            $dest = "$repo\run-${{ github.run_number }}\engine"; New-Item -ItemType Directory -Force $dest | Out-Null
+            Copy-Item engine-evidence\* $dest -Force
+            git -C $repo config user.name "orange-ci"; git -C $repo config user.email "orange-ci@users.noreply.github.com"
+            git -C $repo add -A; git -C $repo commit -qm "engine evidence ${{ github.run_number }}"
+            git -C $repo push -q origin HEAD:ci-evidence 2>$null
+            if ($LASTEXITCODE -eq 0) { break }; Start-Sleep 5
+          }
+
   app:
     name: Windows app (build, self-test, real drag probe, package)
     runs-on: windows-latest
@@ -164,7 +186,6 @@ jobs:
           $url = "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
           git clone -q --depth 1 -b ci-evidence $url $repo 2>$null
           if (-not (Test-Path "$repo\.git")) { git init -q -b ci-evidence $repo; git -C $repo remote add origin $url }
-          Get-ChildItem $repo -Exclude .git | Where-Object { $_.Name -notlike 'run-*' } | Remove-Item -Recurse -Force
           $dest = "$repo\run-${{ github.run_number }}"
           New-Item -ItemType Directory -Force $dest | Out-Null
           Copy-Item evidence\* $dest -Recurse -Force
@@ -173,3 +194,14 @@ jobs:
           git -C $repo add -A
           git -C $repo commit -qm "evidence for run ${{ github.run_number }} (${{ github.sha }})"
           git -C $repo push -q origin HEAD:ci-evidence
+          if ($LASTEXITCODE -ne 0) { git -C $repo pull -q --rebase origin ci-evidence; git -C $repo push -q origin HEAD:ci-evidence }
+      - name: Publish nightly pre-release (installer + portable)
+        if: success() && github.ref == 'refs/heads/main'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view nightly -R ${{ github.repository }} 2>$null
+          if ($LASTEXITCODE -ne 0) { gh release create nightly -R ${{ github.repository }} --prerelease --title "Orange nightly" --notes "Unsigned development build from main. See README for what's verified." }
+          gh release upload nightly -R ${{ github.repository }} (Get-ChildItem out/Orange-*-portable.zip).FullName (Get-ChildItem out/Orange-*-setup.exe).FullName --clobber
+          gh release edit nightly -R ${{ github.repository }} --notes "Unsigned development build of ${{ github.sha }} (run ${{ github.run_number }}). Windows 10 1809+/11 x64. SmartScreen will warn because it's unsigned."
