@@ -53,6 +53,15 @@ public partial class App : Application
             panel.Children.Add(new Microsoft.UI.Xaml.Controls.TextBlock { Text = "Orange UI test " + v });
             if (v.Contains("bar")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.ProgressBar { IsIndeterminate = true });
             if (v.Contains("value")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.ProgressBar { Minimum = 0, Maximum = 1, Value = 0.4 });
+            if (v.Contains("nav")) { var nv = new Microsoft.UI.Xaml.Controls.NavigationView(); nv.MenuItems.Add(new Microsoft.UI.Xaml.Controls.NavigationViewItem { Content = "A" }); panel.Children.Add(nv); }
+            if (v.Contains("combo")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.ComboBox { ItemsSource = new[] { "a", "b" }, SelectedIndex = 0 });
+            if (v.Contains("number")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.NumberBox { Value = 3, SpinButtonPlacementMode = Microsoft.UI.Xaml.Controls.NumberBoxSpinButtonPlacementMode.Compact });
+            if (v.Contains("toggle")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.ToggleSwitch { Header = "x" });
+            if (v.Contains("infobar")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.InfoBar { IsOpen = true, Message = "m" });
+            if (v.Contains("textbox")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.TextBox { PlaceholderText = "p" });
+            if (v.Contains("list")) { var lv = new Microsoft.UI.Xaml.Controls.ListView(); lv.Items.Add("one"); panel.Children.Add(lv); }
+            if (v.Contains("ring")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.ProgressRing { IsActive = true });
+            if (v.Contains("orangebar")) { var ob = new Orange.App.Views.SimpleProgressBar(); ob.Value = 0.4; panel.Children.Add(ob); var ob2 = new Orange.App.Views.SimpleProgressBar(); ob2.IsIndeterminate = true; panel.Children.Add(ob2); }
             if (v.Contains("button")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.Button { Content = "Cancel" });
             if (v.Contains("live")) Microsoft.UI.Xaml.Automation.AutomationProperties.SetLiveSetting(panel, Microsoft.UI.Xaml.Automation.Peers.AutomationLiveSetting.Polite);
             win.Content = panel;

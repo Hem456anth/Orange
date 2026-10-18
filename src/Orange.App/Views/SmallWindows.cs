@@ -152,7 +152,7 @@ public sealed class ProgressWindow : Window
 {
     private readonly TextBlock _title = new() { FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, FontSize = 15, TextTrimming = TextTrimming.CharacterEllipsis };
     private readonly TextBlock _status = new() { Opacity = 0.75, TextWrapping = TextWrapping.Wrap, MaxLines = 3 };
-    private readonly ProgressBar _bar = new() { Minimum = 0, Maximum = 1, IsIndeterminate = true };
+    private readonly SimpleProgressBar _bar = new() { IsIndeterminate = true };
     private readonly Button _primary = new() { Content = "Cancel" };
     private readonly Button _details = new() { Content = "Details", Visibility = Visibility.Collapsed };
     private IReadOnlyList<string> _outputs = Array.Empty<string>();
@@ -249,5 +249,47 @@ public sealed class ProgressWindow : Window
         w._primary.Content = "Close";
         w.Activate();
         _ = w.AutoClose();
+    }
+}
+
+/// <summary>
+/// A plain progress bar drawn with two rectangles. WinUI's ProgressBar crashed (0xC000027B in Microsoft.UI.Xaml.dll)
+/// when rendered in this unpackaged, self-contained build on Windows Server 2025 in CI, so Orange draws its own.
+/// </summary>
+public sealed class SimpleProgressBar : Grid
+{
+    private readonly Border _fill = new() { HorizontalAlignment = HorizontalAlignment.Left, CornerRadius = new CornerRadius(2) };
+    private double _value;
+    private bool _indeterminate, _error;
+    private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(40) };
+    private double _phase;
+
+    public SimpleProgressBar()
+    {
+        Height = 4;
+        CornerRadius = new CornerRadius(2);
+        Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0x33, 0x80, 0x80, 0x80));
+        _fill.Background = new SolidColorBrush(WheelControl.OrangeAccent);
+        Children.Add(_fill);
+        SizeChanged += (_, _) => Layout();
+        _timer.Tick += (_, _) => { _phase = (_phase + 0.025) % 1.3; Layout(); };
+        Unloaded += (_, _) => _timer.Stop();
+        Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(this, "Progress");
+    }
+
+    public double Value { get => _value; set { _value = double.IsFinite(value) ? Math.Clamp(value, 0, 1) : 0; Layout(); } }
+    public bool IsIndeterminate { get => _indeterminate; set { _indeterminate = value; if (value) _timer.Start(); else _timer.Stop(); Layout(); } }
+    public bool ShowError { get => _error; set { _error = value; _fill.Background = new SolidColorBrush(value ? Microsoft.UI.Colors.IndianRed : WheelControl.OrangeAccent); } }
+
+    private void Layout()
+    {
+        double w = ActualWidth;
+        if (w <= 0) return;
+        if (_indeterminate)
+        {
+            _fill.Width = w * 0.3;
+            _fill.Margin = new Thickness(Math.Max(0, (w * (_phase - 0.3))), 0, 0, 0);
+        }
+        else { _fill.Margin = new Thickness(0); _fill.Width = w * _value; }
     }
 }

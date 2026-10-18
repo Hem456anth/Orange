@@ -92,7 +92,8 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force evidence | Out-Null
-          foreach ($v in 'plain','bar','value','button','live','mica','acrylic','presenter','icon','mica-presenter-icon-bar-button-live','full') {
+          Get-ChildItem out/Orange -Recurse -Filter *.pri | ForEach-Object { "pri: $($_.FullName) $($_.Length)" } | Tee-Object -Append evidence/summary.txt
+          foreach ($v in 'plain','bar','nav','combo','number','toggle','infobar','textbox','list','ring','orangebar','full') {
             $p = Start-Process out/Orange/Orange.exe -ArgumentList '--uitest', $v -PassThru
             if (-not $p.WaitForExit(20000)) { $p.Kill(); $code = 'timeout' } else { $code = $p.ExitCode }
             "uitest $v exit=$code" | Tee-Object -Append evidence/summary.txt
