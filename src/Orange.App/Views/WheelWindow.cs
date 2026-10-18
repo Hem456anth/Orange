@@ -35,7 +35,7 @@ public sealed class WheelWindow : Window
     private readonly DragWatcher? _watcher;
     private List<object> _tags = new();
 
-    public static WheelWindow? Current { get; private set; }
+    public static WheelWindow? Active { get; private set; }
     public IntPtr Hwnd => _hwnd;
     public WheelControl Wheel => _wheel;
 
@@ -73,7 +73,7 @@ public sealed class WheelWindow : Window
         AppWindow.IsShownInSwitchers = false;
         var ex = (long)Native.GetWindowLongPtr(_hwnd, Native.GWL_EXSTYLE);
         Native.SetWindowLongPtr(_hwnd, Native.GWL_EXSTYLE, new IntPtr(ex | Native.WS_EX_TOOLWINDOW | Native.WS_EX_TOPMOST));
-        Closed += (_, _) => { _closed = true; _watcher?.SetWheelOpen(false, _kind); if (Current == this) Current = null; Diagnostics.Event("wheel-closed"); };
+        Closed += (_, _) => { _closed = true; _watcher?.SetWheelOpen(false, _kind); if (Active == this) Active = null; Diagnostics.Event("wheel-closed"); };
         if (_watcher != null)
         {
             _watcher.WheelKindChanged += OnKindChanged;
@@ -95,9 +95,9 @@ public sealed class WheelWindow : Window
     /// <summary>Shows the wheel centred on a screen point (physical pixels), clamped to that monitor's work area.</summary>
     public static WheelWindow Open(WheelKind kind, IReadOnlyList<string> files, Native.POINT at, bool dragMode, DragWatcher? watcher)
     {
-        Current?.Close();
+        Active?.Close();
         var w = new WheelWindow(watcher) { _dragMode = dragMode };
-        Current = w;
+        Active = w;
         w._files = files;
         w.SetKind(kind);
         w.Place(at);

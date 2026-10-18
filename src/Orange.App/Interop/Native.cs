@@ -4,7 +4,7 @@ using System.Text;
 namespace Orange.App.Interop;
 
 /// <summary>Win32 declarations used by Orange. Kept in one place so the surface is auditable.</summary>
-internal static partial class Native
+public static partial class Native
 {
     public const int WH_KEYBOARD_LL = 13, WH_MOUSE_LL = 14;
     public const int WM_KEYDOWN = 0x0100, WM_KEYUP = 0x0101, WM_SYSKEYDOWN = 0x0104, WM_SYSKEYUP = 0x0105;

@@ -137,22 +137,22 @@ jobs:
       - name: Publish evidence to ci-evidence branch
         if: always()
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $log = "evidence/app-build.log"
           if (Test-Path $log) { Select-String -Path $log -Pattern 'error|warn' | Select-Object -First 200 | ForEach-Object Line | Out-File evidence/app-build-errors.txt }
-          git config user.name "orange-ci"; git config user.email "orange-ci@users.noreply.github.com"
-          $dest = "run-${{ github.run_number }}"
-          Copy-Item evidence $env:RUNNER_TEMP\ev -Recurse
-          git fetch origin ci-evidence 2>$null
-          git switch --orphan ci-evidence-tmp
-          git rm -rfq . 2>$null
-          if (git ls-remote --heads origin ci-evidence) { git checkout origin/ci-evidence -- . 2>$null }
+          Get-ChildItem evidence -Recurse -Directory | Where-Object { $_.Name -in 'work','a','explorer-source' } | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+          $repo = "$env:RUNNER_TEMP\evrepo"
+          $url = "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
+          git clone -q --depth 1 -b ci-evidence $url $repo 2>$null
+          if (-not (Test-Path "$repo\.git")) { git init -q -b ci-evidence $repo; git -C $repo remote add origin $url }
+          Get-ChildItem $repo -Exclude .git | Where-Object { $_.Name -notlike 'run-*' } | Remove-Item -Recurse -Force
+          $dest = "$repo\run-${{ github.run_number }}"
           New-Item -ItemType Directory -Force $dest | Out-Null
-          Copy-Item "$env:RUNNER_TEMP\ev\*" $dest -Recurse -Force
-          Get-ChildItem $dest -Recurse -Include *.log | Where-Object Length -gt 900KB | ForEach-Object { Get-Content $_ -Tail 4000 | Set-Content $_ }
-          Get-ChildItem $dest -Recurse -Directory -Filter work | Remove-Item -Recurse -Force
-          Get-ChildItem $dest -Recurse -Directory -Filter a | Remove-Item -Recurse -Force
-          Get-ChildItem $dest -Recurse -Directory -Filter explorer-source | Remove-Item -Recurse -Force
-          git add -A
-          git commit -qm "evidence for run ${{ github.run_number }} (${{ github.sha }})"
-          git push -f origin HEAD:ci-evidence
+          Copy-Item evidence\* $dest -Recurse -Force
+          Get-ChildItem $dest -Recurse -Include *.log | Where-Object Length -gt 900KB | ForEach-Object { $t = Get-Content $_ -Tail 4000; Set-Content $_ $t }
+          git -C $repo config user.name "orange-ci"; git -C $repo config user.email "orange-ci@users.noreply.github.com"
+          git -C $repo add -A
+          git -C $repo commit -qm "evidence for run ${{ github.run_number }} (${{ github.sha }})"
+          git -C $repo push -q origin HEAD:ci-evidence
