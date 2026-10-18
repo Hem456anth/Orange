@@ -28,7 +28,7 @@ public static class Program
             }
             main.Activated += (_, e) => App.OnRedirected(e);
         }
-        Application.Start(_ =>
+        Application.Start(p =>
         {
             var ctx = new DispatcherQueueSynchronizationContext(DispatcherQueue.GetForCurrentThread());
             SynchronizationContext.SetSynchronizationContext(ctx);
