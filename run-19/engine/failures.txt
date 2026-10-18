@@ -1,0 +1,18 @@
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.md", ext: "epub") [524 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [267 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "bmp") [58 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [632 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [58 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [4 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [632 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [58 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [4 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "ico") [67 ms]
+  Passed Orange.Core.Tests.MediaConversionTests.Wav_converts(ext: "wma") [2 s]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [29 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_bomb_is_rejected [5 ms]
+Total tests: 128
+     Passed: 127
+    Skipped: 1
+ Total time: 21.2317 Seconds
