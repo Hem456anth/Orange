@@ -1,0 +1,17 @@
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.UI.pri 101528
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.UI.Xaml.Controls.pri 1258296
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.WindowsAppRuntime.pri 8648
+uitest plain exit=0
+uitest bar exit=-1073741189
+uitest nav exit=-1073741189
+uitest combo exit=0
+uitest number exit=-1073741189
+uitest toggle exit=0
+uitest infobar exit=-1073741189
+uitest textbox exit=0
+uitest list exit=0
+uitest ring exit=-1073741189
+uitest orangebar exit=-1073741189
+uitest full exit=0
+selftest exit=1
+probe exit=1
