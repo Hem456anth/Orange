@@ -1,0 +1,50 @@
+[
+  {
+    "Name": "low-level mouse\u002Bkeyboard hooks install",
+    "Passed": true,
+    "Required": true,
+    "Detail": "SetWindowsHookEx WH_MOUSE_LL/WH_KEYBOARD_LL ok"
+  },
+  {
+    "Name": "global hotkey registers",
+    "Passed": true,
+    "Required": false,
+    "Detail": "RegisterHotKey ok"
+  },
+  {
+    "Name": "tray icon",
+    "Passed": true,
+    "Required": false,
+    "Detail": "Shell_NotifyIcon ok"
+  },
+  {
+    "Name": "context menu verb (HKCU) install/remove",
+    "Passed": true,
+    "Required": true,
+    "Detail": "\u0022D:\\a\\Orange\\Orange\\out\\Orange\\Orange.exe\u0022 --wheel \u0022%1\u0022"
+  },
+  {
+    "Name": "Send To shortcut install/remove",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "wheel: PNG convert items",
+    "Passed": true,
+    "Required": true,
+    "Detail": "convert=JPG,WebP,TIFF,BMP,GIF,AVIF,ICO,PDF tools=Compress,Resize,Crop,Rotate,Remove metadata,Grayscale"
+  },
+  {
+    "Name": "wheel: hit-testing maps wedge centres back to wedges",
+    "Passed": true,
+    "Required": true,
+    "Detail": "8 wedges"
+  },
+  {
+    "Name": "wheel: MP4 and two-PDF selections are context-aware",
+    "Passed": true,
+    "Required": true,
+    "Detail": "mp4=MOV,MKV,WebM,AVI,GIF,MP3,M4A,WAV | 2 pdf tools=Merge PDFs,Split,Rotate,Compress,Extract images,Remove metadata"
+  }
+]

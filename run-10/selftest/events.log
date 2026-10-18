@@ -1,0 +1,22 @@
+2026-10-18T16:12:47.2507953Z hooks-installed
+2026-10-18T16:12:47.6565921Z wheel-kind Convert items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:12:47.6729553Z highlight 0
+2026-10-18T16:12:47.6887759Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:12:48.4519439Z highlight 1
+2026-10-18T16:12:48.6453970Z wheel-kind Tools items=Compress|Resize|Crop|Rotate|Remove metadata|Grayscale
+2026-10-18T16:12:49.0987327Z wheel-kind Actions items=Share|Copy|Move to…|Copy path|Terminal|Show in folder
+2026-10-18T16:12:49.4293649Z wheel-kind Convert items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:12:49.7565892Z wheel-closed
+2026-10-18T16:12:49.7789789Z wheel-kind Convert items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:12:49.7857135Z highlight 0
+2026-10-18T16:12:49.7873630Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:12:50.1922604Z wheel-closed
+2026-10-18T16:12:51.5382861Z wheel-kind Convert items=MOV|MKV|WebM|AVI|GIF|MP3|M4A|WAV
+2026-10-18T16:12:51.5444158Z highlight 0
+2026-10-18T16:12:51.5457852Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=MOV|MKV|WebM|AVI|GIF|MP3|M4A|WAV
+2026-10-18T16:12:52.1127351Z wheel-closed
+2026-10-18T16:12:52.1354993Z wheel-kind Tools items=Merge PDFs|Split|Rotate|Compress|Extract images|Remove metadata
+2026-10-18T16:12:52.1423401Z highlight 0
+2026-10-18T16:12:52.1436631Z wheel-shown kind=Tools drag=False files=2 rect=322,170,702,550 items=Merge PDFs|Split|Rotate|Compress|Extract images|Remove metadata
+2026-10-18T16:12:52.6984715Z wheel-closed
+2026-10-18T16:12:52.7159376Z run-start image.to.webp 1
