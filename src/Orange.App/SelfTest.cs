@@ -40,7 +40,8 @@ public static class SelfTest
         async Task Try(string name, bool required, Func<Task<string>> body)
         {
             try { var d = await body(); checks.Add(new Check(name, true, required, d)); }
-            catch (Exception e) { checks.Add(new Check(name, false, required, e.GetType().Name + ": " + e.Message)); }
+            catch (Exception e) { checks.Add(new Check(name, false, required, e.ToString())); }
+            await File.WriteAllTextAsync(Path.Combine(outDir, "selftest-progress.json"), JsonSerializer.Serialize(checks, new JsonSerializerOptions { WriteIndented = true }));
         }
 
         await Try("low-level mouse+keyboard hooks install", true, () =>

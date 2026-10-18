@@ -92,6 +92,8 @@ jobs:
         env:
           ORANGE_FIXTURES: ${{ github.workspace }}\tests\fixtures
         run: |
+          New-Item -ItemType Directory -Force evidence/selftest | Out-Null
+          $env:ORANGE_TEST_EVENTS = "$PWD\evidence\selftest\events.log"
           $p = Start-Process out/Orange/Orange.exe -ArgumentList '--selftest', "$PWD\evidence\selftest" -PassThru -Wait
           Get-Content evidence/selftest/selftest.json -ErrorAction SilentlyContinue | Write-Host
           "selftest exit=$($p.ExitCode)" | Tee-Object -Append evidence/summary.txt
@@ -103,6 +105,7 @@ jobs:
           dotnet build tests/Orange.DragProbe -c Release -o out/probe 2>&1 | Out-File evidence/probe-build.log
           $p = Start-Process out/probe/Orange.DragProbe.exe -ArgumentList "$PWD\out\Orange\Orange.exe", "$PWD\tests\fixtures", "$PWD\evidence\probe" -PassThru -Wait
           Get-Content evidence/probe/probe.json -ErrorAction SilentlyContinue | Write-Host
+          Copy-Item "$env:LOCALAPPDATA\Orange\crash.log" evidence/ -ErrorAction SilentlyContinue
           "probe exit=$($p.ExitCode)" | Tee-Object -Append evidence/summary.txt
       - name: Package (portable zip + per-user installer)
         shell: pwsh

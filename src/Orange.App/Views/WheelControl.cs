@@ -135,7 +135,7 @@ public sealed class WheelControl : Grid
             var (shape, _, text, icon) = _segments[i];
             bool on = i == _highlight;
             shape.Fill = on ? hot : wedge;
-            shape.Stroke = hc ? fg : null; shape.StrokeThickness = hc ? 1 : 0;
+            shape.Stroke = hc ? fg : on ? null : new SolidColorBrush(dark ? Color.FromArgb(0x40, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x30, 0, 0, 0)); shape.StrokeThickness = 1;
             text.Foreground = on ? hotFg : fg;
             if (icon != null) icon.Foreground = on ? hotFg : fg;
         }

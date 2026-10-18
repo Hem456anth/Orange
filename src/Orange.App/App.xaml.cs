@@ -26,7 +26,7 @@ public partial class App : Application
         {
             e.Handled = true;
             try { File.AppendAllText(Path.Combine(AppSettings.Folder, "crash.log"), $"{DateTime.Now:O} {e.Exception}\n"); } catch { }
-            Diagnostics.Event("unhandled " + e.Exception.GetType().Name + ": " + e.Exception.Message);
+            Diagnostics.Event("unhandled " + e.Exception.ToString().Replace(Environment.NewLine, " | "));
         };
     }
 
@@ -42,21 +42,23 @@ public partial class App : Application
 
         if (args.Count >= 1 && args[0] == "--selftest")
         {
-            ExitCode = await SelfTest.RunAsync(args.Count > 1 ? args[1] : Path.Combine(Path.GetTempPath(), "orange-selftest"));
+            ExitCode = 3;
+            try { ExitCode = await SelfTest.RunAsync(args.Count > 1 ? args[1] : Path.Combine(Path.GetTempPath(), "orange-selftest")); }
+            catch (Exception e) { Diagnostics.Event("selftest-crashed " + e); ExitCode = 4; }
             Exit();
             return;
         }
 
-        ConversionService.InitNotifications();
-        Main = new MainWindow();
+        Step("notifications", ConversionService.InitNotifications);
+        Step("main-window", () => Main = new MainWindow());
 
-        Tray = new TrayAndHotkey();
-        Tray.ShowTray();
+        Step("tray", () => { Tray = new TrayAndHotkey(); Tray.ShowTray(); });
+        Tray ??= new TrayAndHotkey();
         Tray.OpenRequested += () => Main.ShowWindow();
         Tray.SettingsRequested += () => { Main.ShowWindow(); };
         Tray.QuitRequested += Quit;
         Tray.HotkeyPressed += OnHotkey;
-        if (settings.HotkeyEnabled) Tray.RegisterHotkey(settings.Hotkey);
+        if (settings.HotkeyEnabled) Step("hotkey", () => Tray.RegisterHotkey(settings.Hotkey));
 
         Watcher = new DragWatcher(_ui) { Enabled = settings.DragActivation };
         Watcher.WheelRequested += (kind, pt, src) =>
@@ -71,6 +73,12 @@ public partial class App : Application
         if (args.Count > 0 && args[0] == "--wheel") Queue(args.Skip(1));
         else if (!args.Contains("--background")) Main.ShowWindow();
         Diagnostics.Event("ready");
+    }
+
+    private static void Step(string name, Action a)
+    {
+        try { a(); Diagnostics.Event("step-ok " + name); }
+        catch (Exception e) { Diagnostics.Event($"step-failed {name} {e.ToString().Replace(Environment.NewLine, " | ")}"); }
     }
 
     /// <summary>A second launch's arguments arrive here (on a background thread).</summary>
