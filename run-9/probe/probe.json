@@ -1,0 +1,23 @@
+{
+  "os": "Microsoft Windows NT 10.0.26100.0",
+  "results": [
+    {
+      "name": "startup",
+      "passed": true,
+      "skipped": false,
+      "detail": "hooks installed"
+    },
+    {
+      "name": "A: OLE drag from a window, tap Shift, drop on WebP",
+      "passed": false,
+      "skipped": false,
+      "detail": "wheel did not appear after Shift: 2026-10-18T16:06:31.8102729Z step-ok notifications / 2026-10-18T16:06:31.9108432Z step-ok main-window / 2026-10-18T16:06:31.9245889Z step-ok tray / 2026-10-18T16:06:31.9257693Z step-ok hotkey / 2026-10-18T16:06:31.9267206Z hooks-installed / 2026-10-18T16:06:31.9268603Z ready; DoDragDrop effect=None; output exists=False; source kept=True"
+    },
+    {
+      "name": "B: real File Explorer drag, tap Shift, drop on WebP",
+      "passed": false,
+      "skipped": false,
+      "detail": "wheel did not appear after Shift: 2026-10-18T16:06:31.8102729Z step-ok notifications / 2026-10-18T16:06:31.9108432Z step-ok main-window / 2026-10-18T16:06:31.9245889Z step-ok tray / 2026-10-18T16:06:31.9257693Z step-ok hotkey / 2026-10-18T16:06:31.9267206Z hooks-installed / 2026-10-18T16:06:31.9268603Z ready; ; output exists=False; source kept despite Shift=True"
+    }
+  ]
+}
