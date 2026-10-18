@@ -73,6 +73,7 @@ public sealed class DragWatcher : IDisposable
                         Math.Abs(ms.pt.Y - _downAt.Y) > Native.GetSystemMetrics(Native.SM_CYDRAG))
                     {
                         _dragging = true;
+                        Diagnostics.Event($"drag-start eligible={_eligible}");
                         // Key already held when the drag starts ("hold Shift while dragging").
                         if (_eligible && !_wheelOpen && HeldWheelKey() is { } held) Raise(held, ms.pt);
                     }
@@ -93,6 +94,8 @@ public sealed class DragWatcher : IDisposable
         {
             var kb = Marshal.PtrToStructure<Native.KBDLLHOOKSTRUCT>(lParam);
             bool repeat = (kb.flags & 0x80) == 0 && IsAutoRepeat(kb.vkCode);
+            if (Diagnostics.Enabled && kb.vkCode is 0x10 or 0xA0 or 0xA1 or 0x11 or 0xA2 or 0xA3 or 0x12 or 0xA4 or 0xA5)
+                Diagnostics.Event($"key {kb.vkCode} dragging={_dragging} eligible={_eligible} open={_wheelOpen}");
             if (kb.vkCode == Native.VK_ESCAPE && _wheelOpen) _ui.TryEnqueue(() => CancelRequested?.Invoke());
             else if (!repeat && KindFor((int)kb.vkCode) is { } kind)
             {

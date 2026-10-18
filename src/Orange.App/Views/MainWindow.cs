@@ -58,7 +58,8 @@ public sealed class MainWindow : Window
         AppWindow.Closing += (_, e) => { e.Cancel = true; AppWindow.Hide(); };   // closing hides; Quit is in the tray menu
         WindowHelpers.Place(this, 980, 680, bottomRight: false);
         _ready = true;
-        _nav.SelectedItem = _nav.MenuItems[0];
+        // NavigationView rejects SelectedItem before its template is applied.
+        _nav.Loaded += (_, _) => { if (_nav.SelectedItem is null) _nav.SelectedItem = _nav.MenuItems[0]; };
     }
 
     private static NavigationViewItem Item(string text, string glyph, string tag) =>

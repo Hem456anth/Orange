@@ -108,17 +108,16 @@ internal static class Probe
         while (sw.ElapsedMilliseconds < 20_000 && item is null)
         {
             Thread.Sleep(500);
-            window = AutomationElement.RootElement.FindFirst(TreeScope.Children, new AndCondition(
-                new PropertyCondition(AutomationElement.ClassNameProperty, "CabinetWClass"),
-                new PropertyCondition(AutomationElement.NameProperty, "explorer-source")));
-            item = window?.FindFirst(TreeScope.Descendants, new AndCondition(
-                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem),
-                new OrCondition(new PropertyCondition(AutomationElement.NameProperty, "explorer-file"), new PropertyCondition(AutomationElement.NameProperty, "explorer-file.png"))));
+            window = AutomationElement.RootElement.FindAll(TreeScope.Children, new PropertyCondition(AutomationElement.ClassNameProperty, "CabinetWClass"))
+                .Cast<AutomationElement>().FirstOrDefault(w => w.Current.Name.Contains("explorer-source", StringComparison.OrdinalIgnoreCase));
+            item = window?.FindAll(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+                .Cast<AutomationElement>().FirstOrDefault(i => i.Current.Name.StartsWith("explorer-file", StringComparison.OrdinalIgnoreCase));
         }
         if (item is null)
         {
             Shot(Path.Combine(outDir, "b-no-explorer.png"));
-            Record("B: real File Explorer drag, tap Shift, drop on WebP", false, "Couldn't find the Explorer window or file via UI Automation (no interactive shell?)", skipped: true);
+            var names = string.Join(" | ", AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition).Cast<AutomationElement>().Select(e => $"{e.Current.ClassName}:{e.Current.Name}").Take(15));
+            Record("B: real File Explorer drag, tap Shift, drop on WebP", false, $"Couldn't find the Explorer window or file via UI Automation. Top-level windows: {names}", skipped: true);
             return;
         }
         var hwnd = new IntPtr(window!.Current.NativeWindowHandle);

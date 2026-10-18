@@ -180,6 +180,13 @@ public sealed class WheelWindow : Window
     }
     private static string Size(long b) => b < 1024 ? $"{b} B" : b < 1 << 20 ? $"{b / 1024.0:0} KB" : b < 1 << 30 ? $"{b / 1048576.0:0.0} MB" : $"{b / 1073741824.0:0.00} GB";
 
+    /// <summary>Fills in files learned later (Explorer selection) unless the drag already told us.</summary>
+    public void SuggestFiles(IReadOnlyList<string> files)
+    {
+        if (_closed || _files.Count > 0) return;
+        _files = files; SetKind(_kind); _ = LoadThumbnailAsync();
+    }
+
     private async Task LoadThumbnailAsync()
     {
         try

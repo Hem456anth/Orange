@@ -22,6 +22,8 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+        // Orange lives in the tray: closing the wheel or a progress window must never quit the app.
+        DispatcherShutdownMode = DispatcherShutdownMode.OnExplicitShutdown;
         UnhandledException += (_, e) =>
         {
             e.Handled = true;
@@ -63,9 +65,16 @@ public partial class App : Application
         Watcher = new DragWatcher(_ui) { Enabled = settings.DragActivation };
         Watcher.WheelRequested += (kind, pt, src) =>
         {
-            var files = ExplorerSelection.Get(src);
-            Diagnostics.Event($"wheel-requested {kind} at={pt.X},{pt.Y} selection={files.Count}");
-            WheelWindow.Open(kind, files, pt, dragMode: true, Watcher);
+            Diagnostics.Event($"wheel-requested {kind} at={pt.X},{pt.Y}");
+            // Open at once; the Explorer selection (a cross-process COM call) is read off the UI thread so the
+            // input hooks are never starved, and the real drag payload replaces it on DragEnter anyway.
+            var w = WheelWindow.Open(kind, Array.Empty<string>(), pt, dragMode: true, Watcher);
+            _ = ExplorerSelection.GetAsync(src, TimeSpan.FromMilliseconds(1500)).ContinueWith(t =>
+            {
+                var files = t.Result;
+                Diagnostics.Event($"selection {files.Count}");
+                if (files.Count > 0) _ui!.TryEnqueue(() => w.SuggestFiles(files));
+            });
         };
         try { Watcher.Start(); }
         catch (Exception e) { Diagnostics.Event("hooks-failed " + e.Message); ProgressWindow.ShowError("Orange", "Drag activation is unavailable on this PC.", e.Message); }

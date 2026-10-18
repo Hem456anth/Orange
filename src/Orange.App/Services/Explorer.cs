@@ -47,6 +47,17 @@ public static class ExplorerSelection
         return result;
     }
 
+    /// <summary>Runs <see cref="Get"/> on its own STA thread with a time limit.</summary>
+    public static Task<IReadOnlyList<string>> GetAsync(IntPtr hwnd, TimeSpan timeout)
+    {
+        var tcs = new TaskCompletionSource<IReadOnlyList<string>>();
+        var t = new Thread(() => { try { tcs.TrySetResult(Get(hwnd)); } catch { tcs.TrySetResult(Array.Empty<string>()); } }) { IsBackground = true };
+        t.SetApartmentState(ApartmentState.STA);
+        t.Start();
+        _ = Task.Delay(timeout).ContinueWith(_ => tcs.TrySetResult(Array.Empty<string>()));
+        return tcs.Task;
+    }
+
     public static bool IsExplorerWindow(IntPtr hwnd)
     {
         var root = Native.GetAncestor(hwnd, 2);
