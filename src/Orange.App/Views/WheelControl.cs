@@ -127,9 +127,9 @@ public sealed class WheelControl : Grid
         bool dark = ActualTheme == ElementTheme.Dark;
         bool hc = new Windows.UI.ViewManagement.AccessibilitySettings().HighContrast;
         var wedge = new SolidColorBrush(hc ? (dark ? Colors.Black : Colors.White) : dark ? Color.FromArgb(0xD0, 0x2B, 0x2B, 0x2B) : Color.FromArgb(0xE6, 0xFF, 0xFF, 0xFF));
-        var hot = new SolidColorBrush(hc ? (Color)Application.Current.Resources["SystemColorHighlightColor"] : OrangeAccent);
+        var hot = new SolidColorBrush(hc ? Res("SystemColorHighlightColor", Colors.Blue) : OrangeAccent);
         var fg = new SolidColorBrush(dark || hc && dark ? Colors.White : Color.FromArgb(255, 0x1A, 0x1A, 0x1A));
-        var hotFg = new SolidColorBrush(hc ? (Color)Application.Current.Resources["SystemColorHighlightTextColor"] : Colors.White);
+        var hotFg = new SolidColorBrush(hc ? Res("SystemColorHighlightTextColor", Colors.White) : Colors.White);
         for (int i = 0; i < _segments.Count; i++)
         {
             var (shape, _, text, icon) = _segments[i];
@@ -142,6 +142,11 @@ public sealed class WheelControl : Grid
         _centerDisc.Fill = new SolidColorBrush(dark ? Color.FromArgb(0xF0, 0x20, 0x20, 0x20) : Color.FromArgb(0xF5, 0xFA, 0xFA, 0xFA));
         _pillBorder.Background = new SolidColorBrush(_highlight >= 0 ? OrangeAccent : dark ? Color.FromArgb(0xFF, 0x3A, 0x3A, 0x3A) : Color.FromArgb(0xFF, 0xEC, 0xEC, 0xEC));
         _pill.Foreground = _highlight >= 0 ? new SolidColorBrush(Colors.White) : fg;
+    }
+
+    private static Color Res(string key, Color fallback)
+    {
+        try { return Application.Current.Resources.TryGetValue(key, out var v) && v is Color c ? c : fallback; } catch { return fallback; }
     }
 
     private Geometry Sector(double a0Deg, double a1Deg, double r0, double r1)

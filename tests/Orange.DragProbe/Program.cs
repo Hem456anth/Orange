@@ -131,7 +131,7 @@ internal static class Probe
         finally { Input.LeftUp(); }
         var produced = Path.Combine(work, "explorer-file.webp");
         var done = WaitFor("run-done image.to.webp", 30_000, mark);
-        var selection = File.ReadAllLines(_events).Skip(mark).FirstOrDefault(l => l.Contains("wheel-requested")) ?? "";
+        var selection = ReadLines().Skip(mark).FirstOrDefault(l => l.Contains("wheel-requested")) ?? "";
         ok = ok && done && File.Exists(produced) && File.Exists(file);
         Record("B: real File Explorer drag, tap Shift, drop on WebP", ok,
             $"{outcome}; {selection.Split(' ').Skip(1).DefaultIfEmpty("").Aggregate((a, b) => a + " " + b)}; output exists={File.Exists(produced)}; source kept despite Shift={File.Exists(file)}");
@@ -148,13 +148,13 @@ internal static class Probe
         Thread.Sleep(300);
         Input.TapShift();
         if (!WaitFor("wheel-shown", 5000, mark)) { Shot(Path.Combine(outDir, $"{tag}-no-wheel.png")); outcome = "wheel did not appear after Shift: " + Tail(); return false; }
-        var line = File.ReadAllLines(_events).Skip(mark).First(l => l.Contains("wheel-shown"));
+        var line = ReadLines().Skip(mark).First(l => l.Contains("wheel-shown"));
         var rect = Field(line, "rect").Split(',').Select(int.Parse).ToArray();
         // The wheel learns the dragged files on DragEnter (or from the Explorer selection): nudge the cursor and re-read.
         Native.GetCursorPos(out var c0);
         for (int i = 0; i < 8; i++) { Input.MoveTo(c0.X + (i % 2) * 3, c0.Y + (i % 2) * 2); Thread.Sleep(80); }
         Thread.Sleep(500);
-        var kindLine = File.ReadAllLines(_events).Skip(mark).LastOrDefault(l => l.Contains("wheel-kind")) ?? line;
+        var kindLine = ReadLines().Skip(mark).LastOrDefault(l => l.Contains("wheel-kind")) ?? line;
         var items = Field(kindLine, "items").Split('|');
         int idx = Array.IndexOf(items, wedge);
         if (idx < 0) { outcome = $"wedge {wedge} not in [{string.Join(",", items)}]"; return false; }
@@ -165,23 +165,36 @@ internal static class Probe
         for (int i = 1; i <= 20; i++) { Input.MoveTo(cur.X + (tx - cur.X) * i / 20, cur.Y + (ty - cur.Y) * i / 20); Thread.Sleep(30); }
         for (int i = 0; i < 6; i++) { Input.MoveTo(tx + (i % 2), ty); Thread.Sleep(60); }   // let DragOver fire on the wedge
         Shot(Path.Combine(outDir, $"{tag}-wheel-over-{wedge}.png"));
-        var highlighted = File.ReadAllLines(_events).Skip(mark).LastOrDefault(l => l.Contains(" highlight ")) ?? "none";
+        var highlighted = ReadLines().Skip(mark).LastOrDefault(l => l.Contains(" highlight ")) ?? "none";
         Input.LeftUp();
         bool dropped = WaitFor("drop index=", 5000, mark);
-        outcome = $"wheel rect={string.Join(",", rect)} items={string.Join(",", items)} target={idx} last {highlighted.Split(' ').Last()} drop={(dropped ? File.ReadAllLines(_events).Skip(mark).First(l => l.Contains("drop index=")).Split(' ').Last() : "none")}";
+        outcome = $"wheel rect={string.Join(",", rect)} items={string.Join(",", items)} target={idx} last {highlighted.Split(' ').Last()} drop={(dropped ? ReadLines().Skip(mark).First(l => l.Contains("drop index=")).Split(' ').Last() : "none")}";
         return dropped;
     }
 
     // ---------------- helpers
     private static string Field(string line, string name) => line.Split(' ').First(p => p.StartsWith(name + "="))[(name.Length + 1)..];
-    private static int EventCount() { try { return File.ReadAllLines(_events).Length; } catch { return 0; } }
-    private static string Tail() { try { return string.Join(" / ", File.ReadAllLines(_events).TakeLast(6)); } catch { return ""; } }
+    private static string[] ReadLines()
+    {
+        for (int i = 0; ; i++)
+        {
+            try
+            {
+                using var fs = new FileStream(_events, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                using var r = new StreamReader(fs);
+                return r.ReadToEnd().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+            }
+            catch (IOException) when (i < 20) { Thread.Sleep(20); }
+        }
+    }
+    private static int EventCount() { try { return ReadLines().Length; } catch { return 0; } }
+    private static string Tail() { try { return string.Join(" / ", ReadLines().TakeLast(6)); } catch { return ""; } }
     private static bool WaitFor(string text, int ms, int fromLine = 0)
     {
         var sw = Stopwatch.StartNew();
         while (sw.ElapsedMilliseconds < ms)
         {
-            try { if (File.ReadAllLines(_events).Skip(fromLine).Any(l => l.Contains(text))) return true; } catch (IOException) { }
+            try { if (ReadLines().Skip(fromLine).Any(l => l.Contains(text))) return true; } catch (IOException) { }
             Thread.Sleep(100);
         }
         return false;

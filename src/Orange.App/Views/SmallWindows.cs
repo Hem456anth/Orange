@@ -150,7 +150,7 @@ public sealed class OptionsWindow : Window
 /// <summary>Small bottom-right window: "Converting to MP3 · 42%", then "1 of 1 saved" with Show in folder.</summary>
 public sealed class ProgressWindow : Window
 {
-    private readonly TextBlock _title = new() { Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"], TextTrimming = TextTrimming.CharacterEllipsis };
+    private readonly TextBlock _title = new() { FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, FontSize = 15, TextTrimming = TextTrimming.CharacterEllipsis };
     private readonly TextBlock _status = new() { Opacity = 0.75, TextWrapping = TextWrapping.Wrap, MaxLines = 3 };
     private readonly ProgressBar _bar = new() { Minimum = 0, Maximum = 1, IsIndeterminate = true };
     private readonly Button _primary = new() { Content = "Cancel" };

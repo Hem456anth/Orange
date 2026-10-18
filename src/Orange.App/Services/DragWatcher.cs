@@ -58,6 +58,12 @@ public sealed class DragWatcher : IDisposable
 
     private IntPtr MouseHook(int nCode, IntPtr wParam, IntPtr lParam)
     {
+        try { MouseCore(nCode, wParam, lParam); } catch { /* never let an exception escape into the OS input chain */ }
+        return Native.CallNextHookEx(_mouseHook, nCode, wParam, lParam);
+    }
+
+    private void MouseCore(int nCode, IntPtr wParam, IntPtr lParam)
+    {
         if (nCode >= 0 && Enabled)
         {
             var ms = Marshal.PtrToStructure<Native.MSLLHOOKSTRUCT>(lParam);
@@ -85,10 +91,15 @@ public sealed class DragWatcher : IDisposable
                     break;
             }
         }
-        return Native.CallNextHookEx(_mouseHook, nCode, wParam, lParam);
     }
 
     private IntPtr KeyHook(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        try { KeyCore(nCode, wParam, lParam); } catch { }
+        return Native.CallNextHookEx(_keyHook, nCode, wParam, lParam);
+    }
+
+    private void KeyCore(int nCode, IntPtr wParam, IntPtr lParam)
     {
         if (nCode >= 0 && Enabled && ((int)wParam is Native.WM_KEYDOWN or Native.WM_SYSKEYDOWN))
         {
@@ -105,7 +116,6 @@ public sealed class DragWatcher : IDisposable
             _lastDown = kb.vkCode;
         }
         else if (nCode >= 0 && ((int)wParam is Native.WM_KEYUP or Native.WM_SYSKEYUP)) _lastDown = 0;
-        return Native.CallNextHookEx(_keyHook, nCode, wParam, lParam);
     }
 
     private uint _lastDown;
@@ -170,11 +180,35 @@ public sealed class DragWatcher : IDisposable
 public static class Diagnostics
 {
     private static readonly string? PathOut = Environment.GetEnvironmentVariable("ORANGE_TEST_EVENTS");
-    private static readonly object Gate = new();
+    private static readonly System.Collections.Concurrent.BlockingCollection<string> Queue = new();
     public static bool Enabled => PathOut is not null;
+
+    static Diagnostics()
+    {
+        if (PathOut is null) return;
+        // A writer thread so callers (including the input hooks) never block on, or fail because of, file I/O.
+        new Thread(() =>
+        {
+            foreach (var line in Queue.GetConsumingEnumerable())
+            {
+                for (int attempt = 0; attempt < 20; attempt++)
+                {
+                    try
+                    {
+                        using var fs = new FileStream(PathOut, FileMode.Append, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
+                        using var w = new StreamWriter(fs);
+                        w.WriteLine(line);
+                        break;
+                    }
+                    catch (IOException) { Thread.Sleep(10); }
+                }
+            }
+        }) { IsBackground = true, Name = "orange-diagnostics" }.Start();
+    }
+
     public static void Event(string what)
     {
         if (PathOut is null) return;
-        lock (Gate) File.AppendAllText(PathOut, $"{DateTime.UtcNow:O} {what}{Environment.NewLine}");
+        Queue.Add($"{DateTime.UtcNow:O} {what}");
     }
 }
