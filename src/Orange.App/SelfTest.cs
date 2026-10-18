@@ -57,7 +57,7 @@ public static class SelfTest
         {
             using var w = new DragWatcher(ui); w.Start(); return Task.FromResult("SetWindowsHookEx WH_MOUSE_LL/WH_KEYBOARD_LL ok");
         });
-        await Try("hooks receive injected mouse input", true, async () =>
+        await Try("hooks receive injected mouse input (needs an active input desktop)", false, async () =>
         {
             using var w = new DragWatcher(ui); w.Start();
             Native.GetCursorPos(out var p0);
@@ -135,6 +135,31 @@ public static class SelfTest
             var pt = p.Wheel.Items.Select(i => i.Title).ToList(); p.Close();
             if (!pt.Contains("Merge PDFs")) throw new Exception("Merge PDFs missing: " + string.Join(",", pt));
             return "mp4=" + string.Join(",", vt) + " | 2 pdf tools=" + string.Join(",", pt);
+        });
+
+        await Try("main window renders (convert, settings, about)", true, async () =>
+        {
+            var m = new MainWindow();
+            m.ShowWindow();
+            await Task.Delay(1200);
+            await Shot(m, Path.Combine(outDir, "main-convert.png"));
+            m.ShowConvert([W("sample.png")], "");
+            await Task.Delay(800);
+            await Shot(m, Path.Combine(outDir, "main-convert-png.png"));
+            m.ShowPage("settings"); await Task.Delay(800);
+            await Shot(m, Path.Combine(outDir, "main-settings.png"));
+            m.ShowPage("about"); await Task.Delay(500);
+            await Shot(m, Path.Combine(outDir, "main-about.png"));
+            m.AppWindow.Hide();
+            return "ok";
+        });
+        await Try("options sheet renders", true, async () =>
+        {
+            var t = OptionsWindow.AskAsync(ConversionService.Instance.Registry.Get("video.trim"), [W("sample.mp4")], new Dictionary<string, string>());
+            await Task.Delay(1200);
+            if (OptionsWindow.Last is { } ow) { await Shot(ow, Path.Combine(outDir, "options-trim.png")); ow.Close(); }
+            await Task.WhenAny(t, Task.Delay(1000));
+            return "ok";
         });
 
         var svc = ConversionService.Instance;

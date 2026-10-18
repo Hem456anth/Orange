@@ -43,11 +43,13 @@ internal static class WindowHelpers
 public sealed class OptionsWindow : Window
 {
     private readonly TaskCompletionSource<IReadOnlyDictionary<string, string>?> _tcs = new();
+    public static OptionsWindow? Last { get; private set; }
     private readonly Dictionary<string, Func<string>> _readers = new();
 
     public static Task<IReadOnlyDictionary<string, string>?> AskAsync(OperationDescriptor op, IReadOnlyList<string> files, IReadOnlyDictionary<string, string> remembered)
     {
         var w = new OptionsWindow(op, files, remembered);
+        Last = w;
         w.Activate();
         return w._tcs.Task;
     }

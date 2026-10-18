@@ -84,6 +84,8 @@ public sealed class MainWindow : Window
         _search.SelectionStart = _search.Text.Length;
     }
 
+    public void ShowPage(string page) => Show(page);
+
     private void Show(string page)
     {
         if (!_ready) return;
