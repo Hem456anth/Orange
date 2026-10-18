@@ -87,6 +87,16 @@ jobs:
           $pe = Get-ChildItem pdx -Recurse -Filter pandoc.exe | Select-Object -First 1
           Copy-Item $pe.FullName "$t/pandoc/"; Get-ChildItem $pe.Directory -Filter 'COPYING*' | Copy-Item -Destination "$t/pandoc/"
           "Pandoc $($rel.tagName). Source: https://github.com/jgm/pandoc" | Out-File "$t/pandoc/SOURCE.txt"
+      - name: UI feature bisect
+        if: always()
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force evidence | Out-Null
+          foreach ($v in 'plain','bar','value','button','live','mica','acrylic','presenter','icon','mica-presenter-icon-bar-button-live','full') {
+            $p = Start-Process out/Orange/Orange.exe -ArgumentList '--uitest', $v -PassThru
+            if (-not $p.WaitForExit(20000)) { $p.Kill(); $code = 'timeout' } else { $code = $p.ExitCode }
+            "uitest $v exit=$code" | Tee-Object -Append evidence/summary.txt
+          }
       - name: Self-test (real Windows APIs, in-process)
         shell: pwsh
         env:

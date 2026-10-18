@@ -44,6 +44,32 @@ public partial class App : Application
         settings.Apply();
         SafePaths.TempWorkspace.CleanupStale();
 
+        if (args.Count >= 2 && args[0] == "--uitest")
+        {
+            // Bisects window features in isolation (CI runs one process per variant and records the exit code).
+            var v = args[1];
+            var win = new Window();
+            var panel = new Microsoft.UI.Xaml.Controls.StackPanel { Padding = new Thickness(20) };
+            panel.Children.Add(new Microsoft.UI.Xaml.Controls.TextBlock { Text = "Orange UI test " + v });
+            if (v.Contains("bar")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.ProgressBar { IsIndeterminate = true });
+            if (v.Contains("value")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.ProgressBar { Minimum = 0, Maximum = 1, Value = 0.4 });
+            if (v.Contains("button")) panel.Children.Add(new Microsoft.UI.Xaml.Controls.Button { Content = "Cancel" });
+            if (v.Contains("live")) Microsoft.UI.Xaml.Automation.AutomationProperties.SetLiveSetting(panel, Microsoft.UI.Xaml.Automation.Peers.AutomationLiveSetting.Polite);
+            win.Content = panel;
+            if (v.Contains("mica")) win.SystemBackdrop = new Microsoft.UI.Xaml.Media.MicaBackdrop();
+            if (v.Contains("acrylic")) win.SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+            if (v.Contains("presenter"))
+            {
+                var pr = Microsoft.UI.Windowing.OverlappedPresenter.Create(); pr.IsAlwaysOnTop = true; pr.IsResizable = false; pr.IsMaximizable = false; pr.IsMinimizable = false;
+                win.AppWindow.SetPresenter(pr);
+            }
+            if (v.Contains("icon")) win.AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "orange.ico"));
+            if (v.Contains("full")) { ProgressWindow.ShowInfo("ui test"); }
+            win.Activate();
+            await Task.Delay(2500);
+            ExitCode = 0; Exit();
+            return;
+        }
         if (args.Count >= 1 && args[0] == "--selftest")
         {
             ExitCode = 3;
