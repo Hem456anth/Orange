@@ -1,0 +1,29 @@
+2026-10-18T16:19:24.7834098Z hooks-installed
+2026-10-18T16:19:24.8217819Z hooks-installed
+2026-10-18T16:19:25.8235888Z wheel-kind Convert items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:19:25.8455328Z highlight 0
+2026-10-18T16:19:25.8639585Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:19:26.6351800Z highlight 1
+2026-10-18T16:19:26.8424069Z wheel-kind Tools items=Compress|Resize|Crop|Rotate|Remove metadata|Grayscale
+2026-10-18T16:19:27.2218270Z wheel-kind Actions items=Share|Copy|Move to…|Copy path|Terminal|Show in folder
+2026-10-18T16:19:27.5833535Z wheel-kind Convert items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:19:27.9266780Z wheel-closed
+2026-10-18T16:19:27.9695077Z wheel-kind Convert items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:19:27.9874344Z highlight 0
+2026-10-18T16:19:27.9888153Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=JPG|WebP|TIFF|BMP|GIF|AVIF|ICO|PDF
+2026-10-18T16:19:28.3913110Z wheel-closed
+2026-10-18T16:19:28.7322805Z wheel-kind Convert items=MOV|MKV|WebM|AVI|GIF|MP3|M4A|WAV
+2026-10-18T16:19:28.7661038Z highlight 0
+2026-10-18T16:19:28.7695327Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=MOV|MKV|WebM|AVI|GIF|MP3|M4A|WAV
+2026-10-18T16:19:29.3196321Z wheel-closed
+2026-10-18T16:19:29.3586447Z wheel-kind Tools items=Merge PDFs|Split|Rotate|Compress|Extract images|Remove metadata
+2026-10-18T16:19:29.3708712Z highlight 0
+2026-10-18T16:19:29.3751673Z wheel-shown kind=Tools drag=False files=2 rect=322,170,702,550 items=Merge PDFs|Split|Rotate|Compress|Extract images|Remove metadata
+2026-10-18T16:19:29.9295578Z wheel-closed
+2026-10-18T16:19:29.9554916Z run-start image.to.webp 1
+2026-10-18T16:19:29.9561854Z pw-ctor
+2026-10-18T16:19:29.9695350Z pw-compact
+2026-10-18T16:19:29.9739764Z pw-place
+2026-10-18T16:19:29.9757966Z pw-activate
+2026-10-18T16:19:29.9896496Z pw-shown
+2026-10-18T16:19:29.9912128Z jobs-running
