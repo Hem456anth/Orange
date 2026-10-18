@@ -113,23 +113,36 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
         };
     }
 
+    private readonly object _encoderLock = new();
+
     private bool Has(string encoder)
     {
-        if (_encoders is null)
+        // Built into a local set and published only when complete: concurrent callers must never
+        // observe a half-filled (or empty) set while the first probe is still reading ffmpeg's output.
+        var set = Volatile.Read(ref _encoders);
+        if (set is null)
         {
-            _encoders = new HashSet<string>();
-            try
+            lock (_encoderLock)
             {
-                var o = ProcessRunner.RunAsync(tools.Require("ffmpeg"), ["-hide_banner", "-encoders"], CancellationToken.None, timeout: TimeSpan.FromSeconds(20)).GetAwaiter().GetResult();
-                foreach (var line in o.StdOut.Split('\n'))
+                set = _encoders;
+                if (set is null)
                 {
-                    var p = line.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    if (p.Length >= 2 && p[0].Length == 6 && (p[0][0] is 'V' or 'A' or 'S')) _encoders.Add(p[1]);
+                    set = new HashSet<string>();
+                    try
+                    {
+                        var o = ProcessRunner.RunAsync(tools.Require("ffmpeg"), ["-hide_banner", "-encoders"], CancellationToken.None, timeout: TimeSpan.FromSeconds(20)).GetAwaiter().GetResult();
+                        foreach (var line in o.StdOut.Split('\n'))
+                        {
+                            var p = line.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                            if (p.Length >= 2 && p[0].Length == 6 && (p[0][0] is 'V' or 'A' or 'S')) set.Add(p[1]);
+                        }
+                    }
+                    catch { /* treated as nothing available */ }
+                    Volatile.Write(ref _encoders, set);
                 }
             }
-            catch { /* treated as nothing available */ }
         }
-        return _encoders.Contains(encoder);
+        return set.Contains(encoder);
     }
 
     private string H264() => Has("libx264") ? "libx264" : Has("h264_mf") ? "h264_mf" : Has("libopenh264") ? "libopenh264" : "mpeg4";
