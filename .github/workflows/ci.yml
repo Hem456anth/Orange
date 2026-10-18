@@ -7,8 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  issues: write
+  contents: write   # only to publish test evidence to the ci-evidence branch
 
 jobs:
   engine:
@@ -47,15 +46,113 @@ jobs:
             engine-test.log
             operation-matrix.md
             tests/**/TestResults/*.trx
-      - name: Report (for remote debugging)
-        if: always()
+
+  app:
+    name: Windows app (build, self-test, real drag probe, package)
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      HAS_CERT: ${{ secrets.SIGNING_CERT_PFX_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Install converters for the self-test
+        shell: pwsh
+        run: |
+          choco install -y --no-progress ffmpeg pandoc ghostscript
+          $gs = Get-ChildItem 'C:\Program Files\gs' -Directory | Sort-Object Name -Descending | Select-Object -First 1
+          "$($gs.FullName)\bin" | Out-File -Append $env:GITHUB_PATH
+      - name: Build and publish Orange (x64, self-contained, unpackaged)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force evidence | Out-Null
+          dotnet publish src/Orange.App/Orange.App.csproj -c Release -r win-x64 -p:Platform=x64 --self-contained -o out/Orange 2>&1 | Tee-Object -FilePath evidence/app-build.log
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          Get-ChildItem out/Orange | Select-Object -First 15 | Format-Table Name, Length | Out-String | Write-Host
+      - name: Bundle FFmpeg and Pandoc (separate GPL programs, with their licenses)
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $log = if (Test-Path engine-test.log) { Get-Content engine-test.log -Tail 150 | Out-String } else { 'no log' }
-          $m = if (Test-Path operation-matrix.md) { Get-Content operation-matrix.md | Out-String } else { '' }
-          $body = "Run: ${{ github.run_id }} / ${{ github.sha }}`n`n### Test log tail`n``````n$log`n```````n`n### Matrix`n$m"
-          $body | Out-File -Encoding utf8 report.md
-          gh issue create --repo ${{ github.repository }} --title "CI engine report ${{ github.run_number }} (${{ job.status }})" --body-file report.md --label ci-report 2>$null
-          if ($LASTEXITCODE -ne 0) { gh label create ci-report --repo ${{ github.repository }} --color FF7A00 2>$null; gh issue create --repo ${{ github.repository }} --title "CI engine report ${{ github.run_number }} (${{ job.status }})" --body-file report.md --label ci-report }
+          $t = "out/Orange/tools"; New-Item -ItemType Directory -Force "$t/ffmpeg/bin","$t/pandoc" | Out-Null
+          Invoke-WebRequest https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip -OutFile ff.zip
+          Expand-Archive ff.zip ffx; $d = Get-ChildItem ffx -Directory | Select-Object -First 1
+          Copy-Item "$($d.FullName)/bin/ffmpeg.exe","$($d.FullName)/bin/ffprobe.exe" "$t/ffmpeg/bin/"; Copy-Item "$($d.FullName)/LICENSE.txt" "$t/ffmpeg/LICENSE.txt"
+          "Source: https://github.com/BtbN/FFmpeg-Builds (build scripts) and https://ffmpeg.org/download.html (source code)" | Out-File "$t/ffmpeg/SOURCE.txt"
+          $rel = gh release view -R jgm/pandoc --json assets,tagName | ConvertFrom-Json
+          $a = $rel.assets | Where-Object { $_.name -like '*windows-x86_64.zip' } | Select-Object -First 1
+          Invoke-WebRequest $a.url -OutFile pd.zip; Expand-Archive pd.zip pdx
+          $pe = Get-ChildItem pdx -Recurse -Filter pandoc.exe | Select-Object -First 1
+          Copy-Item $pe.FullName "$t/pandoc/"; Get-ChildItem $pe.Directory -Filter 'COPYING*' | Copy-Item -Destination "$t/pandoc/"
+          "Pandoc $($rel.tagName). Source: https://github.com/jgm/pandoc" | Out-File "$t/pandoc/SOURCE.txt"
+      - name: Self-test (real Windows APIs, in-process)
+        shell: pwsh
+        env:
+          ORANGE_FIXTURES: ${{ github.workspace }}\tests\fixtures
+        run: |
+          $p = Start-Process out/Orange/Orange.exe -ArgumentList '--selftest', "$PWD\evidence\selftest" -PassThru -Wait
+          Get-Content evidence/selftest/selftest.json -ErrorAction SilentlyContinue | Write-Host
+          "selftest exit=$($p.ExitCode)" | Tee-Object -Append evidence/summary.txt
+          if ($p.ExitCode -ne 0) { exit 1 }
+      - name: Real drag probe (SendInput + OLE + File Explorer)
+        if: always()
+        shell: pwsh
+        run: |
+          dotnet build tests/Orange.DragProbe -c Release -o out/probe 2>&1 | Out-File evidence/probe-build.log
+          $p = Start-Process out/probe/Orange.DragProbe.exe -ArgumentList "$PWD\out\Orange\Orange.exe", "$PWD\tests\fixtures", "$PWD\evidence\probe" -PassThru -Wait
+          Get-Content evidence/probe/probe.json -ErrorAction SilentlyContinue | Write-Host
+          "probe exit=$($p.ExitCode)" | Tee-Object -Append evidence/summary.txt
+      - name: Package (portable zip + per-user installer)
+        shell: pwsh
+        run: |
+          Copy-Item README.md, LICENSE, THIRD-PARTY-NOTICES.md out/Orange/ -ErrorAction SilentlyContinue
+          Compress-Archive out/Orange/* out/Orange-0.1.0-win-x64-portable.zip -Force
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DAppVersion=0.1.0 installer/Orange.iss 2>&1 | Tee-Object evidence/installer.log
+          Get-ChildItem out/*.zip, out/*.exe | Format-Table Name, Length | Out-String | Tee-Object -Append evidence/summary.txt
+      - name: Optional code signing
+        if: env.HAS_CERT == 'true'
+        shell: pwsh
+        env:
+          SIGN_CERT: ${{ secrets.SIGNING_CERT_PFX_BASE64 }}
+          SIGN_PASS: ${{ secrets.SIGNING_CERT_PASSWORD }}
+        run: |
+          [IO.File]::WriteAllBytes("cert.pfx", [Convert]::FromBase64String($env:SIGN_CERT))
+          $st = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Recurse -Filter signtool.exe | Where-Object FullName -like '*x64*' | Select-Object -Last 1
+          & $st.FullName sign /f cert.pfx /p $env:SIGN_PASS /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 out/Orange/Orange.exe out/*.exe
+          Remove-Item cert.pfx
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: orange-win-x64
+          path: |
+            out/Orange-*-portable.zip
+            out/Orange-*-setup.exe
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: app-evidence
+          path: evidence
+      - name: Publish evidence to ci-evidence branch
+        if: always()
+        shell: pwsh
+        run: |
+          $log = "evidence/app-build.log"
+          if (Test-Path $log) { Select-String -Path $log -Pattern 'error|warn' | Select-Object -First 200 | ForEach-Object Line | Out-File evidence/app-build-errors.txt }
+          git config user.name "orange-ci"; git config user.email "orange-ci@users.noreply.github.com"
+          $dest = "run-${{ github.run_number }}"
+          Copy-Item evidence $env:RUNNER_TEMP\ev -Recurse
+          git fetch origin ci-evidence 2>$null
+          git switch --orphan ci-evidence-tmp
+          git rm -rfq . 2>$null
+          if (git ls-remote --heads origin ci-evidence) { git checkout origin/ci-evidence -- . 2>$null }
+          New-Item -ItemType Directory -Force $dest | Out-Null
+          Copy-Item "$env:RUNNER_TEMP\ev\*" $dest -Recurse -Force
+          Get-ChildItem $dest -Recurse -Include *.log | Where-Object Length -gt 900KB | ForEach-Object { Get-Content $_ -Tail 4000 | Set-Content $_ }
+          Get-ChildItem $dest -Recurse -Directory -Filter work | Remove-Item -Recurse -Force
+          Get-ChildItem $dest -Recurse -Directory -Filter a | Remove-Item -Recurse -Force
+          Get-ChildItem $dest -Recurse -Directory -Filter explorer-source | Remove-Item -Recurse -Force
+          git add -A
+          git commit -qm "evidence for run ${{ github.run_number }} (${{ github.sha }})"
+          git push -f origin HEAD:ci-evidence
