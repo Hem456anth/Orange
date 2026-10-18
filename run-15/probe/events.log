@@ -1,0 +1,10 @@
+2026-10-18T16:45:58.6906381Z step-ok notifications
+2026-10-18T16:45:58.7610631Z step-ok main-window
+2026-10-18T16:45:58.7741908Z step-ok tray
+2026-10-18T16:45:58.7755922Z step-ok hotkey
+2026-10-18T16:45:58.7777063Z hooks-installed
+2026-10-18T16:45:58.7780559Z ready
+2026-10-18T16:45:59.1838045Z lbutton-down 300,251 injected=True
+2026-10-18T16:45:59.9849776Z key 160 dragging=False eligible=True open=False
+2026-10-18T16:46:37.1256288Z lbutton-down 370,275 injected=True
+2026-10-18T16:46:37.9159863Z key 160 dragging=False eligible=True open=False
