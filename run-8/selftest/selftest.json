@@ -1,0 +1,99 @@
+{
+  "machine": "runnervm0xl3a",
+  "os": "Microsoft Windows NT 10.0.26100.0",
+  "build": 26100,
+  "dpi": 0,
+  "tools": {
+    "ffmpeg": "D:\\a\\Orange\\Orange\\out\\Orange\\tools\\ffmpeg\\bin\\ffmpeg.exe",
+    "ffprobe": "C:\\ProgramData\\Chocolatey\\bin\\ffprobe.exe",
+    "pandoc": "D:\\a\\Orange\\Orange\\out\\Orange\\tools\\pandoc\\pandoc.exe",
+    "ghostscript": "C:\\Program Files\\gs\\gs10.08.0\\bin\\gswin64c.exe",
+    "libreoffice": null
+  },
+  "checks": [
+    {
+      "Name": "low-level mouse\u002Bkeyboard hooks install",
+      "Passed": true,
+      "Required": true,
+      "Detail": "SetWindowsHookEx WH_MOUSE_LL/WH_KEYBOARD_LL ok"
+    },
+    {
+      "Name": "global hotkey registers",
+      "Passed": true,
+      "Required": false,
+      "Detail": "RegisterHotKey ok"
+    },
+    {
+      "Name": "tray icon",
+      "Passed": true,
+      "Required": false,
+      "Detail": "Shell_NotifyIcon ok"
+    },
+    {
+      "Name": "context menu verb (HKCU) install/remove",
+      "Passed": true,
+      "Required": true,
+      "Detail": "\u0022D:\\a\\Orange\\Orange\\out\\Orange\\Orange.exe\u0022 --wheel \u0022%1\u0022"
+    },
+    {
+      "Name": "Send To shortcut install/remove",
+      "Passed": true,
+      "Required": true,
+      "Detail": "ok"
+    },
+    {
+      "Name": "wheel: PNG convert items",
+      "Passed": true,
+      "Required": true,
+      "Detail": "convert=JPG,WebP,TIFF,BMP,GIF,AVIF,ICO,PDF tools=Compress,Resize,Crop,Rotate,Remove metadata,Grayscale"
+    },
+    {
+      "Name": "wheel: hit-testing maps wedge centres back to wedges",
+      "Passed": true,
+      "Required": true,
+      "Detail": "8 wedges"
+    },
+    {
+      "Name": "wheel: MP4 and two-PDF selections are context-aware",
+      "Passed": true,
+      "Required": true,
+      "Detail": "mp4=MOV,MKV,WebM,AVI,GIF,MP3,M4A,WAV | 2 pdf tools=Merge PDFs,Split,Rotate,Compress,Extract images,Remove metadata"
+    },
+    {
+      "Name": "convert PNG \u2192 WebP via app service",
+      "Passed": false,
+      "Required": true,
+      "Detail": "System.Runtime.InteropServices.COMException (0x80004005): Unspecified error\r\n\r\nCannot find a resource with the given key: BodyStrongTextBlockStyle.\r\n   at WinRT.ExceptionHelpers.\u003CThrowExceptionForHR\u003Eg__Throw|38_0(Int32 hr)\r\n   at WinRT.GenericTypeInstantiations.Windows_Foundation_Collections_IMap_2_object__object.Lookup(IObjectReference _obj, Object key)\r\n   at ABI.Windows.Foundation.Collections.IMapMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Indexer_Get(IObjectReference obj, Dictionary\u00602 __lookupCache, K key)\r\n   at Microsoft.UI.Xaml.ResourceDictionary.get_Item(Object key)\r\n   at Orange.App.Views.ProgressWindow..ctor(String title, OperationDescriptor op) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 153\r\n   at Orange.App.Views.ProgressWindow.Show(OperationDescriptor op, IReadOnlyList\u00601 jobs) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 190\r\n   at Orange.App.Services.ConversionService.RunAsync(OperationDescriptor op, IReadOnlyList\u00601 files, IReadOnlyDictionary\u00602 options, DispatcherQueue ui) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Services\\ConversionService.cs:line 54\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Convert|10\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 125\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 42"
+    },
+    {
+      "Name": "convert JPG \u2192 HEIC (Magick.NET on Windows)",
+      "Passed": false,
+      "Required": false,
+      "Detail": "System.Runtime.InteropServices.COMException (0x80004005): Unspecified error\r\n\r\nCannot find a resource with the given key: BodyStrongTextBlockStyle.\r\n   at WinRT.ExceptionHelpers.\u003CThrowExceptionForHR\u003Eg__Throw|38_0(Int32 hr)\r\n   at WinRT.GenericTypeInstantiations.Windows_Foundation_Collections_IMap_2_object__object.Lookup(IObjectReference _obj, Object key)\r\n   at ABI.Windows.Foundation.Collections.IMapMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Indexer_Get(IObjectReference obj, Dictionary\u00602 __lookupCache, K key)\r\n   at Microsoft.UI.Xaml.ResourceDictionary.get_Item(Object key)\r\n   at Orange.App.Views.ProgressWindow..ctor(String title, OperationDescriptor op) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 153\r\n   at Orange.App.Views.ProgressWindow.ShowError(String title, String message, String detail) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 231\r\n   at Orange.App.Services.ConversionService.RunAsync(OperationDescriptor op, IReadOnlyList\u00601 files, IReadOnlyDictionary\u00602 options, DispatcherQueue ui) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Services\\ConversionService.cs:line 48\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Convert|10\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 125\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 42"
+    },
+    {
+      "Name": "merge PDFs via app service",
+      "Passed": false,
+      "Required": true,
+      "Detail": "System.Runtime.InteropServices.COMException (0x80004005): Unspecified error\r\n\r\nCannot find a resource with the given key: BodyStrongTextBlockStyle.\r\n   at WinRT.ExceptionHelpers.\u003CThrowExceptionForHR\u003Eg__Throw|38_0(Int32 hr)\r\n   at WinRT.GenericTypeInstantiations.Windows_Foundation_Collections_IMap_2_object__object.Lookup(IObjectReference _obj, Object key)\r\n   at ABI.Windows.Foundation.Collections.IMapMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Indexer_Get(IObjectReference obj, Dictionary\u00602 __lookupCache, K key)\r\n   at Microsoft.UI.Xaml.ResourceDictionary.get_Item(Object key)\r\n   at Orange.App.Views.ProgressWindow..ctor(String title, OperationDescriptor op) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 153\r\n   at Orange.App.Views.ProgressWindow.Show(OperationDescriptor op, IReadOnlyList\u00601 jobs) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 190\r\n   at Orange.App.Services.ConversionService.RunAsync(OperationDescriptor op, IReadOnlyList\u00601 files, IReadOnlyDictionary\u00602 options, DispatcherQueue ui) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Services\\ConversionService.cs:line 54\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Convert|10\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 125\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 42"
+    },
+    {
+      "Name": "MP4 \u2192 MP3 via app service (FFmpeg)",
+      "Passed": false,
+      "Required": true,
+      "Detail": "System.Runtime.InteropServices.COMException (0x80004005): Unspecified error\r\n\r\nCannot find a resource with the given key: BodyStrongTextBlockStyle.\r\n   at WinRT.ExceptionHelpers.\u003CThrowExceptionForHR\u003Eg__Throw|38_0(Int32 hr)\r\n   at WinRT.GenericTypeInstantiations.Windows_Foundation_Collections_IMap_2_object__object.Lookup(IObjectReference _obj, Object key)\r\n   at ABI.Windows.Foundation.Collections.IMapMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Indexer_Get(IObjectReference obj, Dictionary\u00602 __lookupCache, K key)\r\n   at Microsoft.UI.Xaml.ResourceDictionary.get_Item(Object key)\r\n   at Orange.App.Views.ProgressWindow..ctor(String title, OperationDescriptor op) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 153\r\n   at Orange.App.Views.ProgressWindow.Show(OperationDescriptor op, IReadOnlyList\u00601 jobs) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 190\r\n   at Orange.App.Services.ConversionService.RunAsync(OperationDescriptor op, IReadOnlyList\u00601 files, IReadOnlyDictionary\u00602 options, DispatcherQueue ui) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Services\\ConversionService.cs:line 54\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Convert|10\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 125\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 42"
+    },
+    {
+      "Name": "DOCX \u2192 PDF (LibreOffice)",
+      "Passed": false,
+      "Required": false,
+      "Detail": "System.Runtime.InteropServices.COMException (0x80004005): Unspecified error\r\n\r\nCannot find a resource with the given key: BodyStrongTextBlockStyle.\r\n   at WinRT.ExceptionHelpers.\u003CThrowExceptionForHR\u003Eg__Throw|38_0(Int32 hr)\r\n   at WinRT.GenericTypeInstantiations.Windows_Foundation_Collections_IMap_2_object__object.Lookup(IObjectReference _obj, Object key)\r\n   at ABI.Windows.Foundation.Collections.IMapMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Lookup(IObjectReference obj, K key)\r\n   at ABI.System.Collections.Generic.IDictionaryMethods\u00602.Indexer_Get(IObjectReference obj, Dictionary\u00602 __lookupCache, K key)\r\n   at Microsoft.UI.Xaml.ResourceDictionary.get_Item(Object key)\r\n   at Orange.App.Views.ProgressWindow..ctor(String title, OperationDescriptor op) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 153\r\n   at Orange.App.Views.ProgressWindow.ShowError(String title, String message, String detail) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\SmallWindows.cs:line 231\r\n   at Orange.App.Services.ConversionService.RunAsync(OperationDescriptor op, IReadOnlyList\u00601 files, IReadOnlyDictionary\u00602 options, DispatcherQueue ui) in D:\\a\\Orange\\Orange\\src\\Orange.App\\Services\\ConversionService.cs:line 48\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Convert|10\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 125\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 42"
+    },
+    {
+      "Name": "read File Explorer selection",
+      "Passed": false,
+      "Required": false,
+      "Detail": "System.Exception: Explorer window didn\u0027t report the selection (no interactive shell on this machine?)\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eb__16\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 144\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 42"
+    }
+  ]
+}
