@@ -54,7 +54,11 @@ public sealed class ConversionService
         Diagnostics.Event($"run-start {op.Id} {jobs.Count}");
         using var cts = new CancellationTokenSource();
         ProgressWindow? win = null;
-        try { win = ProgressWindow.Show(op, jobs); win.CancelRequested += cts.Cancel; }
+        try
+        {
+            win = ProgressWindow.Show(op, jobs); win.CancelRequested += cts.Cancel;
+            win.RetryRequested += failedInputs => _ = RunAsync(op, failedInputs, options, ui);
+        }
         catch (Exception e) { Diagnostics.Event("progress-window-failed " + Flat(e)); }
         var progress = new Progress<BatchProgress>(p => { try { win?.Update(p); } catch (Exception e) { Diagnostics.Event("progress-update-failed " + Flat(e)); } });
         Diagnostics.Event("jobs-running");
@@ -62,6 +66,9 @@ public sealed class ConversionService
         Diagnostics.Event("jobs-finished " + string.Join(',', jobs.Select(j => j.State)));
         try { win?.Complete(jobs); } catch (Exception e) { Diagnostics.Event("progress-complete-failed " + Flat(e)); }
 
+        if (op.Id == "image.qr-read")
+            foreach (var j in jobs.Where(j => j.State == JobState.Succeeded && !string.IsNullOrEmpty(j.Result?.Detail)))
+                try { win?.Close(); QrResultWindow.Show(j.Request.Inputs[0], j.Result!.Detail!); } catch (Exception e) { Diagnostics.Event("qr-window-failed " + Flat(e)); }
         var outputs = jobs.Where(j => j.State == JobState.Succeeded).SelectMany(j => j.Result!.Outputs).ToList();
         var failed = jobs.Where(j => j.State == JobState.Failed).ToList();
         Diagnostics.Event($"run-done {op.Id} ok={outputs.Count} failed={failed.Count} outputs={string.Join('|', outputs)}");

@@ -118,6 +118,7 @@ public sealed class WheelWindow : Window
         Native.StripFrame(w._hwnd);
         w.ApplyRegion();
         watcher?.SetWheelOpen(true, kind);
+        w._wheel.AnimateIn();
         _ = w.LoadThumbnailAsync();
         Native.GetWindowRect(w._hwnd, out var r);
         Diagnostics.Event($"wheel-shown kind={kind} drag={dragMode} files={files.Count} rect={r.Left},{r.Top},{r.Right},{r.Bottom} items={string.Join('|', w._wheel.Items.Select(i => i.Title))}");
@@ -164,24 +165,52 @@ public sealed class WheelWindow : Window
             var group = kind == WheelKind.Convert ? OperationGroup.Convert : OperationGroup.Tool;
             var files = _files.Where(File.Exists).ToList();
             var ops = files.Count == _files.Count ? reg.ForFiles(files, group).ToList() : new List<OperationDescriptor>();
+            if (ops.Count == 0 && _files.Any(Directory.Exists) && kind == WheelKind.Convert)
+            {   // Folders have nothing to convert; the one useful "conversion" is an archive.
+                var zip = FileActions.All.First(a => a.Id == "zip");
+                items.Add(new WheelItem("ZIP", null, zip, "Compress to ZIP"));
+            }
             int Rank(OperationDescriptor o) => s.Favorites.Contains(o.Id) ? 0 : s.Recent.Any(r => r.OperationId == o.Id) ? 1 : 2;
-            var ordered = ops.Select((o, i) => (o, i)).OrderBy(x => x.o.CombinesInputs && files.Count > 1 ? -1 : Rank(x.o)).ThenBy(x => x.i).Select(x => x.o).ToList();
+            var ordered = ops.Select((o, i) => (o, i))
+                .OrderBy(x => x.o.CombinesInputs && files.Count > 1 ? -1 : Rank(x.o))
+                .ThenBy(x => WheelPriority(x.o))
+                .ThenBy(x => x.i).Select(x => x.o).ToList();
             var shown = ordered.Count > MaxWedges ? ordered.Take(MaxWedges - 1).ToList() : ordered;
             foreach (var o in shown)
                 items.Add(new WheelItem(o.Title, group == OperationGroup.Tool ? Glyphs.For(o) : null, o,
                     group == OperationGroup.Convert ? $"Convert to {o.Title}" : o.Title));
             if (ordered.Count > MaxWedges) items.Add(new WheelItem("More", "\uE712", "more", $"{ordered.Count - shown.Count} more options"));
-            if (ops.Count == 0)
-                idle = _files.Count == 0 ? "No files" : files.Count != _files.Count ? "Folder: tap Alt for actions" :
+            if (ops.Count == 0 && items.Count == 0)
+                idle = _files.Count == 0 ? "No files" : files.Count != _files.Count ? $"Folder: tap {KeyName(s.ActionsKey)} for actions" :
                        FileTypeDetector.Detect(files[0]) == FileKind.Unknown ? "Unsupported file" :
                        files.Select(FileTypeDetector.Detect).Distinct().Count() > 1 ? "Mixed file types" : kind == WheelKind.Tools ? "No tools" : "No conversions";
         }
         _tags = items.Select(i => i.Tag).ToList();
         _wheel.SetItems(items, idle);
+        _wheel.SetFileName(_files.Count == 1 ? Path.GetFileName(_files[0].TrimEnd('\\', '/')) : _files.Count > 1 ? $"{_files.Count} items" : "");
         _a11yList.Items.Clear();
         foreach (var i in items) _a11yList.Items.Add(new ListViewItem { Content = i.AccessibleName, Tag = i.Tag });
         Diagnostics.Event($"wheel-kind {kind} items={string.Join('|', items.Select(i => i.Title))}");
     }
+
+    /// <summary>
+    /// Wedge order for tools, after favourites and recents: the panels from Tangerine's image wheel first
+    /// (Compress, Metadata, Edit, Annotate, Add BG, Crop, Redact), the rest behind "More".
+    /// </summary>
+    private static string KeyName(WheelKey k) => k switch { WheelKey.AltShift => "Alt+Shift", _ => k.ToString() };
+
+    private static int WheelPriority(OperationDescriptor o) => o.Id switch
+    {
+        _ when o.Group == OperationGroup.Convert => 0,
+        "image.compress" or "video.compress" or "audio.compress" or "pdf.compress" => 1,
+        "image.metadata" or "video.metadata" or "audio.metadata" => 2,
+        "image.edit" or "video.trim" or "audio.trim" or "pdf.merge" => 3,
+        "image.annotate" or "audio.bleep" or "video.speed" or "pdf.reorder" => 4,
+        "image.add-background" or "audio.channels" or "video.crop" or "pdf.split" => 5,
+        "image.crop" or "audio.normalize" or "video.snapshot" or "pdf.extract-pages" => 6,
+        "image.redact" or "audio.silence-trim" or "video.mute" or "pdf.rotate" => 7,
+        _ => 20,
+    };
 
     private string Caption()
     {
@@ -291,9 +320,11 @@ public sealed class WheelWindow : Window
                 Close();
                 var settings = AppSettings.Current;
                 IReadOnlyDictionary<string, string>? options = null;
-                if (op.Options.Count > 0 && op.Group == OperationGroup.Tool && settings.AskOptionsForTools)
+                if (op.Options.Count > 0 && op.Group == OperationGroup.Tool && (settings.AskOptionsForTools || Editors.HasPanel(op)))
                 {
-                    options = await OptionsWindow.AskAsync(op, files, ConversionService.Instance.RememberedOptions(op));
+                    options = Editors.HasPanel(op)
+                        ? await Editors.AskAsync(op, files, ConversionService.Instance.RememberedOptions(op))
+                        : await OptionsWindow.AskAsync(op, files, ConversionService.Instance.RememberedOptions(op));
                     if (options is null) return;   // cancelled
                 }
                 await ConversionService.Instance.RunAsync(op, files, options, DispatcherQueue);
@@ -357,6 +388,8 @@ public static class Glyphs
         "grayscale" => "\uE790", "pdf" => "\uEA90", "trim" => "\uE8C6", "mute" => "\uE74F", "speed" => "\uEC4A",
         "snapshot" => "\uE722", "split" => "\uE8B9", "join" or "merge" => "\uE71D", "normalize" => "\uE767", "channels" => "\uE995",
         "pages" => "\uE8A5", "images" => "\uE8B9", "extract" => "\uE8B7", "clock" => "\uE823", "count" => "\uE8EF",
+        "edit" => "\uE9E9", "background" => "\uE771", "redact" => "\uED1A", "annotate" => "\uEE56", "collage" => "\uF0E2",
+        "qr" => "\uED14", "bleep" => "\uE7ED", "silence" => "\uE74F", "reorder" => "\uE8CB",
         _ => "\uE713",
     };
 }

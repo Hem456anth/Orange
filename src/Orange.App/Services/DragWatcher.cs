@@ -159,10 +159,18 @@ public sealed class DragWatcher : IDisposable
         _ui.TryEnqueue(() => WheelRequested?.Invoke(kind, p, src));
     }
 
+    private static bool IsShift(int vk) => vk is Native.VK_SHIFT or Native.VK_LSHIFT or Native.VK_RSHIFT;
+    private static bool IsAlt(int vk) => vk is Native.VK_MENU or Native.VK_LMENU or Native.VK_RMENU;
+
+    /// <summary>
+    /// Maps a key press to a wheel. Alt+Shift is a chord: pressing Shift while Alt is held (or Alt while Shift is held)
+    /// means the AltShift wheel, so "Shift" alone and "Alt+Shift" can be two different wheels, like Shift / Option+Shift on a Mac.
+    /// </summary>
     private static WheelKind? KindFor(int vk)
     {
         var s = AppSettings.Current;
-        WheelKey? key = vk switch
+        bool chord = IsShift(vk) && Native.IsDown(Native.VK_MENU) || IsAlt(vk) && Native.IsDown(Native.VK_SHIFT);
+        WheelKey? key = chord ? WheelKey.AltShift : vk switch
         {
             Native.VK_SHIFT or Native.VK_LSHIFT or Native.VK_RSHIFT => WheelKey.Shift,
             Native.VK_CONTROL or Native.VK_LCONTROL or Native.VK_RCONTROL => WheelKey.Ctrl,
@@ -170,6 +178,9 @@ public sealed class DragWatcher : IDisposable
             _ => null,
         };
         if (key is null) return null;
+        // No wheel bound to the chord: fall back to the single key that was pressed.
+        if (key == WheelKey.AltShift && s.ConvertKey != WheelKey.AltShift && s.ToolsKey != WheelKey.AltShift && s.ActionsKey != WheelKey.AltShift)
+            key = IsShift(vk) ? WheelKey.Shift : WheelKey.Alt;
         if (key == s.ConvertKey) return WheelKind.Convert;
         if (key == s.ToolsKey) return WheelKind.Tools;
         if (key == s.ActionsKey) return WheelKind.Actions;
@@ -178,6 +189,7 @@ public sealed class DragWatcher : IDisposable
 
     private static WheelKind? HeldWheelKey()
     {
+        if (Native.IsDown(Native.VK_SHIFT) && Native.IsDown(Native.VK_MENU)) return KindFor(Native.VK_SHIFT);   // chord
         if (Native.IsDown(Native.VK_SHIFT)) return KindFor(Native.VK_SHIFT);
         if (Native.IsDown(Native.VK_CONTROL)) return KindFor(Native.VK_CONTROL);
         if (Native.IsDown(Native.VK_MENU)) return KindFor(Native.VK_MENU);

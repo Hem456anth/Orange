@@ -15,6 +15,7 @@ public static class FileActions
     public static readonly ActionItem[] All =
     [
         new("share", "Share", "\uE72D"),
+        new("zip", "Zip", "\uF012"),
         new("copy", "Copy", "\uE8C8"),
         new("move", "Move to…", "\uE8DE"),
         new("copy-path", "Copy path", "\uE71B"),
@@ -26,6 +27,12 @@ public static class FileActions
     {
         switch (id)
         {
+            case "zip":
+            {
+                var zip = await Orange.Core.Providers.ArchiveProvider.CreateZipAsync(paths, null, CancellationToken.None);
+                Native.RevealInExplorer([zip]);
+                return $"Saved {Path.GetFileName(zip)}";
+            }
             case "copy-path":
             {
                 var p = new DataPackage();

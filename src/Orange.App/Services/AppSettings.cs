@@ -4,7 +4,8 @@ using Orange.Core;
 
 namespace Orange.App.Services;
 
-public enum WheelKey { Shift, Ctrl, Alt }
+/// <summary>AltShift is Windows' Option+Shift: hold Alt and tap Shift (or the reverse) while dragging.</summary>
+public enum WheelKey { Shift, Ctrl, Alt, AltShift }
 public enum DragSourceFilter { ExplorerAndDesktop, AnyApp }
 public enum ThemeChoice { System, Light, Dark }
 
@@ -13,8 +14,10 @@ public sealed class AppSettings
 {
     public bool DragActivation { get; set; } = true;
     public WheelKey ConvertKey { get; set; } = WheelKey.Shift;
-    public WheelKey ToolsKey { get; set; } = WheelKey.Ctrl;
-    public WheelKey ActionsKey { get; set; } = WheelKey.Alt;
+    public WheelKey ToolsKey { get; set; } = WheelKey.AltShift;     // Tangerine: Option + Shift
+    public WheelKey ActionsKey { get; set; } = WheelKey.Ctrl;
+    /// <summary>2 = Alt+Shift tools wheel defaults. Older files are migrated once on load.</summary>
+    public int SettingsVersion { get; set; } = 2;
     public DragSourceFilter DragSources { get; set; } = DragSourceFilter.ExplorerAndDesktop;
     /// <summary>Global shortcut that opens the wheel for the files selected in the active Explorer window.</summary>
     public string Hotkey { get; set; } = "Ctrl+Alt+O";
@@ -49,7 +52,16 @@ public sealed class AppSettings
         try
         {
             if (File.Exists(FilePath))
-                return JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath), Json) ?? new AppSettings();
+            {
+                var json = File.ReadAllText(FilePath);
+                var loaded = JsonSerializer.Deserialize<AppSettings>(json, Json) ?? new AppSettings();
+                if (!json.Contains("\"SettingsVersion\"") && loaded.ToolsKey == WheelKey.Ctrl && loaded.ActionsKey == WheelKey.Alt)
+                {   // 0.1 defaults (Ctrl = tools, Alt = actions) → Tangerine's Alt+Shift for tools, Ctrl for actions.
+                    loaded.ToolsKey = WheelKey.AltShift; loaded.ActionsKey = WheelKey.Ctrl;
+                }
+                loaded.SettingsVersion = 2;
+                return loaded;
+            }
         }
         catch { /* corrupt file: keep a copy and start fresh */ try { File.Copy(FilePath, FilePath + ".bad", true); } catch { } }
         return new AppSettings();

@@ -157,6 +157,10 @@ public sealed class ProgressWindow : Window
     private readonly SimpleProgressBar _bar = new() { IsIndeterminate = true };
     private readonly Button _primary = new() { Content = "Cancel" };
     private readonly Button _details = new() { Content = "Details", Visibility = Visibility.Collapsed };
+    private readonly Button _retry = new() { Content = "Retry", Visibility = Visibility.Collapsed };
+    private IReadOnlyList<Job> _jobs = Array.Empty<Job>();
+    /// <summary>Raised with the inputs of the failed jobs when the user presses Retry.</summary>
+    public event Action<IReadOnlyList<string>>? RetryRequested;
     private IReadOnlyList<string> _outputs = Array.Empty<string>();
     private string _detailText = "";
     private bool _done;
@@ -169,7 +173,13 @@ public sealed class ProgressWindow : Window
         _title.Text = title;
         AutomationProperties.SetLiveSetting(_status, Microsoft.UI.Xaml.Automation.Peers.AutomationLiveSetting.Polite);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, HorizontalAlignment = HorizontalAlignment.Right };
-        buttons.Children.Add(_details); buttons.Children.Add(_primary);
+        buttons.Children.Add(_details); buttons.Children.Add(_retry); buttons.Children.Add(_primary);
+        _retry.Click += (_, _) =>
+        {
+            var failed = _jobs.Where(j => j.State is JobState.Failed or JobState.Cancelled).SelectMany(j => j.Request.Inputs).Distinct().ToList();
+            Close();
+            if (failed.Count > 0) RetryRequested?.Invoke(failed);
+        };
         var panel = new StackPanel { Spacing = 10, Padding = new Thickness(20, 16, 20, 16) };
         panel.Children.Add(_title); panel.Children.Add(_bar); panel.Children.Add(_status); panel.Children.Add(buttons);
         Content = panel;
@@ -192,7 +202,7 @@ public sealed class ProgressWindow : Window
     public static ProgressWindow Show(OperationDescriptor op, IReadOnlyList<Job> jobs)
     {
         Diagnostics.Event("pw-ctor");
-        var w = new ProgressWindow(op.Group == OperationGroup.Convert ? $"Converting to {op.Title}" : op.Title, op);
+        var w = new ProgressWindow(op.Group == OperationGroup.Convert ? $"Converting to {op.Title}" : op.Title, op) { _jobs = jobs };
         w._status.Text = jobs.Count == 1 ? jobs[0].DisplayName : $"0 of {jobs.Count} done";
         Diagnostics.Event("pw-activate");
         w.Activate();
@@ -206,7 +216,7 @@ public sealed class ProgressWindow : Window
         _bar.Value = p.Fraction;
         var pct = (int)(p.Fraction * 100);
         _title.Text = (_op?.Group == OperationGroup.Convert ? $"Converting to {_op.Title}" : _op?.Title ?? "Orange") + $" · {pct}%";
-        if (p.Total > 1) _status.Text = $"{p.Done} of {p.Total} done";
+        if (p.Total > 1) _status.Text = $"{p.Done} of {p.Total} done · {System.IO.Path.GetFileName(p.Current.Request.Inputs[0])} {(int)(p.Current.Progress * 100)}%";
     }
 
     public void Complete(IReadOnlyList<Job> jobs)
@@ -223,13 +233,23 @@ public sealed class ProgressWindow : Window
             _status.Text = first.Result?.Error ?? "Something went wrong.";
             _detailText = string.Join("\n\n", jobs.Where(j => j.State == JobState.Failed).Select(j => $"{j.DisplayName}\n{j.Result?.Error}\n{j.Result?.Detail}"));
             _details.Visibility = Visibility.Visible;
+            _retry.Visibility = RetryRequested != null ? Visibility.Visible : Visibility.Collapsed;
             _bar.ShowError = true;
         }
-        else _status.Text = cancelled > 0 ? "Cancelled. Finished files were kept." : "Done on this PC. Nothing was uploaded.";
+        else
+        {
+            var note = jobs.Count == 1 ? jobs[0].Result?.Detail : null;   // e.g. "1.9 MB (target 2 MB)"
+            var sizes = _outputs.Count == 1 && jobs.Count == 1 && File.Exists(_outputs[0]) && File.Exists(jobs[0].Request.Inputs[0])
+                ? $"{Human(new FileInfo(jobs[0].Request.Inputs[0]).Length)} → {Human(new FileInfo(_outputs[0]).Length)}. " : "";
+            _status.Text = cancelled > 0 ? "Cancelled. Finished files were kept." : $"{(string.IsNullOrEmpty(note) ? sizes : note + ". ")}Done on this PC. Nothing was uploaded.";
+            if (cancelled > 0 && RetryRequested != null) _retry.Visibility = Visibility.Visible;
+        }
         _primary.IsEnabled = true;
         _primary.Content = _outputs.Count > 0 ? "Show in folder" : "Close";
         if (failed == 0 && cancelled == 0) _ = AutoClose();
     }
+
+    private static string Human(long b) => b < 1024 ? $"{b} B" : b < 1 << 20 ? $"{b / 1024.0:0} KB" : b < 1L << 30 ? $"{b / 1048576.0:0.0} MB" : $"{b / 1073741824.0:0.00} GB";
 
     private async Task AutoClose() { await Task.Delay(6000); try { Close(); } catch { } }
 

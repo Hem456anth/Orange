@@ -38,7 +38,7 @@ public static class SelfTest
         var fixtures = Environment.GetEnvironmentVariable("ORANGE_FIXTURES") ?? FindFixtures();
         var work = Path.Combine(outDir, "work");
         Directory.CreateDirectory(work);
-        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx" })
+        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg" })
             if (File.Exists(Path.Combine(fixtures, f))) File.Copy(Path.Combine(fixtures, f), Path.Combine(work, f), true);
         string W(string n) => Path.Combine(work, n);
         AppSettings.Current.RevealWhenDone = false;
@@ -162,6 +162,30 @@ public static class SelfTest
             return "ok";
         });
 
+        foreach (var (opId, fixture) in new[]
+        {
+            ("image.edit", "sample.png"), ("image.add-background", "sample-alpha.png"), ("image.redact", "sample.png"), ("image.annotate", "sample.png"),
+            ("image.crop", "sample.png"), ("image.metadata", "sample-meta.jpg"), ("pdf.reorder", "sample.pdf"),
+            ("audio.trim", "sample.wav"), ("audio.bleep", "sample.wav"), ("audio.channels", "sample.wav"),
+        })
+        {
+            bool media = opId.StartsWith("audio.");
+            await Try($"panel {opId} renders", !media || ToolLocator.Default.Has("ffmpeg"), async () =>
+            {
+                var op = ConversionService.Instance.Registry.Get(opId);
+                var t = Editors.AskAsync(op, [W(fixture)], new Dictionary<string, string>());
+                await Task.Delay(2500);
+                var ed = Editors.Last;
+                if (ed is null) { OptionsWindow.Last?.Close(); throw new Exception("panel did not open (fell back to the plain sheet); see events.log"); }
+                await Shot(ed, Path.Combine(outDir, $"panel-{opId.Replace('.', '-')}.png"));
+                var status = ed.StatusText;
+                ed.Close();
+                await Task.WhenAny(t, Task.Delay(1000));
+                if (status.StartsWith("Preview failed") || status.StartsWith("Couldn't")) throw new Exception(status);
+                return string.IsNullOrEmpty(status) ? "ok" : status;
+            });
+        }
+
         var svc = ConversionService.Instance;
         async Task<string> Convert(string opId, params string[] files)
         {
@@ -174,6 +198,22 @@ public static class SelfTest
         await Try("merge PDFs via app service", true, () => Convert("pdf.merge", W("sample.pdf"), W("with-image.pdf")));
         await Try("MP4 → MP3 via app service (FFmpeg)", ToolLocator.Default.Has("ffmpeg"), () => Convert("video.to.mp3", W("sample.mp4")));
         await Try("DOCX → PDF (LibreOffice)", false, () => Convert("doc.to.pdf", W("sample.docx")));
+        async Task<string> ConvertWith(string opId, string file, params (string K, string V)[] o)
+        {
+            var jobs = await svc.RunAsync(svc.Registry.Get(opId), [file], o.ToDictionary(x => x.K, x => x.V), ui);
+            if (jobs.Count == 0 || jobs.Any(j => j.State != JobState.Succeeded)) throw new Exception(string.Join("; ", jobs.Select(j => j.Result?.Error + " " + j.Result?.Detail)));
+            return string.Join(", ", jobs.SelectMany(j => j.Result!.Outputs).Select(Path.GetFileName));
+        }
+        await Try("Edit photo via app service", true, () => ConvertWith("image.edit", W("sample.png"), ("exposure", "0.5"), ("contrast", "10")));
+        await Try("Add BG via app service", true, () => ConvertWith("image.add-background", W("sample-alpha.png"), ("background", "sunset"), ("padding", "8")));
+        await Try("Redact via app service", true, () => ConvertWith("image.redact", W("sample.png"), ("regions", "10,10,60,40"), ("style", "pixelate")));
+        await Try("Bleep via app service (FFmpeg)", ToolLocator.Default.Has("ffmpeg"), () => ConvertWith("audio.bleep", W("sample.wav"), ("ranges", "0.5-1"), ("sound", "beep")));
+        await Try("Zip a folder (Actions wheel)", true, async () =>
+        {
+            var dir = Path.Combine(Path.GetDirectoryName(W("sample.png"))!, "zip-me"); Directory.CreateDirectory(dir);
+            File.Copy(W("sample.png"), Path.Combine(dir, "a.png"), true);
+            return Path.GetFileName(await Orange.Core.Providers.ArchiveProvider.CreateZipAsync([dir], null, CancellationToken.None));
+        });
 
         await Try("read File Explorer selection", false, async () =>
         {

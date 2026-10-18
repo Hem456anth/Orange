@@ -203,7 +203,9 @@ public sealed class MainWindow : Window
             IReadOnlyDictionary<string, string>? opts = null;
             if (op.Options.Count > 0)
             {
-                opts = await OptionsWindow.AskAsync(op, _files.ToList(), ConversionService.Instance.RememberedOptions(op));
+                opts = Editors.HasPanel(op)
+                    ? await Editors.AskAsync(op, _files.ToList(), ConversionService.Instance.RememberedOptions(op))
+                    : await OptionsWindow.AskAsync(op, _files.ToList(), ConversionService.Instance.RememberedOptions(op));
                 if (opts is null) return;
             }
             await ConversionService.Instance.RunAsync(op, _files.ToList(), opts, DispatcherQueue);
@@ -355,7 +357,7 @@ public sealed class MainWindow : Window
 
     private static string Humanize(string s) => s switch
     {
-        "ExplorerAndDesktop" => "File Explorer and desktop", "AnyApp" => "Any app", "KeepBoth" => "Keep both", "Replace" => "Replace the existing file", "Fail" => "Stop and tell me",
+        "ExplorerAndDesktop" => "File Explorer and desktop", "AnyApp" => "Any app", "KeepBoth" => "Keep both", "Replace" => "Replace the existing file", "Fail" => "Stop and tell me", "AltShift" => "Alt + Shift", "Ctrl" => "Ctrl",
         _ => s,
     };
 
