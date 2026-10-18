@@ -1,0 +1,23 @@
+{
+  "os": "Microsoft Windows NT 10.0.26100.0",
+  "results": [
+    {
+      "name": "startup",
+      "passed": true,
+      "skipped": false,
+      "detail": "hooks installed"
+    },
+    {
+      "name": "A: OLE drag from a window, tap Shift, drop on WebP",
+      "passed": false,
+      "skipped": false,
+      "detail": "wheel did not appear after Shift: 2026-10-18T15:53:38.3064749Z step-ok notifications / 2026-10-18T15:53:39.1181839Z step-failed main-window System.Runtime.InteropServices.COMException (0x80070490): Element not found. |  | Element not found. |  |    at WinRT.ExceptionHelpers.\u003CThrowExceptionForHR\u003Eg__Throw|38_0(Int32 hr) |    at WinRT.ExceptionHelpers.ThrowExceptionForHR(Int32 hr) |    at ABI.Microsoft.UI.Xaml.Controls.INavigationViewMethods.set_SelectedItem(IObjectReference _obj, Object value) |    at Microsoft.UI.Xaml.Controls.NavigationView.set_SelectedItem(Object value) |    at Orange.App.Views.MainWindow..ctor() in D:\\a\\Orange\\Orange\\src\\Orange.App\\Views\\MainWindow.cs:line 61 |    at Orange.App.App.\u003C\u003Ec.\u003COnLaunched\u003Eb__21_0() in D:\\a\\Orange\\Orange\\src\\Orange.App\\App.xaml.cs:line 53 |    at Orange.App.App.Step(String name, Action a) in D:\\a\\Orange\\Orange\\src\\Orange.App\\App.xaml.cs:line 80 / 2026-10-18T15:53:39.1325300Z step-ok tray / 2026-10-18T15:53:39.1343823Z step-ok hotkey / 2026-10-18T15:53:39.1360105Z hooks-installed / 2026-10-18T15:53:39.1362503Z ready; DoDragDrop effect=None; output exists=False; source kept=True"
+    },
+    {
+      "name": "B: real File Explorer drag, tap Shift, drop on WebP",
+      "passed": false,
+      "skipped": true,
+      "detail": "Couldn\u0027t find the Explorer window or file via UI Automation (no interactive shell?)"
+    }
+  ]
+}
