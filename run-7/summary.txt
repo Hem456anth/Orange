@@ -1,0 +1,2 @@
+selftest exit=1
+probe exit=1
