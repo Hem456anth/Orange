@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.UI;
+using Orientation = Microsoft.UI.Xaml.Controls.Orientation;
 
 namespace Orange.App.Views;
 
