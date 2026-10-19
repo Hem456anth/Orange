@@ -32,8 +32,14 @@ public sealed class DocumentProvider(ToolLocator tools) : IOperationProvider
             };
         yield return new OperationDescriptor
         {
-            Id = "doc.to.pdf", Title = "PDF", Category = FileKind.Document, Group = OperationGroup.Convert, InputExtensions = Inputs,
+            Id = "doc.to.pdf", Title = "PDF", Category = FileKind.Document, Group = OperationGroup.Convert, InputExtensions = Inputs.Append("doc").ToHashSet(),
             OutputExtension = "pdf", RequiresTool = "libreoffice", Keywords = ["pdf", "print", "export"],
+        };
+        // Legacy binary Office files: LibreOffice only (the native readers cover DOCX/XLSX/XLS/PPTX).
+        yield return new OperationDescriptor
+        {
+            Id = "ppt.to.pdf", Title = "PDF", Category = FileKind.Presentation, Group = OperationGroup.Convert, InputExtensions = new HashSet<string> { "ppt" },
+            OutputExtension = "pdf", RequiresTool = "libreoffice", Keywords = ["powerpoint", "legacy", "pdf"],
         };
         yield return new OperationDescriptor
         {
@@ -44,7 +50,7 @@ public sealed class DocumentProvider(ToolLocator tools) : IOperationProvider
 
     public bool IsAvailable(OperationDescriptor op) => op.Id switch
     {
-        "doc.to.pdf" => tools.Has("libreoffice") || false,
+        "doc.to.pdf" or "ppt.to.pdf" => tools.Has("libreoffice"),
         "doc.word-count" => true,
         _ => tools.Has("pandoc"),
     };
@@ -81,7 +87,7 @@ public sealed class DocumentProvider(ToolLocator tools) : IOperationProvider
             reader = "html";
         }
 
-        if (op.Id == "doc.to.pdf")
+        if (op.Id is "doc.to.pdf" or "ppt.to.pdf")
         {
             // LibreOffice reads docx/odt/rtf/html directly; markdown/txt/epub go through DOCX first.
             if (srcExt is "md" or "txt" or "epub")

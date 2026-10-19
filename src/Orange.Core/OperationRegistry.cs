@@ -18,6 +18,7 @@ public sealed class OperationRegistry
         r.Add(new ImageStudioProvider());
         r.Add(new MediaProvider(tools));
         r.Add(new PdfProvider(tools));
+        r.Add(new OfficeProvider());          // before Documents: the built-in route wins for the same format
         r.Add(new DocumentProvider(tools));
         r.Add(new SubtitleProvider());
         r.Add(new ArchiveProvider(tools));
@@ -56,6 +57,9 @@ public sealed class OperationRegistry
             // A conversion to the format the files already are is pointless; hide it (unless mixed formats).
             .Where(o => !(o.Op.Group == OperationGroup.Convert && o.Op.OutputExtension is { } x && exts.Count == 1 && exts.Contains(Normalize(x))))
             .Select(o => o.Op)
+            // Two providers offering the same conversion (built-in DOCX→PDF and LibreOffice's): keep the first registered.
+            .GroupBy(o => o.Group == OperationGroup.Convert ? "convert:" + Normalize(o.OutputExtension ?? o.Id) + (o.ProducesFolder ? "/" : "") : o.Id)
+            .Select(g => g.First())
             .OrderBy(o => o.MinInputs > 1 && files.Count > 1 ? 0 : 1)   // multi-file selection: merge-type tools first
             .ToList();
     }
