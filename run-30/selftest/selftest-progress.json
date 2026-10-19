@@ -1,0 +1,200 @@
+[
+  {
+    "Name": "low-level mouse\u002Bkeyboard hooks install",
+    "Passed": true,
+    "Required": true,
+    "Detail": "SetWindowsHookEx WH_MOUSE_LL/WH_KEYBOARD_LL ok"
+  },
+  {
+    "Name": "hooks receive injected mouse input (needs an active input desktop)",
+    "Passed": false,
+    "Required": false,
+    "Detail": "System.Exception: hook installed but received no mouse events\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eb__3\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 66\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 51"
+  },
+  {
+    "Name": "global hotkey registers",
+    "Passed": true,
+    "Required": false,
+    "Detail": "RegisterHotKey ok"
+  },
+  {
+    "Name": "tray icon",
+    "Passed": true,
+    "Required": false,
+    "Detail": "Shell_NotifyIcon ok"
+  },
+  {
+    "Name": "context menu verb (HKCU) install/remove",
+    "Passed": true,
+    "Required": true,
+    "Detail": "\u0022D:\\a\\Orange\\Orange\\out\\Orange\\Orange.exe\u0022 --wheel \u0022%1\u0022"
+  },
+  {
+    "Name": "Send To shortcut install/remove",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "wheel: PNG convert items",
+    "Passed": true,
+    "Required": true,
+    "Detail": "convert=JPG,WebP,TIFF,BMP,GIF,AVIF,ICO,PDF tools=Compress,Metadata,Edit,Annotate,Add BG,Crop,Redact,More"
+  },
+  {
+    "Name": "wheel: hit-testing maps wedge centres back to wedges",
+    "Passed": true,
+    "Required": true,
+    "Detail": "8 wedges"
+  },
+  {
+    "Name": "wheel: MP4 and two-PDF selections are context-aware",
+    "Passed": true,
+    "Required": true,
+    "Detail": "mp4=MOV,MKV,WebM,AVI,GIF,MP3,M4A,WAV | 2 pdf tools=Merge PDFs,Compress,Split,Rotate,Extract images,Remove metadata"
+  },
+  {
+    "Name": "main window renders (convert, settings, about)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "options sheet renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "panel image.edit renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "320 \u00D7 200. Changes are previewed here and saved as a copy."
+  },
+  {
+    "Name": "panel image.add-background renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "panel image.redact renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "320 \u00D7 200 px"
+  },
+  {
+    "Name": "panel image.annotate renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "320 \u00D7 200 px"
+  },
+  {
+    "Name": "panel image.crop renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "320 \u00D7 200 px"
+  },
+  {
+    "Name": "panel image.metadata renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "2 entries, 0 sensitive."
+  },
+  {
+    "Name": "panel pdf.reorder renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "3 pages"
+  },
+  {
+    "Name": "panel audio.trim renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "0:02.00 long"
+  },
+  {
+    "Name": "panel audio.bleep renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "0:02.00 long"
+  },
+  {
+    "Name": "panel audio.channels renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "0:02.00 long"
+  },
+  {
+    "Name": "welcome window renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "convert PNG \u2192 WebP via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample.webp"
+  },
+  {
+    "Name": "convert JPG \u2192 HEIC (Magick.NET on Windows)",
+    "Passed": false,
+    "Required": false,
+    "Detail": "System.Exception\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Convert|14\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 204\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 51"
+  },
+  {
+    "Name": "merge PDFs via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample and 1 more Merged.pdf"
+  },
+  {
+    "Name": "MP4 \u2192 MP3 via app service (FFmpeg)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 2.mp3"
+  },
+  {
+    "Name": "DOCX \u2192 PDF (LibreOffice)",
+    "Passed": false,
+    "Required": false,
+    "Detail": "System.Exception\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Convert|14\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 204\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 51"
+  },
+  {
+    "Name": "Edit photo via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample Edited.png"
+  },
+  {
+    "Name": "Add BG via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample-alpha Background.png"
+  },
+  {
+    "Name": "Redact via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample Redacted.png"
+  },
+  {
+    "Name": "Bleep via app service (FFmpeg)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample Bleeped.wav"
+  },
+  {
+    "Name": "Zip a folder (Actions wheel)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "zip-me.zip"
+  },
+  {
+    "Name": "read File Explorer selection",
+    "Passed": false,
+    "Required": false,
+    "Detail": "System.Exception: Explorer window didn\u0027t report the selection (no interactive shell on this machine?)\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eb__26\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 238\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext() in D:\\a\\Orange\\Orange\\src\\Orange.App\\SelfTest.cs:line 51"
+  }
+]
