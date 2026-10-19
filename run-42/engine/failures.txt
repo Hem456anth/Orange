@@ -1,0 +1,76 @@
+[xUnit.net 00:00:02.79]       Assert.All() Failure: 1 out of 3 items in the collection did not pass.
+[xUnit.net 00:00:02.79]       [1]: Item:  Job { DisplayName = "sample.bmp → JPG", Progress = 1, Request = OperationRequest { Inputs = [···], Operation = OperationDescriptor { Id = image.to.jpg, Title = JPG, Category = Image, Group = Convert, InputExtensions = System.Collections.Generic.HashSet`1[System.String], OutputExtension = jpg, CombinesInputs = False, MinInputs = 1, ProducesFolder = False, Options = <>z__ReadOnlySingleElementList`1[Orange.Core.OptionSpec], Keywords = <>z__ReadOnlyArray`1[System.String], RequiresTool = , Icon =  }, Options = [···], OutputDirectory = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\oran"···, Overwrite = KeepBoth }, Result = OperationResult { Success = False, Outputs = System.String[], Error = Orange couldn't process this file., Detail = Cannot create a file when that file already exists. }, State = Failed }
+[xUnit.net 00:00:02.79]            Error: Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:02.79]                   Expected: Succeeded
+[xUnit.net 00:00:02.79]                   Actual:   Failed
+[xUnit.net 00:00:02.79]       Stack Trace:
+[xUnit.net 00:00:02.79]         D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs(96,0): at Orange.Core.Tests.ImageConversionTests.Batch_converts_each_file_and_reports_progress()
+[xUnit.net 00:00:02.79]       [1]: Item:  Job { DisplayName = "sample.bmp → JPG", Progress = 1, Request = OperationRequest { Inputs = [···], Operation = OperationDescriptor { Id = image.to.jpg, Title = JPG, Category = Image, Group = Convert, InputExtensions = System.Collections.Generic.HashSet`1[System.String], OutputExtension = jpg, CombinesInputs = False, MinInputs = 1, ProducesFolder = False, Options = <>z__ReadOnlySingleElementList`1[Orange.Core.OptionSpec], Keywords = <>z__ReadOnlyArray`1[System.String], RequiresTool = , Icon =  }, Options = [···], OutputDirectory = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\oran"···, Overwrite = KeepBoth }, Result = OperationResult { Success = False, Outputs = System.String[], Error = Orange couldn't process this file., Detail = Cannot create a file when that file already exists. }, State = Failed }
+[xUnit.net 00:00:02.79]            Error: Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:02.79]                   Expected: Succeeded
+[xUnit.net 00:00:02.79]                   Actual:   Failed
+[xUnit.net 00:00:02.79]       Stack Trace:
+[xUnit.net 00:00:02.79]         D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs(96,0): at Orange.Core.Tests.ImageConversionTests.Batch_converts_each_file_and_reports_progress()
+[xUnit.net 00:00:02.79]         --- End of stack trace from previous location ---
+[xUnit.net 00:00:02.79]            Error: Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:02.79]                   Expected: Succeeded
+[xUnit.net 00:00:02.79]                   Actual:   Failed
+[xUnit.net 00:00:02.79]       Stack Trace:
+[xUnit.net 00:00:02.79]         D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs(96,0): at Orange.Core.Tests.ImageConversionTests.Batch_converts_each_file_and_reports_progress()
+[xUnit.net 00:00:02.79]         --- End of stack trace from previous location ---
+  Passed Orange.Core.Tests.RegistryTests.Search_understands_plain_words [2 s]
+  Failed Orange.Core.Tests.ImageConversionTests.Batch_converts_each_file_and_reports_progress [2 s]
+  Error Message:
+   Assert.All() Failure: 1 out of 3 items in the collection did not pass.
+[1]: Item:  Job { DisplayName = "sample.bmp → JPG", Progress = 1, Request = OperationRequest { Inputs = [···], Operation = OperationDescriptor { Id = image.to.jpg, Title = JPG, Category = Image, Group = Convert, InputExtensions = System.Collections.Generic.HashSet`1[System.String], OutputExtension = jpg, CombinesInputs = False, MinInputs = 1, ProducesFolder = False, Options = <>z__ReadOnlySingleElementList`1[Orange.Core.OptionSpec], Keywords = <>z__ReadOnlyArray`1[System.String], RequiresTool = , Icon =  }, Options = [···], OutputDirectory = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\oran"···, Overwrite = KeepBoth }, Result = OperationResult { Success = False, Outputs = System.String[], Error = Orange couldn't process this file., Detail = Cannot create a file when that file already exists. }, State = Failed }
+     Error: Assert.Equal() Failure: Values differ
+            Expected: Succeeded
+            Actual:   Failed
+  Error Message:
+   Assert.All() Failure: 1 out of 3 items in the collection did not pass.
+[1]: Item:  Job { DisplayName = "sample.bmp → JPG", Progress = 1, Request = OperationRequest { Inputs = [···], Operation = OperationDescriptor { Id = image.to.jpg, Title = JPG, Category = Image, Group = Convert, InputExtensions = System.Collections.Generic.HashSet`1[System.String], OutputExtension = jpg, CombinesInputs = False, MinInputs = 1, ProducesFolder = False, Options = <>z__ReadOnlySingleElementList`1[Orange.Core.OptionSpec], Keywords = <>z__ReadOnlyArray`1[System.String], RequiresTool = , Icon =  }, Options = [···], OutputDirectory = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\oran"···, Overwrite = KeepBoth }, Result = OperationResult { Success = False, Outputs = System.String[], Error = Orange couldn't process this file., Detail = Cannot create a file when that file already exists. }, State = Failed }
+     Error: Assert.Equal() Failure: Values differ
+            Expected: Succeeded
+            Actual:   Failed
+  Stack Trace:
+   Assert.All() Failure: 1 out of 3 items in the collection did not pass.
+[1]: Item:  Job { DisplayName = "sample.bmp → JPG", Progress = 1, Request = OperationRequest { Inputs = [···], Operation = OperationDescriptor { Id = image.to.jpg, Title = JPG, Category = Image, Group = Convert, InputExtensions = System.Collections.Generic.HashSet`1[System.String], OutputExtension = jpg, CombinesInputs = False, MinInputs = 1, ProducesFolder = False, Options = <>z__ReadOnlySingleElementList`1[Orange.Core.OptionSpec], Keywords = <>z__ReadOnlyArray`1[System.String], RequiresTool = , Icon =  }, Options = [···], OutputDirectory = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\oran"···, Overwrite = KeepBoth }, Result = OperationResult { Success = False, Outputs = System.String[], Error = Orange couldn't process this file., Detail = Cannot create a file when that file already exists. }, State = Failed }
+     Error: Assert.Equal() Failure: Values differ
+            Expected: Succeeded
+            Actual:   Failed
+  Stack Trace:
+     at Orange.Core.Tests.ImageConversionTests.Batch_converts_each_file_and_reports_progress() in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 96
+[1]: Item:  Job { DisplayName = "sample.bmp → JPG", Progress = 1, Request = OperationRequest { Inputs = [···], Operation = OperationDescriptor { Id = image.to.jpg, Title = JPG, Category = Image, Group = Convert, InputExtensions = System.Collections.Generic.HashSet`1[System.String], OutputExtension = jpg, CombinesInputs = False, MinInputs = 1, ProducesFolder = False, Options = <>z__ReadOnlySingleElementList`1[Orange.Core.OptionSpec], Keywords = <>z__ReadOnlyArray`1[System.String], RequiresTool = , Icon =  }, Options = [···], OutputDirectory = "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\oran"···, Overwrite = KeepBoth }, Result = OperationResult { Success = False, Outputs = System.String[], Error = Orange couldn't process this file., Detail = Cannot create a file when that file already exists. }, State = Failed }
+     Error: Assert.Equal() Failure: Values differ
+            Expected: Succeeded
+            Actual:   Failed
+  Stack Trace:
+     at Orange.Core.Tests.ImageConversionTests.Batch_converts_each_file_and_reports_progress() in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 96
+--- End of stack trace from previous location ---
+     Error: Assert.Equal() Failure: Values differ
+            Expected: Succeeded
+            Actual:   Failed
+  Stack Trace:
+     at Orange.Core.Tests.ImageConversionTests.Batch_converts_each_file_and_reports_progress() in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 96
+--- End of stack trace from previous location ---
+  Passed Orange.Core.Tests.OfficeTests.Native_sheet_conversions(fixture: "sample.xlsx", op: "sheet.to.ods") [2 s]
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.mobi", op: "ebook.to.txt") [152 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [130 ms]
+  Passed Orange.Core.Tests.StudioTests.Redact_changes_only_the_marked_area(style: "black") [260 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [234 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "bmp") [34 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.epub", op: "ebook.to.txt") [81 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [234 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "bmp") [34 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.epub", op: "ebook.to.txt") [81 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [20 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [2 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "ico") [59 ms]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [53 ms]
+Total tests: 237
+Test Run Failed.
+     Passed: 235
+     Failed: 1
+    Skipped: 1
+ Total time: 26.5269 Seconds
