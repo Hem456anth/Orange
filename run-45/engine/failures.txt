@@ -1,0 +1,18 @@
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.epub", op: "ebook.to.txt") [21 ms]
+  Passed Orange.Core.Tests.OfficeTests.Native_sheet_conversions(fixture: "sample.xls", op: "sheet.to.xlsx") [168 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [133 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.mobi", op: "ebook.to.epub") [132 ms]
+  Passed Orange.Core.Tests.StudioTests.Redact_changes_only_the_marked_area(style: "pixelate") [264 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "bmp") [81 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [20 ms]
+  Passed Orange.Core.Tests.OfficeTests.Native_document_conversions(fixture: "sample.md", op: "doc.native.pdf") [30 ms]
+  Passed Orange.Core.Tests.OfficeTests.Html_reader_drops_scripts [1 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [21 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [2 ms]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [44 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_bomb_is_rejected [4 ms]
+Total tests: 247
+     Passed: 246
+    Skipped: 1
+ Total time: 25.6726 Seconds
