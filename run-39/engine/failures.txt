@@ -1,0 +1,18 @@
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.OfficeTests.Native_sheet_conversions(fixture: "sample.xls", op: "sheet.to.xlsx") [57 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [127 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "bmp") [24 ms]
+  Passed Orange.Core.Tests.StudioTests.Redact_changes_only_the_marked_area(style: "black") [227 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "ico") [82 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "gif") [53 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [8 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [6 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [3 ms]
+  Passed Orange.Core.Tests.WatchTests.Converts_with_a_preset_ignores_its_own_output_and_moves_originals [6 s]
+  Passed Orange.Core.Tests.WatchTests.Ignores_partial_and_temp_names(name: ".hidden.png", ignored: True) [3 ms]
+  Passed Orange.Core.Tests.WatchTests.Ignores_partial_and_temp_names(name: "video.mp4.crdownload", ignored: True) [1 ms]
+  Passed Orange.Core.Tests.WatchTests.Ignores_partial_and_temp_names(name: "photo.png", ignored: False) [< 1 ms]
+Total tests: 215
+     Passed: 214
+    Skipped: 1
+ Total time: 23.9328 Seconds
