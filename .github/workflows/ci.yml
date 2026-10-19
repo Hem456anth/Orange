@@ -24,7 +24,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          choco install -y --no-progress ffmpeg pandoc ghostscript libreoffice-fresh
+          New-Item -ItemType Directory -Force evidence | Out-Null
+          $ErrorActionPreference = 'Continue'
+          foreach ($try in 1,2) {
+            choco install -y --no-progress ffmpeg pandoc ghostscript libreoffice-fresh 2>&1 | Out-File -Append evidence/install.log
+            if ($LASTEXITCODE -eq 0) { break }
+            "choco attempt $try exit=$LASTEXITCODE" | Tee-Object -Append evidence/install.log
+          }
           if (-not (Get-Command pandoc -ErrorAction SilentlyContinue) -and -not (Test-Path 'C:\Program Files\Pandoc\pandoc.exe')) {
             # choco's pandoc package flakes on hosted runners; fall back to the official release zip
             $rel = gh release view -R jgm/pandoc --json assets | ConvertFrom-Json
@@ -32,9 +38,10 @@ jobs:
             Invoke-WebRequest $a.url -OutFile "$env:RUNNER_TEMP\pd.zip"; Expand-Archive "$env:RUNNER_TEMP\pd.zip" "$env:RUNNER_TEMP\pd" -Force
             (Get-ChildItem "$env:RUNNER_TEMP\pd" -Recurse -Filter pandoc.exe | Select-Object -First 1).Directory.FullName | Out-File -Append $env:GITHUB_PATH
           }
-          $gs = Get-ChildItem 'C:\Program Files\gs' -Directory | Sort-Object Name -Descending | Select-Object -First 1
-          "$($gs.FullName)\bin" | Out-File -Append $env:GITHUB_PATH
+          $gs = Get-ChildItem 'C:\Program Files\gs' -Directory -ErrorAction SilentlyContinue | Sort-Object Name -Descending | Select-Object -First 1
+          if ($gs) { "$($gs.FullName)\bin" | Out-File -Append $env:GITHUB_PATH } else { "ghostscript missing" | Tee-Object -Append evidence/install.log }
           'C:\Program Files\LibreOffice\program' | Out-File -Append $env:GITHUB_PATH
+          exit 0
       - name: Test
         shell: pwsh
         env:
@@ -65,6 +72,7 @@ jobs:
           New-Item -ItemType Directory -Force engine-evidence | Out-Null
           if (Test-Path engine-test.log) { Select-String -Path engine-test.log -Pattern 'Failed |Error Message|Assert|Skipped |Passed!|Failed!|Total tests' -Context 0,6 | ForEach-Object { $_.Line; $_.Context.PostContext } | Select-Object -First 400 | Out-File engine-evidence/failures.txt }
           Copy-Item operation-matrix.md engine-evidence/ -ErrorAction SilentlyContinue
+          Copy-Item evidence/install.log engine-evidence/ -ErrorAction SilentlyContinue
           $url = "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
           for ($i = 0; $i -lt 5; $i++) {
             $repo = "$env:RUNNER_TEMP\evrepo$i"
@@ -94,7 +102,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          choco install -y --no-progress ffmpeg pandoc ghostscript
+          New-Item -ItemType Directory -Force evidence | Out-Null
+          $ErrorActionPreference = 'Continue'
+          foreach ($try in 1,2) {
+            choco install -y --no-progress ffmpeg pandoc ghostscript 2>&1 | Out-File -Append evidence/install.log
+            if ($LASTEXITCODE -eq 0) { break }
+            "choco attempt $try exit=$LASTEXITCODE" | Tee-Object -Append evidence/install.log
+          }
           if (-not (Get-Command pandoc -ErrorAction SilentlyContinue) -and -not (Test-Path 'C:\Program Files\Pandoc\pandoc.exe')) {
             # choco's pandoc package flakes on hosted runners; fall back to the official release zip
             $rel = gh release view -R jgm/pandoc --json assets | ConvertFrom-Json
@@ -102,8 +116,10 @@ jobs:
             Invoke-WebRequest $a.url -OutFile "$env:RUNNER_TEMP\pd.zip"; Expand-Archive "$env:RUNNER_TEMP\pd.zip" "$env:RUNNER_TEMP\pd" -Force
             (Get-ChildItem "$env:RUNNER_TEMP\pd" -Recurse -Filter pandoc.exe | Select-Object -First 1).Directory.FullName | Out-File -Append $env:GITHUB_PATH
           }
-          $gs = Get-ChildItem 'C:\Program Files\gs' -Directory | Sort-Object Name -Descending | Select-Object -First 1
-          "$($gs.FullName)\bin" | Out-File -Append $env:GITHUB_PATH
+          $gs = Get-ChildItem 'C:\Program Files\gs' -Directory -ErrorAction SilentlyContinue | Sort-Object Name -Descending | Select-Object -First 1
+          if ($gs) { "$($gs.FullName)\bin" | Out-File -Append $env:GITHUB_PATH } else { "ghostscript missing" | Tee-Object -Append evidence/install.log }
+
+          exit 0
       - name: Build and publish Orange (x64, self-contained, unpackaged)
         shell: pwsh
         run: |
