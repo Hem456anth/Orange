@@ -1,0 +1,25 @@
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.UI.pri 101528
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.UI.Xaml.Controls.pri 1258296
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.WindowsAppRuntime.pri 8648
+pri: D:\a\Orange\Orange\out\Orange\Orange.pri 1353000
+uitest plain exit=0
+uitest bar exit=0
+uitest nav exit=0
+uitest combo exit=0
+uitest number exit=0
+uitest toggle exit=0
+uitest infobar exit=0
+uitest textbox exit=0
+uitest list exit=0
+uitest ring exit=0
+uitest orangebar exit=0
+uitest full exit=0
+selftest exit=0
+probe exit=1
+
+Name                                 Length
+----                                 ------
+Orange-0.1.0-win-x64-portable.zip 280967352
+Orange-0.1.0-win-x64-setup.exe    190765630
+
+
