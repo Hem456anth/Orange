@@ -309,6 +309,13 @@ public sealed class MainWindow : Window
         p.Children.Add(Number("Files converted at the same time", s.MaxParallelJobs, 1, 16, v => s.MaxParallelJobs = (int)v));
         p.Children.Add(Number("Largest input file (GB)", s.MaxInputGigabytes, 0.1, 200, v => s.MaxInputGigabytes = v));
 
+        p.Children.Add(Header("Troubleshooting"));
+        p.Children.Add(Toggle("Write a debug log", s.DebugLog, v => s.DebugLog = v,
+            "Records drag, key and drop events and conversion results in a text file on this PC. Nothing is sent anywhere. Turn it off when you're done."));
+        var openLogs = new Button { Content = "Open logs folder" };
+        openLogs.Click += (_, _) => { Directory.CreateDirectory(AppSettings.LogFolder); System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe") { ArgumentList = { AppSettings.LogFolder }, UseShellExecute = false }); };
+        p.Children.Add(openLogs);
+
         p.Children.Add(Header("Converters"));
         p.Children.Add(new TextBlock { Text = "Orange uses these programs on your PC. Missing ones only hide the operations that need them.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
         foreach (var tool in new[] { "ffmpeg", "ffprobe", "pandoc", "ghostscript", "libreoffice" })

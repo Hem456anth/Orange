@@ -36,6 +36,7 @@ Input files are untrusted (downloads, attachments). The user is trusted. Attacke
 
 - No network code in Orange. No telemetry, analytics, crash upload, update check, account or licence server. External tools are invoked with local paths only (FFmpeg protocol whitelist, Pandoc sandbox).
 - Data stored: `%LOCALAPPDATA%\Orange\settings.json` (preferences, last options per operation, favourites, last 50 recent conversions with output paths) and `crash.log` (local only). *About & privacy → Delete settings and history* removes them.
+- Optional debug log (Settings → Troubleshooting, off by default): `%LOCALAPPDATA%\Orange\logs\orange-yyyyMMdd.log`, 2 MB cap per file, 7 days kept, control characters stripped so names can't forge lines. Records hook/key events, drag data formats, drop targets, file paths and results; never contents; never sent anywhere (`LocalLogTests`).
 - The test-only trace (`ORANGE_TEST_EVENTS`) is off unless that environment variable is set; it records event names and file paths, never contents.
 
 ## 4. Verification status (honest)

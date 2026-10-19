@@ -31,6 +31,9 @@ public sealed class AppSettings
     public ThemeChoice Theme { get; set; } = ThemeChoice.System;
     public bool StartWithWindows { get; set; } = true;
     public bool WelcomeShown { get; set; }
+    /// <summary>Local troubleshooting log in %LOCALAPPDATA%\Orange\logs. Off by default; never uploaded.</summary>
+    public bool DebugLog { get; set; }
+    [JsonIgnore] public static string LogFolder => Path.Combine(Folder, "logs");
     public int MaxParallelJobs { get; set; } = Math.Max(1, Environment.ProcessorCount / 2);
     public double MaxInputGigabytes { get; set; } = 8;
     public Dictionary<string, string> ToolPaths { get; set; } = new();
@@ -88,6 +91,8 @@ public sealed class AppSettings
             MaxParallelJobs = Math.Clamp(MaxParallelJobs, 1, 16),
             MaxInputBytes = (long)(Math.Clamp(MaxInputGigabytes, 0.1, 200) * 1024 * 1024 * 1024),
         };
+        if (DebugLog || Environment.GetEnvironmentVariable("ORANGE_DEBUG_LOG") == "1") { if (!Orange.Core.Logging.LocalLog.Enabled) Orange.Core.Logging.LocalLog.Enable(LogFolder); }
+        else Orange.Core.Logging.LocalLog.Disable();
         foreach (var (tool, path) in ToolPaths) if (!string.IsNullOrWhiteSpace(path)) ToolLocator.Default.Override(tool, path);
     }
 
