@@ -40,7 +40,7 @@ automated tests (engine tests and/or Windows CI self-test) · 🟡 built, verifi
 
 | Feature | Tangerine | Orange | Notes |
 |---|---|---|---|
-| Wheel while dragging, by modifier | V Shift / Option / Command / Control combos | ✅🟡 Shift = convert, Alt+Shift = tools, Ctrl = actions, remappable | User confirmed Shift/Ctrl/Alt wheels open mid-drag on a Win11 laptop; Alt+Shift chord is new and awaits a real-PC check |
+| Wheel while dragging, by modifier | V Shift / Option / Command / Control combos | ✅🟡 0.2 defaults: Shift = convert, Shift twice = tools, Shift+Ctrl = actions (plain Ctrl/Alt are Explorer's copy/link keys), remappable | Gesture decoding unit-tested (`WheelKeyTests`); user confirmed single-key wheels open mid-drag on a Win11 laptop; new gestures await a real-PC check |
 | Wheel follows pointer, stays open after key release | V/P | ✅ | |
 | Hover tick sound | V | ❌ by design (silent; Windows sound scheme for done/error) | |
 | Keyboard wheel | P (Enter in Finder) | ✅ Ctrl+Alt+O on the Explorer selection; arrows, 1–9, Tab, Esc | Explorer reserves Enter |

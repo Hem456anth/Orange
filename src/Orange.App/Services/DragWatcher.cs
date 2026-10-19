@@ -4,14 +4,16 @@ using Orange.App.Interop;
 
 namespace Orange.App.Services;
 
+/// <summary>Same order as <see cref="WheelTarget"/> (cast between them).</summary>
 public enum WheelKind { Convert, Tools, Actions }
 
 /// <summary>
 /// Notices "a drag is in progress and the user tapped (or is holding) a wheel key" anywhere on the desktop.
 ///
 /// How: low-level mouse and keyboard hooks (WH_MOUSE_LL / WH_KEYBOARD_LL). They observe input only; every event is
-/// passed on unchanged, so Explorer's own drag (and its Shift = move / Ctrl = copy / Alt = link feedback) keeps
-/// working. The hooks never read keystrokes beyond the three modifier keys and Escape, and nothing is logged.
+/// passed on unchanged, so Explorer's own drag keeps working. Explorer reads Shift = move, Ctrl = copy, Alt = link;
+/// Orange's drop target always answers Copy, so a wheel key can never make Explorer move the source. Gestures
+/// (Shift, Shift twice, Shift+Ctrl by default) are decoded by the unit-tested <see cref="WheelKeyInterpreter"/>. The hooks never read keystrokes beyond the three modifier keys and Escape, and nothing is logged.
 /// A drag is "a left button press that moved past the system drag threshold"; by default it only counts when the
 /// press started on a File Explorer window or the desktop (Settings → Drag sources).
 ///
@@ -27,6 +29,8 @@ public sealed class DragWatcher : IDisposable
     private volatile bool _buttonDown, _dragging, _eligible, _wheelOpen;
     private IntPtr _sourceWindow;
     private volatile WheelKind _current;
+    private readonly WheelKeyInterpreter _keys = new();
+    private static long NowMs => Environment.TickCount64;
 
     public event Action<WheelKind, Native.POINT, IntPtr>? WheelRequested;   // kind, cursor (physical px), drag source window
     public event Action<WheelKind>? WheelKindChanged;
@@ -117,7 +121,7 @@ public sealed class DragWatcher : IDisposable
                     break;
                 case Native.WM_LBUTTONUP:
                     var was = _dragging;
-                    _buttonDown = false; _dragging = false;
+                    _buttonDown = false; _dragging = false; _keys.Reset();
                     if (was) { if (Diagnostics.Enabled) Diagnostics.Event($"lbutton-up {ms.pt.X},{ms.pt.Y} wheelOpen={_wheelOpen}"); _ui.TryEnqueue(() => DragEnded?.Invoke()); }
                     break;
             }
@@ -139,10 +143,18 @@ public sealed class DragWatcher : IDisposable
             if (Diagnostics.Enabled && kb.vkCode is 0x10 or 0xA0 or 0xA1 or 0x11 or 0xA2 or 0xA3 or 0x12 or 0xA4 or 0xA5)
                 Diagnostics.Event($"key {kb.vkCode} dragging={_dragging} eligible={_eligible} open={_wheelOpen}");
             if (kb.vkCode == Native.VK_ESCAPE && _wheelOpen) _ui.TryEnqueue(() => CancelRequested?.Invoke());
-            else if (!repeat && KindFor((int)kb.vkCode) is { } kind)
+            else if (!repeat && Modifier((int)kb.vkCode) is { } mod && (_dragging || _wheelOpen))
             {
-                if (_wheelOpen) { if (kind != _current) { _current = kind; _ui.TryEnqueue(() => WheelKindChanged?.Invoke(kind)); } }
-                else if (_dragging && _eligible) { Native.GetCursorPos(out var p); Raise(kind, p); }
+                SyncKeys();
+                var target = _keys.OnKeyDown(mod, mod == ModifierKey.Shift || Native.IsDown(Native.VK_SHIFT),
+                    mod == ModifierKey.Ctrl || Native.IsDown(Native.VK_CONTROL), mod == ModifierKey.Alt || Native.IsDown(Native.VK_MENU), NowMs);
+                if (Diagnostics.Enabled) Diagnostics.Event($"key-gesture {mod} -> {target?.ToString() ?? "none"}");
+                if (target is { } t)
+                {
+                    var kind = (WheelKind)(int)t;
+                    if (_wheelOpen) { if (kind != _current) { _current = kind; _ui.TryEnqueue(() => WheelKindChanged?.Invoke(kind)); } }
+                    else if (_dragging && _eligible) { Native.GetCursorPos(out var p); Raise(kind, p); }
+                }
             }
             _lastDown = kb.vkCode;
         }
@@ -160,41 +172,25 @@ public sealed class DragWatcher : IDisposable
         _ui.TryEnqueue(() => WheelRequested?.Invoke(kind, p, src));
     }
 
-    private static bool IsShift(int vk) => vk is Native.VK_SHIFT or Native.VK_LSHIFT or Native.VK_RSHIFT;
-    private static bool IsAlt(int vk) => vk is Native.VK_MENU or Native.VK_LMENU or Native.VK_RMENU;
+    private static ModifierKey? Modifier(int vk) => vk switch
+    {
+        Native.VK_SHIFT or Native.VK_LSHIFT or Native.VK_RSHIFT => ModifierKey.Shift,
+        Native.VK_CONTROL or Native.VK_LCONTROL or Native.VK_RCONTROL => ModifierKey.Ctrl,
+        Native.VK_MENU or Native.VK_LMENU or Native.VK_RMENU => ModifierKey.Alt,
+        _ => null,
+    };
 
-    /// <summary>
-    /// Maps a key press to a wheel. Alt+Shift is a chord: pressing Shift while Alt is held (or Alt while Shift is held)
-    /// means the AltShift wheel, so "Shift" alone and "Alt+Shift" can be two different wheels, like Shift / Option+Shift on a Mac.
-    /// </summary>
-    private static WheelKind? KindFor(int vk)
+    /// <summary>Settings can change at any time; copy the bindings in before interpreting a key.</summary>
+    private void SyncKeys()
     {
         var s = AppSettings.Current;
-        bool chord = IsShift(vk) && Native.IsDown(Native.VK_MENU) || IsAlt(vk) && Native.IsDown(Native.VK_SHIFT);
-        WheelKey? key = chord ? WheelKey.AltShift : vk switch
-        {
-            Native.VK_SHIFT or Native.VK_LSHIFT or Native.VK_RSHIFT => WheelKey.Shift,
-            Native.VK_CONTROL or Native.VK_LCONTROL or Native.VK_RCONTROL => WheelKey.Ctrl,
-            Native.VK_MENU or Native.VK_LMENU or Native.VK_RMENU => WheelKey.Alt,
-            _ => null,
-        };
-        if (key is null) return null;
-        // No wheel bound to the chord: fall back to the single key that was pressed.
-        if (key == WheelKey.AltShift && s.ConvertKey != WheelKey.AltShift && s.ToolsKey != WheelKey.AltShift && s.ActionsKey != WheelKey.AltShift)
-            key = IsShift(vk) ? WheelKey.Shift : WheelKey.Alt;
-        if (key == s.ConvertKey) return WheelKind.Convert;
-        if (key == s.ToolsKey) return WheelKind.Tools;
-        if (key == s.ActionsKey) return WheelKind.Actions;
-        return null;
+        _keys.ConvertKey = s.ConvertKey; _keys.ToolsKey = s.ToolsKey; _keys.ActionsKey = s.ActionsKey;
     }
 
-    private static WheelKind? HeldWheelKey()
+    private WheelKind? HeldWheelKey()
     {
-        if (Native.IsDown(Native.VK_SHIFT) && Native.IsDown(Native.VK_MENU)) return KindFor(Native.VK_SHIFT);   // chord
-        if (Native.IsDown(Native.VK_SHIFT)) return KindFor(Native.VK_SHIFT);
-        if (Native.IsDown(Native.VK_CONTROL)) return KindFor(Native.VK_CONTROL);
-        if (Native.IsDown(Native.VK_MENU)) return KindFor(Native.VK_MENU);
-        return null;
+        SyncKeys();
+        return _keys.ForHeld(Native.IsDown(Native.VK_SHIFT), Native.IsDown(Native.VK_CONTROL), Native.IsDown(Native.VK_MENU)) is { } t ? (WheelKind)(int)t : null;
     }
 
     private readonly Dictionary<uint, bool> _pidIsExplorer = new();

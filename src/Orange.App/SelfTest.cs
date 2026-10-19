@@ -106,6 +106,10 @@ public static class SelfTest
             await Shot(w, Path.Combine(outDir, "wheel-actions.png"));
             ((FrameworkElement)w.Content).RequestedTheme = ElementTheme.Dark; w.SetKind(WheelKind.Convert); await Task.Delay(300);
             await Shot(w, Path.Combine(outDir, "wheel-png-convert-dark.png"));
+            ((FrameworkElement)w.Content).RequestedTheme = ElementTheme.Light;
+            w.Wheel.SetHint("Shift: Convert\nShift twice: Tools\nShift+Ctrl: Actions"); await Task.Delay(200);
+            await Shot(w, Path.Combine(outDir, "wheel-key-hint.png"));
+            w.Wheel.SetHint(null);
             w.Close();
             if (!titles.Contains("WebP") || titles.Contains("PNG")) throw new Exception("unexpected items: " + string.Join(",", titles));
             return "convert=" + string.Join(",", titles) + " tools=" + string.Join(",", tools);

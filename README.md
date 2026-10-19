@@ -9,9 +9,11 @@ Orange is an independent project inspired by the workflow of [Tangerine for Mac]
 | Do this | Get this |
 |---|---|
 | Drag files in Explorer (or on the desktop), tap **Shift** | Convert wheel: formats for those files |
-| …hold **Alt** and tap **Shift** (Tangerine's Option+Shift) | Tools wheel: Compress, Metadata, Edit, Annotate, Add BG, Crop, Redact, Trim, Bleep, Merge… |
-| …tap **Ctrl** | Actions wheel: Share, Zip, Copy, Move to…, Copy path, Terminal, Show in folder |
+| …tap **Shift twice** quickly | Tools wheel: Compress, Metadata, Edit, Annotate, Add BG, Crop, Redact, Trim, Bleep, Merge… |
+| …press **Shift+Ctrl** | Actions wheel: Share, Zip, Copy, Move to…, Copy path, Terminal, Show in folder |
 | Drag a **folder** and tap Shift | ZIP |
+
+All keys can be changed in Settings → Activation. Orange always accepts a drop as a *copy*, so Explorer's Shift = move never moves your file.
 | Select files, press **Ctrl+Alt+O** | The same wheel, keyboard-driven: ←/→, Enter, Tab to switch wheels, Esc |
 | Right-click → *Convert with Orange* (Windows 11: *Show more options*), or *Send to → Orange* | The wheel for the selection |
 | Open Orange from the tray | Search every operation, favourites, recent conversions, settings |

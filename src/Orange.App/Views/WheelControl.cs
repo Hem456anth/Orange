@@ -42,6 +42,8 @@ public sealed class WheelControl : Grid
     private readonly TextBlock _pill = new() { FontSize = 12, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
     private readonly Border _pillBorder = new() { CornerRadius = new CornerRadius(10), Padding = new Thickness(10, 3, 10, 3) };
     private readonly TextBlock _name = new() { FontSize = 10.5, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, Opacity = 0.9 };
+    private readonly TextBlock _hint = new() { FontSize = 11, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, TextAlignment = TextAlignment.Center, TextWrapping = TextWrapping.Wrap, LineHeight = 14 };
+    private bool _hintOn;
     private IReadOnlyList<WheelItem> _items = Array.Empty<WheelItem>();
     private string _idleCaption = "";
     private int _highlight = -1;
@@ -77,6 +79,10 @@ public sealed class WheelControl : Grid
         _pillBorder.Width = InnerRadius * 1.8;
         Canvas.SetLeft(_pillBorder, diameter / 2 - _pillBorder.Width / 2);
         Canvas.SetTop(_pillBorder, diameter / 2 + thumbSize / 2 - 14);
+        _hint.Width = thumbSize + 16;
+        Canvas.SetLeft(_hint, diameter / 2 - _hint.Width / 2);
+        Canvas.SetTop(_hint, diameter / 2 - thumbSize / 2 - 6);
+        _hint.Visibility = Visibility.Collapsed;
         _name.Width = InnerRadius * 1.6;
         Canvas.SetLeft(_name, diameter / 2 - _name.Width / 2);
         Canvas.SetTop(_name, diameter / 2 + thumbSize / 2 + 12);
@@ -124,6 +130,7 @@ public sealed class WheelControl : Grid
             _segments.Add((shape, label, text, icon));
         }
         _canvas.Children.Add(_thumbClip);
+        _canvas.Children.Add(_hint);
         _canvas.Children.Add(_pillBorder);
         _canvas.Children.Add(_name);
         _pill.Text = idleCaption;
@@ -133,7 +140,17 @@ public sealed class WheelControl : Grid
     /// <summary>The file name under the size pill (Tangerine shows the dragged file's name with the wheel).</summary>
     public void SetFileName(string name) { _name.Text = name; AutomationProperties.SetName(this, string.IsNullOrEmpty(name) ? "Orange wheel" : $"Orange wheel for {name}"); }
 
-    public void SetThumbnail(ImageSource? src) { _thumb.Source = src; _thumbClip.Visibility = src is null ? Visibility.Collapsed : Visibility.Visible; }
+    public void SetThumbnail(ImageSource? src) { _thumb.Source = src; _thumbClip.Visibility = src is null || _hintOn ? Visibility.Collapsed : Visibility.Visible; }
+
+    /// <summary>Key reminder shown in the hub, in place of the thumbnail, for the first few drags. Null hides it.</summary>
+    public void SetHint(string? text)
+    {
+        _hintOn = !string.IsNullOrEmpty(text);
+        _hint.Text = text ?? "";
+        _hint.Visibility = _hintOn ? Visibility.Visible : Visibility.Collapsed;
+        _thumbClip.Visibility = _hintOn || _thumb.Source is null ? Visibility.Collapsed : Visibility.Visible;
+        AutomationProperties.SetHelpText(this, text ?? "");
+    }
 
     /// <summary>Index of the wedge under a point in control coordinates, or -1 (centre or outside).</summary>
     public int HitTest(Point p)
@@ -185,6 +202,7 @@ public sealed class WheelControl : Grid
         _pillBorder.Background = _highlight >= 0 && !hc ? BrandGradient() : new SolidColorBrush(hc ? Res("SystemColorHighlightColor", Colors.Blue) : Color.FromArgb(0xD0, 0x3A, 0x30, 0x2C));
         _pill.Foreground = new SolidColorBrush(Colors.White);
         _name.Foreground = new SolidColorBrush(hc ? fg.Color : Colors.White);
+        _hint.Foreground = new SolidColorBrush(hc ? fg.Color : Colors.White);
     }
 
     /// <summary>A sector whose sides are pulled in by different angles at the inner and outer radius (even gap width).</summary>
