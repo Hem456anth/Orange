@@ -1,0 +1,35 @@
+{
+  "os": "Microsoft Windows NT 10.0.26100.0",
+  "results": [
+    {
+      "name": "control: this probe\u0027s own low-level mouse hook sees SendInput",
+      "passed": false,
+      "skipped": false,
+      "detail": "hook=True err=0 events=0"
+    },
+    {
+      "name": "environment: integrity / session",
+      "passed": true,
+      "skipped": false,
+      "detail": "session=2 elevated=True interactive=True"
+    },
+    {
+      "name": "startup",
+      "passed": true,
+      "skipped": false,
+      "detail": "hooks installed"
+    },
+    {
+      "name": "A: OLE drag from a window, tap Shift, drop on WebP",
+      "passed": false,
+      "skipped": false,
+      "detail": "wheel did not appear after Shift: 2026-10-19T17:19:22.6085466Z step-ok tray / 2026-10-19T17:19:22.6098568Z step-ok hotkey / 2026-10-19T17:19:22.6119414Z hooks-installed / 2026-10-19T17:19:22.6123137Z ready / 2026-10-19T17:19:23.0295375Z lbutton-down 300,251 injected=True / 2026-10-19T17:19:23.8336487Z key 160 dragging=False eligible=True open=False; DoDragDrop effect=None; output exists=False; source kept=True"
+    },
+    {
+      "name": "B: real File Explorer drag, tap Shift, drop on WebP",
+      "passed": false,
+      "skipped": false,
+      "detail": "wheel did not appear after Shift: 2026-10-19T17:19:22.6119414Z hooks-installed / 2026-10-19T17:19:22.6123137Z ready / 2026-10-19T17:19:23.0295375Z lbutton-down 300,251 injected=True / 2026-10-19T17:19:23.8336487Z key 160 dragging=False eligible=True open=False / 2026-10-19T17:20:01.3822300Z lbutton-down 370,275 injected=True / 2026-10-19T17:20:02.1804003Z key 160 dragging=False eligible=True open=False; ; output exists=False; source kept despite Shift=True"
+    }
+  ]
+}
