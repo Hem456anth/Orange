@@ -111,7 +111,7 @@ public sealed class OptionsWindow : Window
         panel.Children.Add(error);
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, HorizontalAlignment = HorizontalAlignment.Right };
         var go = new Button { Content = op.Group == OperationGroup.Convert ? "Convert" : op.Title, Style = (Style)Application.Current.Resources["AccentButtonStyle"] };
-        var cancel = new Button { Content = "Cancel" };
+        var cancel = new Button { Content = L.T("Cancel") };
         go.Click += (_, _) =>
         {
             var result = _readers.ToDictionary(kv => kv.Key, kv => kv.Value());
@@ -155,9 +155,9 @@ public sealed class ProgressWindow : Window
     private readonly TextBlock _title = new() { FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, FontSize = 15, TextTrimming = TextTrimming.CharacterEllipsis };
     private readonly TextBlock _status = new() { Opacity = 0.75, TextWrapping = TextWrapping.Wrap, MaxLines = 3 };
     private readonly SimpleProgressBar _bar = new() { IsIndeterminate = true };
-    private readonly Button _primary = new() { Content = "Cancel" };
-    private readonly Button _details = new() { Content = "Details", Visibility = Visibility.Collapsed };
-    private readonly Button _retry = new() { Content = "Retry", Visibility = Visibility.Collapsed };
+    private readonly Button _primary = new() { Content = L.T("Cancel") };
+    private readonly Button _details = new() { Content = L.T("Details"), Visibility = Visibility.Collapsed };
+    private readonly Button _retry = new() { Content = L.T("Retry"), Visibility = Visibility.Collapsed };
     private IReadOnlyList<Job> _jobs = Array.Empty<Job>();
     /// <summary>Raised with the inputs of the failed jobs when the user presses Retry.</summary>
     public event Action<IReadOnlyList<string>>? RetryRequested;
@@ -185,7 +185,7 @@ public sealed class ProgressWindow : Window
         Content = panel;
         _primary.Click += (_, _) =>
         {
-            if (!_done) { CancelRequested?.Invoke(); _primary.IsEnabled = false; _status.Text = "Cancelling…"; }
+            if (!_done) { CancelRequested?.Invoke(); _primary.IsEnabled = false; _status.Text = L.T("Cancelling…"); }
             else { if (_outputs.Count > 0) Native.RevealInExplorer(_outputs); Close(); }
         };
         _details.Click += async (_, _) =>
@@ -258,7 +258,7 @@ public sealed class ProgressWindow : Window
         var w = new ProgressWindow(title, null) { _done = true, _detailText = detail ?? "" };
         w._bar.Visibility = Visibility.Collapsed;
         w._status.Text = message;
-        w._primary.Content = "Close";
+        w._primary.Content = L.T("Close");
         if (!string.IsNullOrEmpty(detail)) w._details.Visibility = Visibility.Visible;
         w.Activate();
     }
@@ -268,7 +268,7 @@ public sealed class ProgressWindow : Window
         var w = new ProgressWindow("Orange", null) { _done = true };
         w._bar.Visibility = Visibility.Collapsed;
         w._status.Text = message;
-        w._primary.Content = "Close";
+        w._primary.Content = L.T("Close");
         w.Activate();
         _ = w.AutoClose();
     }

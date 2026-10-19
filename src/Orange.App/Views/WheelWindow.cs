@@ -114,7 +114,7 @@ public sealed class WheelWindow : Window
     {
         var s = AppSettings.Current;
         if (s.KeyHintsShown >= 3) return;
-        _wheel.SetHint($"{KeyName(s.ConvertKey)}: Convert\n{KeyName(s.ToolsKey)}: Tools\n{KeyName(s.ActionsKey)}: Actions");
+        _wheel.SetHint(L.F("{0}: Convert", KeyName(s.ConvertKey)) + "\n" + L.F("{0}: Tools", KeyName(s.ToolsKey)) + "\n" + L.F("{0}: Actions", KeyName(s.ActionsKey)));
         s.KeyHintsShown++;
         try { s.Save(); } catch { }
     }
@@ -236,12 +236,12 @@ public sealed class WheelWindow : Window
             var shown = ordered.Count > room ? ordered.Take(room - 1).ToList() : ordered;
             foreach (var o in shown)
                 items.Add(new WheelItem(o.Title, group == OperationGroup.Tool ? Glyphs.For(o) : null, o,
-                    group == OperationGroup.Convert ? $"Convert to {o.Title}" : o.Title));
-            if (ordered.Count > room) items.Add(new WheelItem("More", "\uE712", "more", $"{ordered.Count - shown.Count} more options"));
+                    group == OperationGroup.Convert ? L.F("Convert to {0}", o.Title) : o.Title));
+            if (ordered.Count > room) items.Add(new WheelItem(L.T("More"), "\uE712", "more", L.F("{0} more options", ordered.Count - shown.Count)));
             if (ops.Count == 0 && items.Count == 0)
-                idle = _files.Count == 0 ? "No files" : files.Count != _files.Count ? $"Folder: tap {KeyName(s.ActionsKey)} for actions" :
-                       FileTypeDetector.Detect(files[0]) == FileKind.Unknown ? "Unsupported file" :
-                       files.Select(FileTypeDetector.Detect).Distinct().Count() > 1 ? "Mixed file types" : kind == WheelKind.Tools ? "No tools" : "No conversions";
+                idle = _files.Count == 0 ? L.T("No files") : files.Count != _files.Count ? L.F("Folder: tap {0} for actions", KeyName(s.ActionsKey)) :
+                       FileTypeDetector.Detect(files[0]) == FileKind.Unknown ? L.T("Unsupported file") :
+                       files.Select(FileTypeDetector.Detect).Distinct().Count() > 1 ? L.T("Mixed file types") : kind == WheelKind.Tools ? L.T("No tools") : L.T("No conversions");
         }
         _tags = items.Select(i => i.Tag).ToList();
         _wheel.SetItems(items, idle);
@@ -253,7 +253,7 @@ public sealed class WheelWindow : Window
 
     /// <summary>
     /// Wedge order for tools, after favourites and recents: the panels from Tangerine's image wheel first
-    /// (Compress, Metadata, Edit, Annotate, Add BG, Crop, Redact), the rest behind "More".
+    /// (Compress, Metadata, Edit, Annotate, Add BG, Crop, Redact), the rest behind L.T("More").
     /// </summary>
     private static string KeyName(WheelKey k) => WheelKeyInterpreter.Label(k);
 
@@ -272,9 +272,9 @@ public sealed class WheelWindow : Window
 
     private string Caption()
     {
-        if (_files.Count == 0) return "Drop here";
-        if (_files.Count > 1) return $"{_files.Count} files";
-        try { var fi = new FileInfo(_files[0]); return fi.Exists ? Size(fi.Length) : "Folder"; } catch { return ""; }
+        if (_files.Count == 0) return L.T("Drop here");
+        if (_files.Count > 1) return L.F("{0} files", _files.Count);
+        try { var fi = new FileInfo(_files[0]); return fi.Exists ? Size(fi.Length) : L.T("Folder"); } catch { return ""; }
     }
     private static string Size(long b) => b < 1024 ? $"{b} B" : b < 1 << 20 ? $"{b / 1024.0:0} KB" : b < 1 << 30 ? $"{b / 1048576.0:0.0} MB" : $"{b / 1073741824.0:0.00} GB";
 

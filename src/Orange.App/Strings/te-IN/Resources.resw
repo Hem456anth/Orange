@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="S6B21FB791A" xml:space="preserve"><value>గురించి</value><comment>About</comment></data>
+  <data name="S3BDC8163B2" xml:space="preserve"><value>గురించి &amp; గోప్యత</value><comment>About &amp; privacy</comment></data>
+  <data name="SE71B811B83" xml:space="preserve"><value>చర్యల వీల్ కీ</value><comment>Actions wheel key</comment></data>
+  <data name="SB9D3621863" xml:space="preserve"><value>యాక్టివేషన్</value><comment>Activation</comment></data>
+  <data name="S1C0DA9C5C6" xml:space="preserve"><value>ఫోల్డర్ జోడించు…</value><comment>Add folder…</comment></data>
+  <data name="S41DEF7A0FE" xml:space="preserve"><value>రూపం</value><comment>Appearance</comment></data>
+  <data name="SCFEA419C3B" xml:space="preserve"><value>వర్తింపజేయి</value><comment>Apply</comment></data>
+  <data name="S77DFD2135F" xml:space="preserve"><value>రద్దు చేయి</value><comment>Cancel</comment></data>
+  <data name="S736B9062B3" xml:space="preserve"><value>అప్‌డేట్‌ల కోసం తనిఖీ చేయి</value><comment>Check for updates</comment></data>
+  <data name="S2CE5DD0D6F" xml:space="preserve"><value>ఇప్పుడే తనిఖీ చేయి</value><comment>Check now</comment></data>
+  <data name="S820D6004B0" xml:space="preserve"><value>తనిఖీ చేస్తోంది…</value><comment>Checking…</comment></data>
+  <data name="S017DFB659B" xml:space="preserve"><value>ఫైళ్లను ఎంచుకోండి…</value><comment>Choose files…</comment></data>
+  <data name="SF0B6F756B9" xml:space="preserve"><value>ఫోల్డర్ ఎంచుకోండి…</value><comment>Choose folder…</comment></data>
+  <data name="S719EA396AD" xml:space="preserve"><value>క్లియర్ చేయి</value><comment>Clear</comment></data>
+  <data name="S53B5158BC7" xml:space="preserve"><value>చరిత్రను తొలగించు</value><comment>Clear history</comment></data>
+  <data name="SBBFA773E5A" xml:space="preserve"><value>మూసివేయి</value><comment>Close</comment></data>
+  <data name="S3F15CE7953" xml:space="preserve"><value>మార్చు</value><comment>Convert</comment></data>
+  <data name="S50382C07AC" xml:space="preserve"><value>ఫైళ్లను అవి ఉన్న చోటే మార్చండి, సవరించండి. అంతా ఈ PCలోనే ఉంటుంది.</value><comment>Convert and edit files right where they are. Everything stays on this PC.</comment></data>
+  <data name="SA30C9F5918" xml:space="preserve"><value>{0}కి మార్చు</value><comment>Convert to {0}</comment></data>
+  <data name="S34DBC8ADF9" xml:space="preserve"><value>కన్వర్ట్ వీల్ కీ</value><comment>Convert wheel key</comment></data>
+  <data name="S6A89FDE6D6" xml:space="preserve"><value>కన్వర్టర్‌లు</value><comment>Converters</comment></data>
+  <data name="S8E3DF45A49" xml:space="preserve"><value>కాపీ అయింది</value><comment>Copied</comment></data>
+  <data name="SAF74F7C536" xml:space="preserve"><value>కాపీ చేయి</value><comment>Copy</comment></data>
+  <data name="SF6FDBE48DC" xml:space="preserve"><value>తొలగించు</value><comment>Delete</comment></data>
+  <data name="S247E7BD0C4" xml:space="preserve"><value>సెట్టింగ్‌లు, చరిత్రను తొలగించు</value><comment>Delete settings and history</comment></data>
+  <data name="SDC3DECBB93" xml:space="preserve"><value>వివరాలు</value><comment>Details</comment></data>
+  <data name="S997E94A7BD" xml:space="preserve"><value>ఫైళ్లను లాగండి</value><comment>Drag files</comment></data>
+  <data name="S773489073E" xml:space="preserve"><value>ఫైళ్లను ఇక్కడ వదలండి</value><comment>Drop files here</comment></data>
+  <data name="S7C67E6FB70" xml:space="preserve"><value>ఇక్కడ వదలండి</value><comment>Drop here</comment></data>
+  <data name="S7F5D63AA39" xml:space="preserve"><value>ఇంజిన్‌లు</value><comment>Engines</comment></data>
+  <data name="S0A116345CA" xml:space="preserve"><value>ఎగుమతి…</value><comment>Export…</comment></data>
+  <data name="S07B3E447DB" xml:space="preserve"><value>ఇష్టమైనవి</value><comment>Favorites</comment></data>
+  <data name="S700869DC5E" xml:space="preserve"><value>ఫైల్ ఎక్స్‌ప్లోరర్</value><comment>File Explorer</comment></data>
+  <data name="S09979A78C9" xml:space="preserve"><value>ఫైల్ పేరు</value><comment>File name</comment></data>
+  <data name="S7072340B57" xml:space="preserve"><value>ఫైల్ రకం</value><comment>File type</comment></data>
+  <data name="S30BAA24967" xml:space="preserve"><value>ఫోల్డర్</value><comment>Folder</comment></data>
+  <data name="S90C9E8E6F3" xml:space="preserve"><value>ఫోల్డర్: చర్యల కోసం {0} నొక్కండి</value><comment>Folder: tap {0} for actions</comment></data>
+  <data name="S90E40D5043" xml:space="preserve"><value>ప్రారంభించండి</value><comment>Get started</comment></data>
+  <data name="SD4C2792A72" xml:space="preserve"><value>దాచబడింది</value><comment>Hidden</comment></data>
+  <data name="S4834CAF8F5" xml:space="preserve"><value>దిగుమతి…</value><comment>Import…</comment></data>
+  <data name="S89B86AB0E6" xml:space="preserve"><value>భాష</value><comment>Language</comment></data>
+  <data name="SA96A0F9E9D" xml:space="preserve"><value>కనుగొను…</value><comment>Locate…</comment></data>
+  <data name="S251EDC0EB5" xml:space="preserve"><value>మెటాడేటా</value><comment>Metadata</comment></data>
+  <data name="S8CDF7D4FFF" xml:space="preserve"><value>వేర్వేరు రకాల ఫైళ్లు</value><comment>Mixed file types</comment></data>
+  <data name="S4BAB2D8FE1" xml:space="preserve"><value>మరిన్ని</value><comment>More</comment></data>
+  <data name="S709A23220F" xml:space="preserve"><value>పేరు</value><comment>Name</comment></data>
+  <data name="S806DAFA0EB" xml:space="preserve"><value>కొత్త ప్రీసెట్</value><comment>New preset</comment></data>
+  <data name="SDF020D0423" xml:space="preserve"><value>అసలు ఫైల్ పక్కన</value><comment>Next to the original</comment></data>
+  <data name="SFEFC469310" xml:space="preserve"><value>అసలు ఫైల్ పక్కన</value><comment>Next to the original file</comment></data>
+  <data name="S978E7379FF" xml:space="preserve"><value>మార్పిడులు లేవు</value><comment>No conversions</comment></data>
+  <data name="SCCC17F6130" xml:space="preserve"><value>ఫైళ్లు లేవు</value><comment>No files</comment></data>
+  <data name="S243F77D7BE" xml:space="preserve"><value>టూల్స్ లేవు</value><comment>No tools</comment></data>
+  <data name="SB4AE3B97C5" xml:space="preserve"><value>ఇంకా ఏమీ లేదు. మీ చివరి 50 మార్పిడులు ఇక్కడ కనిపిస్తాయి.</value><comment>Nothing yet. Your last 50 conversions appear here.</comment></data>
+  <data name="SA392B09798" xml:space="preserve"><value>పూర్తయ్యాక తెలియజేయి</value><comment>Notify when done</comment></data>
+  <data name="S4B013BEE83" xml:space="preserve"><value>వీల్‌పై</value><comment>On wheel</comment></data>
+  <data name="S2362AABD36" xml:space="preserve"><value>లాగ్ ఫోల్డర్ తెరువు</value><comment>Open logs folder</comment></data>
+  <data name="S92DFD13345" xml:space="preserve"><value>డౌన్‌లోడ్ పేజీ తెరువు</value><comment>Open the download page</comment></data>
+  <data name="S71833AFB3E" xml:space="preserve"><value>ఫైళ్లను లాగుతున్నప్పుడు వీల్ తెరవు</value><comment>Open the wheel while dragging files</comment></data>
+  <data name="S430D32076E" xml:space="preserve"><value>ఆపరేషన్</value><comment>Operation</comment></data>
+  <data name="S70E0A39308" xml:space="preserve"><value>లేదా ఎక్కడైనా: ఫైల్ ఎక్స్‌ప్లోరర్‌లో ఫైళ్లను లాగి Shift నొక్కండి.</value><comment>Or anywhere: drag files in File Explorer and tap Shift.</comment></data>
+  <data name="S9A0F8A6EAD" xml:space="preserve"><value>Orange {0} అందుబాటులో ఉంది.</value><comment>Orange {0} is available.</comment></data>
+  <data name="S4BED336194" xml:space="preserve"><value>అవుట్‌పుట్</value><comment>Output</comment></data>
+  <data name="S314D642E91" xml:space="preserve"><value>అన్ని వాచ్ ఫోల్డర్‌లను ఆపు</value><comment>Pause all watch folders</comment></data>
+  <data name="S71EDE17FB1" xml:space="preserve"><value>పనితీరు మరియు పరిమితులు</value><comment>Performance and limits</comment></data>
+  <data name="SE709E76FF5" xml:space="preserve"><value>ప్రీసెట్‌లు</value><comment>Presets</comment></data>
+  <data name="SCF01481F62" xml:space="preserve"><value>గోప్యత</value><comment>Privacy</comment></data>
+  <data name="S76EEC760C9" xml:space="preserve"><value>ఇటీవలివి</value><comment>Recent</comment></data>
+  <data name="SE963907DAC" xml:space="preserve"><value>తీసివేయి</value><comment>Remove</comment></data>
+  <data name="S2BE5029FBC" xml:space="preserve"><value>అన్ని రేకులను రీసెట్ చేయి</value><comment>Reset all petals</comment></data>
+  <data name="S0D0E3867A4" xml:space="preserve"><value>భాష మార్చడానికి Orangeని మళ్ళీ ప్రారంభించండి.</value><comment>Restart Orange to switch language.</comment></data>
+  <data name="S894A58AB60" xml:space="preserve"><value>డిఫాల్ట్‌లను పునరుద్ధరించు</value><comment>Restore defaults</comment></data>
+  <data name="S9F5CD8A2E8" xml:space="preserve"><value>మళ్ళీ ప్రయత్నించు</value><comment>Retry</comment></data>
+  <data name="S221CC26FEF" xml:space="preserve"><value>Windows లాగే</value><comment>Same as Windows</comment></data>
+  <data name="S82889739CA" xml:space="preserve"><value>ప్రీసెట్ సేవ్ చేయి</value><comment>Save preset</comment></data>
+  <data name="S7A0E8C6186" xml:space="preserve"><value>ఫలితాలను ఇక్కడ సేవ్ చేయి</value><comment>Save results to</comment></data>
+  <data name="SF142818A71" xml:space="preserve"><value>ఇక్కడ సేవ్ చేయి</value><comment>Save to</comment></data>
+  <data name="S8C869B7A3D" xml:space="preserve"><value>వెతకండి: webp, compress, to mp3, merge pdf…</value><comment>Search: webp, compress, to mp3, merge pdf…</comment></data>
+  <data name="SC7F73BB54D" xml:space="preserve"><value>సెట్టింగ్‌లు</value><comment>Settings</comment></data>
+  <data name="S2E7109BDA2" xml:space="preserve"><value>సెట్టింగ్‌ల విభాగాలు</value><comment>Settings sections</comment></data>
+  <data name="SD97D1EE339" xml:space="preserve"><value>చూపించు</value><comment>Show</comment></data>
+  <data name="S4B67E5067F" xml:space="preserve"><value>ఫలితాలను ఫైల్ ఎక్స్‌ప్లోరర్‌లో చూపించు</value><comment>Show results in File Explorer</comment></data>
+  <data name="SFB1C39E9F4" xml:space="preserve"><value>శబ్దాలు</value><comment>Sounds</comment></data>
+  <data name="S44C8EAC0A9" xml:space="preserve"><value>సైన్ ఇన్ అయినప్పుడు Orange ప్రారంభించు</value><comment>Start Orange when I sign in</comment></data>
+  <data name="SE2CD8B387C" xml:space="preserve"><value>ఫైల్ ఎక్స్‌ప్లోరర్ లేదా డెస్క్‌టాప్‌లో ఒకటి లేదా ఎక్కువ ఫైళ్లను లాగడం ప్రారంభించండి. మౌస్ బటన్‌ను నొక్కి ఉంచండి.</value><comment>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</comment></data>
+  <data name="SA797E30923" xml:space="preserve"><value>థీమ్</value><comment>Theme</comment></data>
+  <data name="S72C5D67385" xml:space="preserve"><value>టూల్స్ వీల్ కీ</value><comment>Tools wheel key</comment></data>
+  <data name="S285EC850C1" xml:space="preserve"><value>సమస్య పరిష్కారం</value><comment>Troubleshooting</comment></data>
+  <data name="S39FC721248" xml:space="preserve"><value>రద్దు చేయి</value><comment>Undo</comment></data>
+  <data name="SA735DA1D32" xml:space="preserve"><value>అన్‌ఇన్‌స్టాల్ చేయి</value><comment>Uninstall</comment></data>
+  <data name="S71FC0B3558" xml:space="preserve"><value>మద్దతు లేని ఫైల్</value><comment>Unsupported file</comment></data>
+  <data name="SC76D18079A" xml:space="preserve"><value>అప్‌డేట్‌లు</value><comment>Updates</comment></data>
+  <data name="SBA83F8AAA9" xml:space="preserve"><value>వాచ్ ఫోల్డర్‌లు</value><comment>Watch folders</comment></data>
+  <data name="S35AA5E321D" xml:space="preserve"><value>Orangeకి స్వాగతం</value><comment>Welcome to Orange</comment></data>
+  <data name="S0D972AFCE8" xml:space="preserve"><value>వీల్</value><comment>Wheel</comment></data>
+  <data name="S023871A68C" xml:space="preserve"><value>వీల్ ఎడిటర్</value><comment>Wheel editor</comment></data>
+  <data name="S0E8368E2E1" xml:space="preserve"><value>డీబగ్ లాగ్ రాయి</value><comment>Write a debug log</comment></data>
+  <data name="S574A1BF604" xml:space="preserve"><value>కీలు, షార్ట్‌కట్‌లు, ఫోల్డర్‌లను ఎప్పుడైనా సెట్టింగ్‌లలో మార్చవచ్చు.</value><comment>You can change keys, shortcuts and folders any time in Settings.</comment></data>
+  <data name="SEAED5F0C8D" xml:space="preserve"><value>మీ దగ్గర తాజా వెర్షన్ ఉంది.</value><comment>You have the latest version.</comment></data>
+  <data name="S48CD18DABC" xml:space="preserve"><value>మీ డేటా</value><comment>Your data</comment></data>
+  <data name="S9DC9940B61" xml:space="preserve"><value>{0} ఫైళ్లు</value><comment>{0} files</comment></data>
+  <data name="SE69D1C4AF7" xml:space="preserve"><value>మరో {0} ఎంపికలు</value><comment>{0} more options</comment></data>
+  <data name="SAE536BF5C7" xml:space="preserve"><value>{0}: చర్యలు</value><comment>{0}: Actions</comment></data>
+  <data name="S2A48481CB2" xml:space="preserve"><value>{0}: మార్చు</value><comment>{0}: Convert</comment></data>
+  <data name="S60B20DE398" xml:space="preserve"><value>{0}: టూల్స్</value><comment>{0}: Tools</comment></data>
+</root>

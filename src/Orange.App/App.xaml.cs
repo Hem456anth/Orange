@@ -42,6 +42,7 @@ public partial class App : Application
         var args = Environment.GetCommandLineArgs().Skip(1).ToList();
         var settings = AppSettings.Current;
         settings.Apply();
+        L.Init(settings.Language);
         try { AppSettings.Engines.Register(); } catch { /* a broken engine folder must not stop start-up */ }
         SafePaths.TempWorkspace.CleanupStale();
 
@@ -118,6 +119,17 @@ public partial class App : Application
         catch (Exception e) { Diagnostics.Event("hooks-failed " + e.Message); ProgressWindow.ShowError("Orange", "Drag activation is unavailable on this PC.", e.Message); }
 
         Step("watch-folders", WatchService.Start);
+        if (settings.CheckForUpdates && (settings.LastUpdateCheck is null || DateTimeOffset.Now - settings.LastUpdateCheck > TimeSpan.FromDays(1)))
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var info = await new Orange.Core.Updates.UpdateChecker().CheckAsync(typeof(App).Assembly.GetName().Version ?? new Version(0, 0));
+                    settings.LastUpdateCheck = DateTimeOffset.Now; settings.Save();
+                    if (info.IsNewer) _ui!.TryEnqueue(() => ProgressWindow.ShowInfo(L.F("Orange {0} is available. Open Settings → Updates to read what's new.", info.Version)));
+                }
+                catch (Exception e) { Diagnostics.Event("update-check-failed " + e.Message); }
+            });
         Step("menu-file", () => ConversionService.Instance.WriteContextMenuFile());
         Dispatch(args);
         if (!args.Contains("--background") && args.FirstOrDefault() is not ("--preset" or "--to")) Step("welcome", WelcomeWindow.ShowIfFirstRun);

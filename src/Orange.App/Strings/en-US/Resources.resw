@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="SFE6081B81A" xml:space="preserve"><value>A preset is a format plus its settings and a naming rule. Pinned presets appear first on the wheel for files they fit.</value><comment>A preset is a format plus its settings and a naming rule. Pinned presets appear first on the wheel for files they fit.</comment></data>
+  <data name="S6B21FB791A" xml:space="preserve"><value>About</value><comment>About</comment></data>
+  <data name="S3BDC8163B2" xml:space="preserve"><value>About &amp; privacy</value><comment>About &amp; privacy</comment></data>
+  <data name="SE71B811B83" xml:space="preserve"><value>Actions wheel key</value><comment>Actions wheel key</comment></data>
+  <data name="SB9D3621863" xml:space="preserve"><value>Activation</value><comment>Activation</comment></data>
+  <data name="S1C0DA9C5C6" xml:space="preserve"><value>Add folder…</value><comment>Add folder…</comment></data>
+  <data name="S41DEF7A0FE" xml:space="preserve"><value>Appearance</value><comment>Appearance</comment></data>
+  <data name="SCFEA419C3B" xml:space="preserve"><value>Apply</value><comment>Apply</comment></data>
+  <data name="SC82D6539BC" xml:space="preserve"><value>Ask for settings before running tools (trim, crop…)</value><comment>Ask for settings before running tools (trim, crop…)</comment></data>
+  <data name="S64DD60FE1A" xml:space="preserve"><value>Background</value><comment>Background</comment></data>
+  <data name="S77DFD2135F" xml:space="preserve"><value>Cancel</value><comment>Cancel</comment></data>
+  <data name="S1323927CA7" xml:space="preserve"><value>Cancelled. Nothing was installed.</value><comment>Cancelled. Nothing was installed.</comment></data>
+  <data name="SCEE18487B5" xml:space="preserve"><value>Cancelling…</value><comment>Cancelling…</comment></data>
+  <data name="S736B9062B3" xml:space="preserve"><value>Check for updates</value><comment>Check for updates</comment></data>
+  <data name="S2CE5DD0D6F" xml:space="preserve"><value>Check now</value><comment>Check now</comment></data>
+  <data name="S820D6004B0" xml:space="preserve"><value>Checking…</value><comment>Checking…</comment></data>
+  <data name="S017DFB659B" xml:space="preserve"><value>Choose files…</value><comment>Choose files…</comment></data>
+  <data name="SF0B6F756B9" xml:space="preserve"><value>Choose folder…</value><comment>Choose folder…</comment></data>
+  <data name="S87C2240851" xml:space="preserve"><value>Choose which petals each kind of file shows, and their order. Favourites and pinned presets still come first.</value><comment>Choose which petals each kind of file shows, and their order. Favourites and pinned presets still come first.</comment></data>
+  <data name="S719EA396AD" xml:space="preserve"><value>Clear</value><comment>Clear</comment></data>
+  <data name="S53B5158BC7" xml:space="preserve"><value>Clear history</value><comment>Clear history</comment></data>
+  <data name="SBBFA773E5A" xml:space="preserve"><value>Close</value><comment>Close</comment></data>
+  <data name="S3F15CE7953" xml:space="preserve"><value>Convert</value><comment>Convert</comment></data>
+  <data name="S50382C07AC" xml:space="preserve"><value>Convert and edit files right where they are. Everything stays on this PC.</value><comment>Convert and edit files right where they are. Everything stays on this PC.</comment></data>
+  <data name="SA30C9F5918" xml:space="preserve"><value>Convert to {0}</value><comment>Convert to {0}</comment></data>
+  <data name="S34DBC8ADF9" xml:space="preserve"><value>Convert wheel key</value><comment>Convert wheel key</comment></data>
+  <data name="S6A89FDE6D6" xml:space="preserve"><value>Converters</value><comment>Converters</comment></data>
+  <data name="S8E3DF45A49" xml:space="preserve"><value>Copied</value><comment>Copied</comment></data>
+  <data name="SAF74F7C536" xml:space="preserve"><value>Copy</value><comment>Copy</comment></data>
+  <data name="SDCE04FD315" xml:space="preserve"><value>Custom…</value><comment>Custom…</comment></data>
+  <data name="SF6FDBE48DC" xml:space="preserve"><value>Delete</value><comment>Delete</comment></data>
+  <data name="S247E7BD0C4" xml:space="preserve"><value>Delete settings and history</value><comment>Delete settings and history</comment></data>
+  <data name="SDC3DECBB93" xml:space="preserve"><value>Details</value><comment>Details</comment></data>
+  <data name="S997E94A7BD" xml:space="preserve"><value>Drag files</value><comment>Drag files</comment></data>
+  <data name="S9023493CF5" xml:space="preserve"><value>Drags that open the wheel</value><comment>Drags that open the wheel</comment></data>
+  <data name="S773489073E" xml:space="preserve"><value>Drop files here</value><comment>Drop files here</comment></data>
+  <data name="S7C67E6FB70" xml:space="preserve"><value>Drop here</value><comment>Drop here</comment></data>
+  <data name="S7F5D63AA39" xml:space="preserve"><value>Engines</value><comment>Engines</comment></data>
+  <data name="S94CAEAF6C8" xml:space="preserve"><value>Example: </value><comment>Example: </comment></data>
+  <data name="S0A116345CA" xml:space="preserve"><value>Export…</value><comment>Export…</comment></data>
+  <data name="S07B3E447DB" xml:space="preserve"><value>Favorites</value><comment>Favorites</comment></data>
+  <data name="SCF2EBEB47B" xml:space="preserve"><value>Favorites appear first on the wheel. Star operations on the Convert page.</value><comment>Favorites appear first on the wheel. Star operations on the Convert page.</comment></data>
+  <data name="S700869DC5E" xml:space="preserve"><value>File Explorer</value><comment>File Explorer</comment></data>
+  <data name="S09979A78C9" xml:space="preserve"><value>File name</value><comment>File name</comment></data>
+  <data name="S7072340B57" xml:space="preserve"><value>File type</value><comment>File type</comment></data>
+  <data name="S732646E539" xml:space="preserve"><value>Files converted at the same time</value><comment>Files converted at the same time</comment></data>
+  <data name="S30BAA24967" xml:space="preserve"><value>Folder</value><comment>Folder</comment></data>
+  <data name="S90C9E8E6F3" xml:space="preserve"><value>Folder: tap {0} for actions</value><comment>Folder: tap {0} for actions</comment></data>
+  <data name="S90E40D5043" xml:space="preserve"><value>Get started</value><comment>Get started</comment></data>
+  <data name="SD4C2792A72" xml:space="preserve"><value>Hidden</value><comment>Hidden</comment></data>
+  <data name="S05BB7DB66F" xml:space="preserve"><value>If the name is taken</value><comment>If the name is taken</comment></data>
+  <data name="S4834CAF8F5" xml:space="preserve"><value>Import…</value><comment>Import…</comment></data>
+  <data name="S89B86AB0E6" xml:space="preserve"><value>Language</value><comment>Language</comment></data>
+  <data name="SDE69D5D930" xml:space="preserve"><value>Largest input file (GB)</value><comment>Largest input file (GB)</comment></data>
+  <data name="SA36EF8ABA2" xml:space="preserve"><value>Light</value><comment>Light</comment></data>
+  <data name="SA96A0F9E9D" xml:space="preserve"><value>Locate…</value><comment>Locate…</comment></data>
+  <data name="S251EDC0EB5" xml:space="preserve"><value>Metadata</value><comment>Metadata</comment></data>
+  <data name="S8CDF7D4FFF" xml:space="preserve"><value>Mixed file types</value><comment>Mixed file types</comment></data>
+  <data name="SC5C5533844" xml:space="preserve"><value>Mono</value><comment>Mono</comment></data>
+  <data name="S4BAB2D8FE1" xml:space="preserve"><value>More</value><comment>More</comment></data>
+  <data name="SB044176D71" xml:space="preserve"><value>Move originals to an Originals folder</value><comment>Move originals to an Originals folder</comment></data>
+  <data name="S709A23220F" xml:space="preserve"><value>Name</value><comment>Name</comment></data>
+  <data name="S2002D74EC2" xml:space="preserve"><value>New files dropped into a watched folder are converted with a preset while Orange runs in the tray. Orange waits until a file has finished copying or downloading, and never re-converts its own results.</value><comment>New files dropped into a watched folder are converted with a preset while Orange runs in the tray. Orange waits until a file has finished copying or downloading, and never re-converts its own results.</comment></data>
+  <data name="S806DAFA0EB" xml:space="preserve"><value>New preset</value><comment>New preset</comment></data>
+  <data name="SDF020D0423" xml:space="preserve"><value>Next to the original</value><comment>Next to the original</comment></data>
+  <data name="SFEFC469310" xml:space="preserve"><value>Next to the original file</value><comment>Next to the original file</comment></data>
+  <data name="S978E7379FF" xml:space="preserve"><value>No conversions</value><comment>No conversions</comment></data>
+  <data name="SCCC17F6130" xml:space="preserve"><value>No files</value><comment>No files</comment></data>
+  <data name="S243F77D7BE" xml:space="preserve"><value>No tools</value><comment>No tools</comment></data>
+  <data name="SB4AE3B97C5" xml:space="preserve"><value>Nothing yet. Your last 50 conversions appear here.</value><comment>Nothing yet. Your last 50 conversions appear here.</comment></data>
+  <data name="SA392B09798" xml:space="preserve"><value>Notify when done</value><comment>Notify when done</comment></data>
+  <data name="S63BA343FAE" xml:space="preserve"><value>Off by default. When on, Orange asks GitHub once a day whether a newer version exists. Nothing about you or your files is sent, and nothing is downloaded automatically.</value><comment>Off by default. When on, Orange asks GitHub once a day whether a newer version exists. Nothing about you or your files is sent, and nothing is downloaded automatically.</comment></data>
+  <data name="S4B013BEE83" xml:space="preserve"><value>On wheel</value><comment>On wheel</comment></data>
+  <data name="S2362AABD36" xml:space="preserve"><value>Open logs folder</value><comment>Open logs folder</comment></data>
+  <data name="S92DFD13345" xml:space="preserve"><value>Open the download page</value><comment>Open the download page</comment></data>
+  <data name="S71833AFB3E" xml:space="preserve"><value>Open the wheel while dragging files</value><comment>Open the wheel while dragging files</comment></data>
+  <data name="S430D32076E" xml:space="preserve"><value>Operation</value><comment>Operation</comment></data>
+  <data name="S60D30FAFF4" xml:space="preserve"><value>Optional helpers Orange can download for you. Downloads happen only when you press Install, come from the project's official release page, and are checked against a fingerprint built into Orange before anything is installed.</value><comment>Optional helpers Orange can download for you. Downloads happen only when you press Install, come from the project's official release page, and are checked against a fingerprint built into Orange before anything is installed.</comment></data>
+  <data name="S70E0A39308" xml:space="preserve"><value>Or anywhere: drag files in File Explorer and tap Shift.</value><comment>Or anywhere: drag files in File Explorer and tap Shift.</comment></data>
+  <data name="SB50B8238AC" xml:space="preserve"><value>Orange in the Send to menu</value><comment>Orange in the Send to menu</comment></data>
+  <data name="SDC77451D8C" xml:space="preserve"><value>Orange uses the new language the next time it starts. Hindi and Telugu translations are new; corrections are welcome.</value><comment>Orange uses the new language the next time it starts. Hindi and Telugu translations are new; corrections are welcome.</comment></data>
+  <data name="SF714CDCF58" xml:space="preserve"><value>Orange uses these programs on your PC. Missing ones only hide the operations that need them.</value><comment>Orange uses these programs on your PC. Missing ones only hide the operations that need them.</comment></data>
+  <data name="S9A0F8A6EAD" xml:space="preserve"><value>Orange {0} is available.</value><comment>Orange {0} is available.</comment></data>
+  <data name="SE7D1B8123C" xml:space="preserve"><value>Orange {0} is available. Open Settings → Updates to read what's new.</value><comment>Orange {0} is available. Open Settings → Updates to read what's new.</comment></data>
+  <data name="S4BED336194" xml:space="preserve"><value>Output</value><comment>Output</comment></data>
+  <data name="S314D642E91" xml:space="preserve"><value>Pause all watch folders</value><comment>Pause all watch folders</comment></data>
+  <data name="S71EDE17FB1" xml:space="preserve"><value>Performance and limits</value><comment>Performance and limits</comment></data>
+  <data name="SBCA788763D" xml:space="preserve"><value>Preset</value><comment>Preset</comment></data>
+  <data name="SE709E76FF5" xml:space="preserve"><value>Presets</value><comment>Presets</comment></data>
+  <data name="SCF01481F62" xml:space="preserve"><value>Privacy</value><comment>Privacy</comment></data>
+  <data name="SABBA02FCDD" xml:space="preserve"><value>QR code</value><comment>QR code</comment></data>
+  <data name="S76EEC760C9" xml:space="preserve"><value>Recent</value><comment>Recent</comment></data>
+  <data name="SE963907DAC" xml:space="preserve"><value>Remove</value><comment>Remove</comment></data>
+  <data name="SA21B0FEC07" xml:space="preserve"><value>Reset all</value><comment>Reset all</comment></data>
+  <data name="S2BE5029FBC" xml:space="preserve"><value>Reset all petals</value><comment>Reset all petals</comment></data>
+  <data name="S0D0E3867A4" xml:space="preserve"><value>Restart Orange to switch language.</value><comment>Restart Orange to switch language.</comment></data>
+  <data name="S894A58AB60" xml:space="preserve"><value>Restore defaults</value><comment>Restore defaults</comment></data>
+  <data name="S9F5CD8A2E8" xml:space="preserve"><value>Retry</value><comment>Retry</comment></data>
+  <data name="S87B85DCA19" xml:space="preserve"><value>Rotate</value><comment>Rotate</comment></data>
+  <data name="S221CC26FEF" xml:space="preserve"><value>Same as Windows</value><comment>Same as Windows</comment></data>
+  <data name="S82889739CA" xml:space="preserve"><value>Save preset</value><comment>Save preset</comment></data>
+  <data name="S7A0E8C6186" xml:space="preserve"><value>Save results to</value><comment>Save results to</comment></data>
+  <data name="SF142818A71" xml:space="preserve"><value>Save to</value><comment>Save to</comment></data>
+  <data name="S8C869B7A3D" xml:space="preserve"><value>Search: webp, compress, to mp3, merge pdf…</value><comment>Search: webp, compress, to mp3, merge pdf…</comment></data>
+  <data name="SC7F73BB54D" xml:space="preserve"><value>Settings</value><comment>Settings</comment></data>
+  <data name="S080D471C79" xml:space="preserve"><value>Settings and history deleted. They'll be recreated with defaults.</value><comment>Settings and history deleted. They'll be recreated with defaults.</comment></data>
+  <data name="S2E7109BDA2" xml:space="preserve"><value>Settings sections</value><comment>Settings sections</comment></data>
+  <data name="S58136BC5AA" xml:space="preserve"><value>Shortcut for the selected files in File Explorer</value><comment>Shortcut for the selected files in File Explorer</comment></data>
+  <data name="SD97D1EE339" xml:space="preserve"><value>Show</value><comment>Show</comment></data>
+  <data name="S68CDEAD5F8" xml:space="preserve"><value>Show original</value><comment>Show original</comment></data>
+  <data name="S4B67E5067F" xml:space="preserve"><value>Show results in File Explorer</value><comment>Show results in File Explorer</comment></data>
+  <data name="SFB1C39E9F4" xml:space="preserve"><value>Sounds</value><comment>Sounds</comment></data>
+  <data name="S44C8EAC0A9" xml:space="preserve"><value>Start Orange when I sign in</value><comment>Start Orange when I sign in</comment></data>
+  <data name="SE2CD8B387C" xml:space="preserve"><value>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</value><comment>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</comment></data>
+  <data name="SF4F390B6D3" xml:space="preserve"><value>Stereo</value><comment>Stereo</comment></data>
+  <data name="SFD97888875" xml:space="preserve"><value>Subfolder name</value><comment>Subfolder name</comment></data>
+  <data name="S6B3066BB8D" xml:space="preserve"><value>Text to add</value><comment>Text to add</comment></data>
+  <data name="SA797E30923" xml:space="preserve"><value>Theme</value><comment>Theme</comment></data>
+  <data name="S72C5D67385" xml:space="preserve"><value>Tools wheel key</value><comment>Tools wheel key</comment></data>
+  <data name="S366188483E" xml:space="preserve"><value>Trim silent ends automatically</value><comment>Trim silent ends automatically</comment></data>
+  <data name="S285EC850C1" xml:space="preserve"><value>Troubleshooting</value><comment>Troubleshooting</comment></data>
+  <data name="S39FC721248" xml:space="preserve"><value>Undo</value><comment>Undo</comment></data>
+  <data name="SA735DA1D32" xml:space="preserve"><value>Uninstall</value><comment>Uninstall</comment></data>
+  <data name="S71FC0B3558" xml:space="preserve"><value>Unsupported file</value><comment>Unsupported file</comment></data>
+  <data name="SC76D18079A" xml:space="preserve"><value>Updates</value><comment>Updates</comment></data>
+  <data name="S63D1192302" xml:space="preserve"><value>Use colour</value><comment>Use colour</comment></data>
+  <data name="SBA83F8AAA9" xml:space="preserve"><value>Watch folders</value><comment>Watch folders</comment></data>
+  <data name="S35AA5E321D" xml:space="preserve"><value>Welcome to Orange</value><comment>Welcome to Orange</comment></data>
+  <data name="S0D972AFCE8" xml:space="preserve"><value>Wheel</value><comment>Wheel</comment></data>
+  <data name="S023871A68C" xml:space="preserve"><value>Wheel editor</value><comment>Wheel editor</comment></data>
+  <data name="S56EFD88C3A" xml:space="preserve"><value>When a file with that name exists</value><comment>When a file with that name exists</comment></data>
+  <data name="S0E8368E2E1" xml:space="preserve"><value>Write a debug log</value><comment>Write a debug log</comment></data>
+  <data name="S574A1BF604" xml:space="preserve"><value>You can change keys, shortcuts and folders any time in Settings.</value><comment>You can change keys, shortcuts and folders any time in Settings.</comment></data>
+  <data name="SEAED5F0C8D" xml:space="preserve"><value>You have the latest version.</value><comment>You have the latest version.</comment></data>
+  <data name="S48CD18DABC" xml:space="preserve"><value>Your data</value><comment>Your data</comment></data>
+  <data name="SB102C11553" xml:space="preserve"><value>Your files stay on this PC. Orange converts everything locally, never uploads files, has no account, no analytics and no telemetry. It only goes online when you install an engine or turn on update checks.</value><comment>Your files stay on this PC. Orange converts everything locally, never uploads files, has no account, no analytics and no telemetry. It only goes online when you install an engine or turn on update checks.</comment></data>
+  <data name="S416ED6C7AD" xml:space="preserve"><value>e.g. Instagram photo</value><comment>e.g. Instagram photo</comment></data>
+  <data name="S8012FF51A0" xml:space="preserve"><value>unchanged</value><comment>unchanged</comment></data>
+  <data name="S9DC9940B61" xml:space="preserve"><value>{0} files</value><comment>{0} files</comment></data>
+  <data name="SE69D1C4AF7" xml:space="preserve"><value>{0} more options</value><comment>{0} more options</comment></data>
+  <data name="SAE536BF5C7" xml:space="preserve"><value>{0}: Actions</value><comment>{0}: Actions</comment></data>
+  <data name="S2A48481CB2" xml:space="preserve"><value>{0}: Convert</value><comment>{0}: Convert</comment></data>
+  <data name="S60B20DE398" xml:space="preserve"><value>{0}: Tools</value><comment>{0}: Tools</comment></data>
+  <data name="S02B4EBD4E3" xml:space="preserve"><value>●</value><comment>●</comment></data>
+</root>

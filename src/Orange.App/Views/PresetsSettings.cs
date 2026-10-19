@@ -16,7 +16,7 @@ public static class PresetsSettings
     {
         var p = new StackPanel { Spacing = 10 };
         var presets = ConversionService.Instance.Presets;
-        p.Children.Add(new TextBlock { Text = "A preset is a format plus its settings and a naming rule. Pinned presets appear first on the wheel for files they fit.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+        p.Children.Add(new TextBlock { Text = L.T("A preset is a format plus its settings and a naming rule. Pinned presets appear first on the wheel for files they fit."), Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
 
         foreach (var pr in presets.ToList())
         {
@@ -30,18 +30,18 @@ public static class PresetsSettings
             var opts = string.Join(", ", pr.Options.Select(kv => $"{kv.Key} {kv.Value}"));
             t.Children.Add(new TextBlock { Text = $"{op?.Category} → {op?.Title ?? pr.OperationId}{(opts.Length > 0 ? " · " + opts : "")} · {pr.Output.NamePattern}", FontSize = 12, Opacity = 0.7, TextTrimming = TextTrimming.CharacterEllipsis });
             row.Children.Add(t);
-            var pin = new ToggleSwitch { IsOn = pr.PinnedOnWheel, OnContent = "On wheel", OffContent = "Hidden", MinWidth = 0 };
+            var pin = new ToggleSwitch { IsOn = pr.PinnedOnWheel, OnContent = L.T("On wheel"), OffContent = L.T("Hidden"), MinWidth = 0 };
             var name = pr.Name;
             pin.Toggled += (_, _) => Replace(name, x => x with { PinnedOnWheel = pin.IsOn });
             Grid.SetColumn(pin, 1); row.Children.Add(pin);
-            var del = new Button { Content = "Delete" };
+            var del = new Button { Content = L.T("Delete") };
             del.Click += (_, _) => { var l = ConversionService.Instance.Presets.Where(x => x.Name != name).ToList(); SaveAll(l); refresh(); };
             Grid.SetColumn(del, 2); row.Children.Add(del);
             p.Children.Add(row);
         }
 
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        var import = new Button { Content = "Import…" };
+        var import = new Button { Content = L.T("Import…") };
         import.Click += async (_, _) =>
         {
             var fo = new FileOpenPicker(); fo.FileTypeFilter.Add(".json");
@@ -55,7 +55,7 @@ public static class PresetsSettings
             }
             catch (OrangeException e) { ProgressWindow.ShowError("Presets", e.Message, e.Detail); }
         };
-        var export = new Button { Content = "Export…" };
+        var export = new Button { Content = L.T("Export…") };
         export.Click += async (_, _) =>
         {
             var fs = new FileSavePicker { SuggestedFileName = "orange-presets" }; fs.FileTypeChoices.Add("JSON", new List<string> { ".json" });
@@ -63,7 +63,7 @@ public static class PresetsSettings
             var f = await fs.PickSaveFileAsync(); if (f is null) return;
             await File.WriteAllTextAsync(f.Path, PresetJson.Export(ConversionService.Instance.Presets));
         };
-        var reset = new Button { Content = "Restore defaults" };
+        var reset = new Button { Content = L.T("Restore defaults") };
         reset.Click += (_, _) => { SaveAll(DefaultPresets.All.ToList()); refresh(); };
         buttons.Children.Add(import); buttons.Children.Add(export); buttons.Children.Add(reset);
         p.Children.Add(buttons);
@@ -87,10 +87,10 @@ public static class PresetsSettings
     {
         var box = new StackPanel { Spacing = 8, Padding = new Thickness(12), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(8),
             BorderBrush = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["CardStrokeColorDefaultBrush"] };
-        box.Children.Add(new TextBlock { Text = "New preset", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+        box.Children.Add(new TextBlock { Text = L.T("New preset"), FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
         var ops = Reg.All.Where(o => !o.CombinesInputs && !o.ProducesFolder).OrderBy(o => o.Category).ThenBy(o => o.Group).ThenBy(o => o.Title).ToList();
-        var name = new TextBox { Header = "Name", PlaceholderText = "e.g. Instagram photo", Width = 300, HorizontalAlignment = HorizontalAlignment.Left };
-        var opBox = new ComboBox { Header = "Operation", ItemsSource = ops.Select(o => $"{o.Category} → {o.Title}").ToList(), SelectedIndex = Math.Max(0, ops.FindIndex(o => o.Id == "image.to.webp")), MinWidth = 300 };
+        var name = new TextBox { Header = L.T("Name"), PlaceholderText = L.T("e.g. Instagram photo"), Width = 300, HorizontalAlignment = HorizontalAlignment.Left };
+        var opBox = new ComboBox { Header = L.T("Operation"), ItemsSource = ops.Select(o => $"{o.Category} → {o.Title}").ToList(), SelectedIndex = Math.Max(0, ops.FindIndex(o => o.Id == "image.to.webp")), MinWidth = 300 };
         var optPanel = new StackPanel { Spacing = 6 };
         var optBoxes = new Dictionary<string, TextBox>();
         void BuildOptions()
@@ -105,12 +105,12 @@ public static class PresetsSettings
         }
         opBox.SelectionChanged += (_, _) => BuildOptions();
         BuildOptions();
-        var pattern = new TextBox { Header = "File name", Text = "{name} {preset}.{ext}", Width = 300, HorizontalAlignment = HorizontalAlignment.Left };
-        var where = new ComboBox { Header = "Save to", ItemsSource = new List<string> { "Beside the original", "A subfolder" }, SelectedIndex = 0, MinWidth = 300 };
-        var sub = new TextBox { Header = "Subfolder name", Text = "Orange", Width = 300, HorizontalAlignment = HorizontalAlignment.Left, Visibility = Visibility.Collapsed };
+        var pattern = new TextBox { Header = L.T("File name"), Text = "{name} {preset}.{ext}", Width = 300, HorizontalAlignment = HorizontalAlignment.Left };
+        var where = new ComboBox { Header = L.T("Save to"), ItemsSource = new List<string> { "Beside the original", "A subfolder" }, SelectedIndex = 0, MinWidth = 300 };
+        var sub = new TextBox { Header = L.T("Subfolder name"), Text = "Orange", Width = 300, HorizontalAlignment = HorizontalAlignment.Left, Visibility = Visibility.Collapsed };
         where.SelectionChanged += (_, _) => sub.Visibility = where.SelectedIndex == 1 ? Visibility.Visible : Visibility.Collapsed;
-        var conflict = new ComboBox { Header = "If the name is taken", ItemsSource = new List<string> { "Keep both", "Replace", "Skip" }, SelectedIndex = 0, MinWidth = 300 };
-        var meta = new ComboBox { Header = "Metadata", ItemsSource = new List<string> { "Keep (as the operation does)", "Strip" }, SelectedIndex = 0, MinWidth = 300 };
+        var conflict = new ComboBox { Header = L.T("If the name is taken"), ItemsSource = new List<string> { "Keep both", "Replace", "Skip" }, SelectedIndex = 0, MinWidth = 300 };
+        var meta = new ComboBox { Header = L.T("Metadata"), ItemsSource = new List<string> { "Keep (as the operation does)", "Strip" }, SelectedIndex = 0, MinWidth = 300 };
         var preview = new TextBlock { FontSize = 12, Opacity = 0.8 };
         var error = new TextBlock { FontSize = 12, Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.IndianRed), TextWrapping = TextWrapping.Wrap };
         Preset Current() => new()
@@ -129,14 +129,14 @@ public static class PresetsSettings
                 var op = ops[Math.Max(0, opBox.SelectedIndex)];
                 var ext = op.OutputExtension ?? op.Category switch { FileKind.Image => "jpg", FileKind.Video => "mp4", FileKind.Audio => "mp3", FileKind.Pdf => "pdf", _ => "txt" };
                 var n = (c with { Name = c.Name.Length > 0 ? c.Name : "Preset" }).FileNameFor(@"C:\Photos\holiday." + ext, ext, op.Title);
-                preview.Text = "Example: " + (c.Output.Location == OutputLocation.Subfolder ? $@"{SafePaths.SanitizeFileName(c.Output.Subfolder)}\" : "") + n;
+                preview.Text = L.T("Example: ") + (c.Output.Location == OutputLocation.Subfolder ? $@"{SafePaths.SanitizeFileName(c.Output.Subfolder)}\" : "") + n;
             }
             catch (Exception e) { preview.Text = e.Message; }
         }
         foreach (var tb in new[] { name, pattern, sub }) tb.TextChanged += (_, _) => Preview();
         foreach (var cb in new[] { opBox, where }) cb.SelectionChanged += (_, _) => Preview();
         Preview();
-        var save = new Button { Content = "Save preset", Style = (Style)Application.Current.Resources["AccentButtonStyle"] };
+        var save = new Button { Content = L.T("Save preset"), Style = (Style)Application.Current.Resources["AccentButtonStyle"] };
         save.Click += (_, _) =>
         {
             try
@@ -158,10 +158,10 @@ public static class PresetsSettings
     public static UIElement WheelEditor(Action refresh)
     {
         var p = new StackPanel { Spacing = 8 };
-        p.Children.Add(new TextBlock { Text = "Choose which petals each kind of file shows, and their order. Favourites and pinned presets still come first.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+        p.Children.Add(new TextBlock { Text = L.T("Choose which petals each kind of file shows, and their order. Favourites and pinned presets still come first."), Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
         var kinds = new[] { FileKind.Image, FileKind.Video, FileKind.Audio, FileKind.Pdf, FileKind.Document, FileKind.Subtitle, FileKind.Archive, FileKind.Spreadsheet, FileKind.Presentation, FileKind.Font };
-        var kindBox = new ComboBox { Header = "File type", ItemsSource = kinds.Select(k => k.ToString()).ToList(), SelectedIndex = 0, MinWidth = 200 };
-        var groupBox = new ComboBox { Header = "Wheel", ItemsSource = new List<string> { "Convert", "Tools" }, SelectedIndex = 0, MinWidth = 200 };
+        var kindBox = new ComboBox { Header = L.T("File type"), ItemsSource = kinds.Select(k => k.ToString()).ToList(), SelectedIndex = 0, MinWidth = 200 };
+        var groupBox = new ComboBox { Header = L.T("Wheel"), ItemsSource = new List<string> { "Convert", "Tools" }, SelectedIndex = 0, MinWidth = 200 };
         var pickers = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 12 };
         pickers.Children.Add(kindBox); pickers.Children.Add(groupBox);
         p.Children.Add(pickers);
@@ -203,7 +203,7 @@ public static class PresetsSettings
         kindBox.SelectionChanged += (_, _) => Render();
         groupBox.SelectionChanged += (_, _) => Render();
         Render();
-        var resetLayout = new Button { Content = "Reset all petals" };
+        var resetLayout = new Button { Content = L.T("Reset all petals") };
         resetLayout.Click += (_, _) => { AppSettings.Current.Layout = new WheelLayout(); AppSettings.Current.Save(); Render(); };
         p.Children.Add(resetLayout);
         return p;

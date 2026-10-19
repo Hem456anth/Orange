@@ -38,7 +38,7 @@ public static class SelfTest
         var fixtures = Environment.GetEnvironmentVariable("ORANGE_FIXTURES") ?? FindFixtures();
         var work = Path.Combine(outDir, "work");
         Directory.CreateDirectory(work);
-        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg" })
+        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg", "sample.xlsx", "sample.pptx", "sample.epub", "sample.csv" })
             if (File.Exists(Path.Combine(fixtures, f))) File.Copy(Path.Combine(fixtures, f), Path.Combine(work, f), true);
         string W(string n) => Path.Combine(work, n);
         AppSettings.Current.RevealWhenDone = false;
@@ -154,8 +154,25 @@ public static class SelfTest
             await Shot(m, Path.Combine(outDir, "main-settings.png"));
             m.ShowPage("about"); await Task.Delay(500);
             await Shot(m, Path.Combine(outDir, "main-about.png"));
+            foreach (var sec in new[] { "Output", "Presets", "Engines", "Language", "Updates", "Privacy" })
+            {
+                m.ShowSettings(sec); await Task.Delay(700);
+                await Shot(m, Path.Combine(outDir, $"settings-{sec.ToLowerInvariant()}.png"));
+            }
             m.AppWindow.Hide();
             return "ok";
+        });
+        await Try("localisation: Hindi and Telugu resources load from resources.pri", true, async () =>
+        {
+            var before = L.Language;
+            L.Init("hi-IN"); var hi = L.T("Settings");
+            L.Init("te-IN"); var te = L.T("Settings");
+            var m = new MainWindow(); m.ShowWindow(); m.ShowSettings("Activation"); await Task.Delay(900);
+            await Shot(m, Path.Combine(outDir, "settings-telugu.png"));
+            m.AppWindow.Hide();
+            L.Init(before);
+            if (hi != "सेटिंग्स" || te != "సెట్టింగ్‌లు") throw new Exception($"got '{hi}' / '{te}'");
+            return $"hi={hi} te={te}";
         });
         await Try("options sheet renders", true, async () =>
         {
@@ -209,6 +226,20 @@ public static class SelfTest
         await Try("merge PDFs via app service", true, () => Convert("pdf.merge", W("sample.pdf"), W("with-image.pdf")));
         await Try("MP4 → MP3 via app service (FFmpeg)", ToolLocator.Default.Has("ffmpeg"), () => Convert("video.to.mp3", W("sample.mp4")));
         await Try("DOCX → PDF (LibreOffice)", false, () => Convert("doc.to.pdf", W("sample.docx")));
+        await Try("DOCX → PDF built in (no LibreOffice)", true, () => Convert("doc.native.pdf", W("sample.docx")));
+        await Try("XLSX → CSV built in", true, () => Convert("sheet.to.csv", W("sample.xlsx")));
+        await Try("PPTX → PDF built in", true, () => Convert("slides.to.pdf", W("sample.pptx")));
+        await Try("PDF → PPTX built in (PDFium)", true, () => Convert("pdf.to.pptx", W("sample.pdf")));
+        await Try("EPUB → PDF built in", true, () => Convert("ebook.to.pdf", W("sample.epub")));
+        await Try("RAR/7z: 7-Zip bundled", true, () => Task.FromResult(ToolLocator.Default.Find("7zip") ?? throw new Exception("7-Zip not found")));
+        await Try("PNG → JPEG XL", true, () => Convert("image.to.jxl", W("sample.png")));
+        await Try("Preset 'Web image' via app service", true, async () =>
+        {
+            var p = Orange.Core.Presets.PresetStore.Find(svc.Presets, "Web image")!;
+            var r = await new Orange.Core.Presets.PresetRunner(svc.Registry).RunAsync(p, [W("sample.png")]);
+            if (r[0].State != Orange.Core.Presets.PresetFileState.Done) throw new Exception(r[0].Error);
+            return Path.GetFileName(r[0].Output!);
+        });
         async Task<string> ConvertWith(string opId, string file, params (string K, string V)[] o)
         {
             var jobs = await svc.RunAsync(svc.Registry.Get(opId), [file], o.ToDictionary(x => x.K, x => x.V), ui);
