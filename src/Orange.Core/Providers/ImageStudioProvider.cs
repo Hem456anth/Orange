@@ -18,7 +18,7 @@ public sealed class ImageStudioProvider : IOperationProvider
 
     public static readonly IReadOnlyDictionary<string, (string A, string B)> Gradients = new Dictionary<string, (string, string)>
     {
-        ["sunset"] = ("#FF9A3C", "#9B5DE5"), ["sky"] = ("#3D9BFF", "#003FA8"), ["ocean"] = ("#2BC0E4", "#EAECC6"),
+        ["sunset"] = ("#FF9A3C", "#9B5DE5"), ["citrus"] = ("#FFB347", "#FF5E62"), ["ocean"] = ("#2BC0E4", "#EAECC6"),
         ["mint"] = ("#43E97B", "#38F9D7"), ["lavender"] = ("#C3B1E1", "#F7F0FF"), ["night"] = ("#0F2027", "#2C5364"),
         ["peach"] = ("#FFDDE1", "#EE9CA7"), ["mono"] = ("#FFFFFF", "#D9D9D9"),
     };
@@ -42,7 +42,7 @@ public sealed class ImageStudioProvider : IOperationProvider
             ["hide", "censor", "blur", "pixelate", "privacy", "black out"]);
         yield return Tool("image.annotate", "Annotate", "Annotated", "annotate",
             [new("text", "Text", OptionType.Text, ""), new("x", "Text left (px)", OptionType.Integer, "20", 0, 65000), new("y", "Text top (px)", OptionType.Integer, "20", 0, 65000),
-             new("size", "Text size (px)", OptionType.Integer, "48", 6, 1000), new("color", "Colour", OptionType.Text, "#0A64E0"),
+             new("size", "Text size (px)", OptionType.Integer, "48", 6, 1000), new("color", "Colour", OptionType.Text, "#FF6A00"),
              new("boxes", "Boxes", OptionType.Text, "", Help: "Outlined rectangles x,y,w,h; separate several with ';'."),
              new("arrows", "Arrows", OptionType.Text, "", Help: "x1,y1,x2,y2; separate several with ';'."),
              new("stroke", "Line width (px)", OptionType.Integer, "6", 1, 200)],

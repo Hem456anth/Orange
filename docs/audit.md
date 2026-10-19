@@ -42,7 +42,7 @@ Input files are untrusted (downloads, attachments). The user is trusted. Attacke
 
 | Item | Status | Evidence |
 |---|---|---|
-| Engine: 106 tests incl. real FFmpeg/Pandoc/Ghostscript/LibreOffice conversions and all security cases | **Verified** on Linux (sandbox) and Windows (GitHub `windows-latest`) | CI job *engine* |
+| Engine: 136 tests (134 pass, 2 skip when an optional tool is absent) incl. real FFmpeg/Pandoc/Ghostscript conversions, lossless metadata removal with image-data hash check, audio visualizer, and all security cases | **Verified** on Linux (sandbox) and Windows (GitHub `windows-latest`) | CI job *engine* |
 | App compiles, publishes self-contained x64, packages portable zip + installer | **Verified** on Windows CI | CI job *app* |
 | Hooks install; hotkey registers; tray icon; context-menu verb and Send To install/remove; wheel shows context-aware items; hit-testing; light/dark rendering; conversions through the app's own service (PNG→WebP, PDF merge, MP4→MP3) | **Verified** on Windows Server 2025 (build 26100) CI desktop via `--selftest` | `ci-evidence/run-N/selftest/` |
 | Shift-drag end to end (real mouse, OLE drag, File Explorer source) | **Partly verified on a real Windows 11 laptop (2026-10-18, nightly build from 6e0dfaf), by the owner, with a folder dragged from the desktop:** the wheel opened under the cursor during a real drag for each wheel key. A folder showed the empty "Folders: use Actions" state, and the Actions wheel showed all six actions. Still open: dragging files and converting by dropping on a wedge, and a possible Ctrl/Alt mix-up being checked. Hosted CI can't verify this, because injected input reaches no low-level hook there | owner's photos, issue thread |
@@ -51,6 +51,16 @@ Input files are untrusted (downloads, attachments). The user is trusted. Attacke
 | WinUI controls in unpackaged build | A crash in NavigationView/NumberBox/InfoBar/ProgressBar was traced to missing `resources.pri` and fixed by `EnableMsixTooling=true`; Orange also draws its own progress bar | CI UI bisect |
 | Narrator / high contrast / 150–200 % DPI | Implemented (UIA names, live region, theme brushes, PerMonitorV2); manual check pending | — |
 | Windows 10 | Targeted (min 10.0.17763); not run in CI | — |
+
+### Added 2026-10-19 (from the Tangerine 2.0.2 bundle pass)
+
+| Item | Status |
+|---|---|
+| Lossless JPEG/PNG metadata removal (segments dropped, scan/IDAT data byte-identical, orientation kept, refuses if the image-data hash changes) | Verified by engine tests |
+| Compress refuses to save a bigger file | Verified by engine test |
+| Audio visualizer (wave / bars / spectrum → MP4) | Verified by engine tests with real FFmpeg |
+| First-run Welcome window | Built; CI self-test screenshot pending the next green run |
+| Damaged JPEG/PNG input to the metadata cleaner | Refused with a message (test) |
 
 ## 5. Compatibility
 

@@ -106,7 +106,7 @@ public sealed class MainWindow : Window
         var drop = new Border
         {
             AllowDrop = true, MinHeight = 120, CornerRadius = new CornerRadius(12), BorderThickness = new Thickness(2),
-            BorderBrush = new SolidColorBrush(Brand.Accent), Background = new SolidColorBrush(Brand.WithAlpha(Brand.Accent, 0x18)),
+            BorderBrush = new SolidColorBrush(WheelControl.OrangeAccent), Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0x18, 0xFF, 0x7A, 0x00)),
         };
         var dropText = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Spacing = 6 };
         dropText.Children.Add(new TextBlock { Text = "Drop files here", Style = (Style)Application.Current.Resources["SubtitleTextBlockStyle"], HorizontalAlignment = HorizontalAlignment.Center });
@@ -193,7 +193,7 @@ public sealed class MainWindow : Window
         text.Children.Add(new TextBlock { Text = op.Group == OperationGroup.Convert ? $"{op.Category} → {op.Title}" : $"{op.Category}: {op.Title}", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
         var sub = op.Group == OperationGroup.Convert ? $"Save as .{op.OutputExtension}" : op.ProducesFolder ? "Saves into a new folder" : op.CombinesInputs ? $"Needs {op.MinInputs}+ files" : "Saves a new copy";
         if (!available) sub = op.RequiresTool is { } t && !ToolLocator.Default.Has(t) ? $"Needs {ToolNames.Friendly(t)} (not installed)" : "Not supported on this PC";
-        text.Children.Add(new TextBlock { Text = sub, FontSize = 12, Opacity = available ? 0.65 : 0.9, Foreground = available ? null : new SolidColorBrush(Brand.Error) });
+        text.Children.Add(new TextBlock { Text = sub, FontSize = 12, Opacity = available ? 0.65 : 0.9, Foreground = available ? null : new SolidColorBrush(Colors.IndianRed) });
         Grid.SetColumn(text, 1); g.Children.Add(text);
         var applicable = _files.Count > 0 && available && reg.ForFiles(_files, op.Group).Any(o => o.Id == op.Id);
         var run = new Button { Content = op.Group == OperationGroup.Convert ? "Convert" : "Run", IsEnabled = applicable };
@@ -315,7 +315,7 @@ public sealed class MainWindow : Window
         {
             var path = ToolLocator.Default.Find(tool);
             var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-            row.Children.Add(new FontIcon { Glyph = path is null ? "\uE783" : "\uE73E", Foreground = new SolidColorBrush(path is null ? Brand.Error : Colors.SeaGreen) });
+            row.Children.Add(new FontIcon { Glyph = path is null ? "\uE783" : "\uE73E", Foreground = new SolidColorBrush(path is null ? Colors.IndianRed : Colors.SeaGreen) });
             row.Children.Add(new TextBlock { Text = $"{ToolNames.Friendly(tool)} ({tool})", Width = 200, VerticalAlignment = VerticalAlignment.Center });
             row.Children.Add(new TextBlock { Text = path ?? "Not found", Opacity = 0.7, VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, MaxWidth = 340 });
             var b = new Button { Content = "Locate…" };

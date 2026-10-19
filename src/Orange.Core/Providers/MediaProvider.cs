@@ -100,7 +100,7 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
             Id = "audio.visualize", Title = "Visualize", Category = FileKind.Audio, Group = OperationGroup.Tool, InputExtensions = AudioIn.ToHashSet(),
             OutputExtension = "mp4", RequiresTool = "ffmpeg", Icon = "visualize",
             Options = [new("style", "Style", OptionType.Choice, "wave", Choices: ["wave", "bars", "spectrum"]),
-                       new("color", "Colour", OptionType.Text, "#3D9BFF"), new("background", "Background", OptionType.Text, "#0B1220",
+                       new("color", "Colour", OptionType.Text, "#FF7A00"), new("background", "Background", OptionType.Text, "#1A1210",
                            Help: "A colour (#RRGGBB) or image:<path> for a still picture behind the visualization."),
                        new("size", "Size", OptionType.Choice, "1280x720", Choices: ["1920x1080", "1280x720", "1080x1080", "1080x1920"])],
             Keywords = ["video", "waveform", "podcast", "audiogram", "share", "single-only", "suffix:Visualized"],
