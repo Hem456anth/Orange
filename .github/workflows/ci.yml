@@ -21,8 +21,17 @@ jobs:
           dotnet-version: 8.0.x
       - name: Install converters
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           choco install -y --no-progress ffmpeg pandoc ghostscript libreoffice-fresh
+          if (-not (Get-Command pandoc -ErrorAction SilentlyContinue) -and -not (Test-Path 'C:\Program Files\Pandoc\pandoc.exe')) {
+            # choco's pandoc package flakes on hosted runners; fall back to the official release zip
+            $rel = gh release view -R jgm/pandoc --json assets | ConvertFrom-Json
+            $a = $rel.assets | Where-Object { $_.name -like '*windows-x86_64.zip' } | Select-Object -First 1
+            Invoke-WebRequest $a.url -OutFile "$env:RUNNER_TEMP\pd.zip"; Expand-Archive "$env:RUNNER_TEMP\pd.zip" "$env:RUNNER_TEMP\pd" -Force
+            (Get-ChildItem "$env:RUNNER_TEMP\pd" -Recurse -Filter pandoc.exe | Select-Object -First 1).Directory.FullName | Out-File -Append $env:GITHUB_PATH
+          }
           $gs = Get-ChildItem 'C:\Program Files\gs' -Directory | Sort-Object Name -Descending | Select-Object -First 1
           "$($gs.FullName)\bin" | Out-File -Append $env:GITHUB_PATH
           'C:\Program Files\LibreOffice\program' | Out-File -Append $env:GITHUB_PATH
@@ -82,8 +91,17 @@ jobs:
           dotnet-version: 8.0.x
       - name: Install converters for the self-test
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           choco install -y --no-progress ffmpeg pandoc ghostscript
+          if (-not (Get-Command pandoc -ErrorAction SilentlyContinue) -and -not (Test-Path 'C:\Program Files\Pandoc\pandoc.exe')) {
+            # choco's pandoc package flakes on hosted runners; fall back to the official release zip
+            $rel = gh release view -R jgm/pandoc --json assets | ConvertFrom-Json
+            $a = $rel.assets | Where-Object { $_.name -like '*windows-x86_64.zip' } | Select-Object -First 1
+            Invoke-WebRequest $a.url -OutFile "$env:RUNNER_TEMP\pd.zip"; Expand-Archive "$env:RUNNER_TEMP\pd.zip" "$env:RUNNER_TEMP\pd" -Force
+            (Get-ChildItem "$env:RUNNER_TEMP\pd" -Recurse -Filter pandoc.exe | Select-Object -First 1).Directory.FullName | Out-File -Append $env:GITHUB_PATH
+          }
           $gs = Get-ChildItem 'C:\Program Files\gs' -Directory | Sort-Object Name -Descending | Select-Object -First 1
           "$($gs.FullName)\bin" | Out-File -Append $env:GITHUB_PATH
       - name: Build and publish Orange (x64, self-contained, unpackaged)
