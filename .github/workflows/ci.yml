@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -91,7 +92,15 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 60
     env:
-      HAS_CERT: ${{ secrets.SIGNING_CERT_PFX_BASE64 != '' }}
+      # Signing is optional: with no secrets every signing step reports "skipped" and the build stays green.
+      SIGN_CERT: ${{ secrets.SIGNING_CERT_PFX_BASE64 }}
+      SIGN_PASS: ${{ secrets.SIGNING_CERT_PASSWORD }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      TS_ENDPOINT: ${{ secrets.TRUSTED_SIGNING_ENDPOINT }}
+      TS_ACCOUNT: ${{ secrets.TRUSTED_SIGNING_ACCOUNT }}
+      TS_PROFILE: ${{ secrets.TRUSTED_SIGNING_PROFILE }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -150,6 +159,26 @@ jobs:
           # Windows App SDK 1.8 ships ONNX Runtime + DirectML for Windows ML; Orange doesn't use Windows ML (~38 MB).
           Remove-Item out/Orange/onnxruntime.dll, out/Orange/DirectML.dll -ErrorAction SilentlyContinue
           Remove-Item out/Orange/NpuDetect -Recurse -ErrorAction SilentlyContinue
+      - name: Build the Windows 11 context-menu extension (IExplorerCommand DLL + sparse MSIX)
+        shell: pwsh
+        env:
+          SIGN_SUBJECT: ${{ secrets.SIGNING_CERT_SUBJECT }}
+        run: |
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $vcvars = Join-Path $vs "VC\Auxiliary\Build\vcvars64.bat"
+          New-Item -ItemType Directory -Force out/shellext | Out-Null
+          cmd /c "`"$vcvars`" >nul && cl /nologo /O2 /EHsc /std:c++17 /DUNICODE /D_UNICODE /LD src\Orange.ShellExt\OrangeShellExt.cpp /Feout\shellext\OrangeShellExt.dll /link /DEF:src\Orange.ShellExt\OrangeShellExt.def" 2>&1 | Tee-Object evidence/shellext-build.log
+          if (-not (Test-Path out/shellext/OrangeShellExt.dll)) { Write-Host "shell extension build failed"; exit 1 }
+          Copy-Item out/shellext/OrangeShellExt.dll out/Orange/
+          $stage = "out/msix"; New-Item -ItemType Directory -Force "$stage/Assets" | Out-Null
+          $manifest = Get-Content src/Orange.ShellExt/AppxManifest.xml -Raw
+          if ($env:SIGN_SUBJECT) { $manifest = $manifest.Replace('Publisher="CN=Orange contributors"', "Publisher=`"$env:SIGN_SUBJECT`"") }
+          Set-Content "$stage/AppxManifest.xml" $manifest -Encoding UTF8
+          Copy-Item src/Orange.ShellExt/orange-150.png, src/Orange.ShellExt/orange-44.png "$stage/Assets/"
+          $makeappx = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Recurse -Filter makeappx.exe | Where-Object FullName -like '*x64*' | Select-Object -Last 1
+          & $makeappx.FullName pack /o /d $stage /p out/Orange/Orange-ContextMenu.msix /nv 2>&1 | Tee-Object -Append evidence/shellext-build.log
+          if (-not (Test-Path out/Orange/Orange-ContextMenu.msix)) { Write-Host "MSIX pack failed"; exit 1 }
+          "shell extension dll=$((Get-Item out/Orange/OrangeShellExt.dll).Length) msix=$((Get-Item out/Orange/Orange-ContextMenu.msix).Length)" | Tee-Object -Append evidence/summary.txt
       - name: Bundle FFmpeg (LGPL shared build, licence + source offer)
         shell: pwsh
         run: |
@@ -208,6 +237,13 @@ jobs:
           [System.Management.Automation.Language.Parser]::ParseFile("$PWD\tools\checklist\Run-OrangeChecklist.ps1", [ref]$null, [ref]$errs) | Out-Null
           if ($errs.Count) { $errs | ForEach-Object { Write-Host $_ }; exit 1 }
           "checklist script parses" | Tee-Object -Append evidence/summary.txt
+      - name: Sign app, CLI, shell extension and MSIX (skipped without secrets)
+        shell: pwsh
+        run: |
+          $r = & tools/sign/Sign-Files.ps1 out/Orange/Orange.exe out/Orange/orange-cli.exe out/Orange/OrangeShellExt.dll out/Orange/Orange-ContextMenu.msix
+          $r | Tee-Object -Append evidence/summary.txt
+          # The installer registers the sparse package only when it is signed (Windows refuses unsigned ones).
+          if ("$r" -like 'signed=*') { New-Item out/Orange/contextmenu.signed -ItemType File -Force | Out-Null }
       - name: Package (portable zip + per-user installer)
         shell: pwsh
         run: |
@@ -220,17 +256,19 @@ jobs:
           Get-ChildItem out/Orange -Directory | ForEach-Object { "dir $($_.Name) MB=$([math]::Round((Get-ChildItem $_.FullName -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" } | Tee-Object -Append evidence/summary.txt
           Get-ChildItem out/Orange -File | Sort-Object Length -Descending | Select-Object -First 15 | ForEach-Object { "file $($_.Name) MB=$([math]::Round($_.Length/1MB,1))" } | Tee-Object -Append evidence/summary.txt
           "root files MB=$([math]::Round((Get-ChildItem out/Orange -File | Measure-Object Length -Sum).Sum/1MB,1))" | Tee-Object -Append evidence/summary.txt
-      - name: Optional code signing
-        if: env.HAS_CERT == 'true'
+      - name: Sign the installer (skipped without secrets)
+        shell: pwsh
+        run: |
+          & tools/sign/Sign-Files.ps1 (Get-ChildItem out/Orange-*-setup.exe).FullName | Tee-Object -Append evidence/summary.txt
+      - name: Publish a release for version tags
+        if: startsWith(github.ref, 'refs/tags/v')
         shell: pwsh
         env:
-          SIGN_CERT: ${{ secrets.SIGNING_CERT_PFX_BASE64 }}
-          SIGN_PASS: ${{ secrets.SIGNING_CERT_PASSWORD }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          [IO.File]::WriteAllBytes("cert.pfx", [Convert]::FromBase64String($env:SIGN_CERT))
-          $st = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Recurse -Filter signtool.exe | Where-Object FullName -like '*x64*' | Select-Object -Last 1
-          & $st.FullName sign /f cert.pfx /p $env:SIGN_PASS /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 out/Orange/Orange.exe out/*.exe
-          Remove-Item cert.pfx
+          $tag = "${{ github.ref_name }}"
+          $notes = if (Test-Path CHANGELOG.md) { "See CHANGELOG.md" } else { "" }
+          gh release create $tag -R ${{ github.repository }} --title "Orange $tag" --notes-file CHANGELOG.md (Get-ChildItem out/Orange-*-portable.zip).FullName (Get-ChildItem out/Orange-*-setup.exe).FullName
       - uses: actions/upload-artifact@v4
         if: always()
         with:

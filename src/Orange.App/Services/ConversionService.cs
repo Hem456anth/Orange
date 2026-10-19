@@ -20,7 +20,22 @@ public sealed class ConversionService
     /// <summary>Saved presets (presets.json), or the six defaults.</summary>
     public IReadOnlyList<Preset> Presets => _presets ??= PresetStore.Default.Load(Registry);
 
-    public void SavePresets(List<Preset> presets) { PresetStore.Default.Save(presets, Registry); _presets = presets; }
+    public void SavePresets(List<Preset> presets) { PresetStore.Default.Save(presets, Registry); _presets = presets; WriteContextMenuFile(); }
+
+    /// <summary>
+    /// %LOCALAPPDATA%\Orange\menu.txt for the Windows 11 context-menu DLL: one "preset|Name|kind" line per pinned preset
+    /// (at most six). Plain text so the DLL needs no JSON parser; no paths or file names.
+    /// </summary>
+    public void WriteContextMenuFile()
+    {
+        var lines = Presets.Where(p => p.PinnedOnWheel).Take(6).Select(p =>
+        {
+            var op = Registry.All.FirstOrDefault(o => o.Id == p.OperationId);
+            return $"preset|{p.Name.Replace('|', ' ')}|{op?.Category.ToString().ToLowerInvariant() ?? ""}";
+        });
+        Directory.CreateDirectory(AppSettings.Folder);
+        File.WriteAllLines(Path.Combine(AppSettings.Folder, "menu.txt"), lines);
+    }
 
     /// <summary>Runs a preset on files (wheel petal or main window) and reports like any other run.</summary>
     public async Task RunPresetAsync(Preset preset, IReadOnlyList<string> files)

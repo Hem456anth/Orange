@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sparse package: gives the unpackaged Orange an identity so Windows 11 shows its IExplorerCommand in the top-level
+     context menu. Files stay in the install folder (ExternalLocation). Must be signed with a certificate whose subject
+     matches Publisher below; CI sets both from the signing secret. -->
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+         xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+         xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
+         xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+         IgnorableNamespaces="uap uap10 desktop4 desktop5 com rescap">
+  <Identity Name="Orange.ContextMenu" Publisher="CN=Orange contributors" Version="0.2.0.0" ProcessorArchitecture="x64" />
+  <Properties>
+    <DisplayName>Orange</DisplayName>
+    <PublisherDisplayName>Orange contributors</PublisherDisplayName>
+    <Logo>Assets\orange-150.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+  </Properties>
+  <Resources><Resource Language="en-us" /></Resources>
+  <Dependencies><TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22000.0" MaxVersionTested="10.0.26100.0" /></Dependencies>
+  <Capabilities><rescap:Capability Name="runFullTrust" /><rescap:Capability Name="unvirtualizedResources" /></Capabilities>
+  <Applications>
+    <Application Id="Orange" Executable="Orange.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
+      <uap:VisualElements DisplayName="Orange" Description="Local file converter" BackgroundColor="transparent"
+                          Square150x150Logo="Assets\orange-150.png" Square44x44Logo="Assets\orange-44.png" AppListEntry="none" />
+      <Extensions>
+        <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <desktop5:ItemType Type="*"><desktop5:Verb Id="Orange" Clsid="7C5B9C3E-9B1E-4E43-9A2F-0A7E0F0A0002" /></desktop5:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer DisplayName="Orange context menu">
+              <com:Class Id="7C5B9C3E-9B1E-4E43-9A2F-0A7E0F0A0002" Path="OrangeShellExt.dll" ThreadingModel="STA" />
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+</Package>

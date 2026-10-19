@@ -52,9 +52,12 @@ Root: HKCU; Subkey: "Software\Classes\*\shell\Orange\command"; ValueType: string
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Orange"; ValueData: """{app}\Orange.exe"" --background"; Flags: uninsdeletevalue; Tasks: autostart
 
 [Run]
+; Windows 11 top-level context menu: register the sparse package only when CI signed it.
+Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -Command ""Add-AppxPackage -Path '{app}\Orange-ContextMenu.msix' -ExternalLocation '{app}' -ForceUpdateFromAnyVersion"""; Flags: runhidden; Tasks: contextmenu; Check: FileExists(ExpandConstant('{app}\contextmenu.signed'))
 Filename: "{app}\Orange.exe"; Description: "Start Orange"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
+Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -Command ""Get-AppxPackage Orange.ContextMenu | Remove-AppxPackage"""; Flags: runhidden; RunOnceId: "RemoveOrangeContextMenu"
 Filename: "taskkill.exe"; Parameters: "/im Orange.exe /f"; Flags: runhidden; RunOnceId: "StopOrange"
 
 [UninstallDelete]

@@ -118,9 +118,9 @@ public partial class App : Application
         catch (Exception e) { Diagnostics.Event("hooks-failed " + e.Message); ProgressWindow.ShowError("Orange", "Drag activation is unavailable on this PC.", e.Message); }
 
         Step("watch-folders", WatchService.Start);
-        if (args.Count > 0 && args[0] == "--wheel") Queue(args.Skip(1));
-        else if (!args.Contains("--background")) Main.ShowWindow();
-        if (!args.Contains("--background")) Step("welcome", WelcomeWindow.ShowIfFirstRun);
+        Step("menu-file", () => ConversionService.Instance.WriteContextMenuFile());
+        Dispatch(args);
+        if (!args.Contains("--background") && args.FirstOrDefault() is not ("--preset" or "--to")) Step("welcome", WelcomeWindow.ShowIfFirstRun);
         Diagnostics.Event("ready");
     }
 
@@ -137,11 +137,34 @@ public partial class App : Application
         var argv = SplitArgs(la.Arguments ?? "");
         // The first token can be the exe path.
         if (argv.Count > 0 && argv[0].EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) argv.RemoveAt(0);
-        _ui?.TryEnqueue(() =>
+        _ui?.TryEnqueue(() => Dispatch(argv));
+    }
+
+    /// <summary>
+    /// Command lines from the shell: --wheel files (classic verb, Send To), --preset "Name" files and --to fmt files
+    /// (Windows 11 top-level menu), anything else opens the main window unless --background.
+    /// </summary>
+    private static void Dispatch(List<string> argv)
+    {
+        Diagnostics.Event("dispatch " + string.Join(' ', argv.Take(2)));
+        if (argv.Count > 0 && argv[0] == "--wheel") Queue(argv.Skip(1));
+        else if (argv.Count > 2 && argv[0] == "--preset")
         {
-            if (argv.Count > 0 && argv[0] == "--wheel") Queue(argv.Skip(1));
-            else if (!argv.Contains("--background")) Main.ShowWindow();
-        });
+            var files = argv.Skip(2).Where(File.Exists).Select(Path.GetFullPath).ToList();
+            var preset = Orange.Core.Presets.PresetStore.Find(ConversionService.Instance.Presets, argv[1]);
+            if (preset is null) ProgressWindow.ShowError("Orange", $"There's no preset called \"{argv[1]}\".", null);
+            else if (files.Count > 0) _ = ConversionService.Instance.RunPresetAsync(preset, files);
+        }
+        else if (argv.Count > 2 && argv[0] == "--to")
+        {
+            var files = argv.Skip(2).Where(File.Exists).Select(Path.GetFullPath).ToList();
+            var fmt = OperationRegistry.Normalize(argv[1].TrimStart('.').ToLowerInvariant());
+            var op = files.Count == 0 ? null : ConversionService.Instance.Registry.ForFiles(files, OperationGroup.Convert)
+                .FirstOrDefault(o => o.OutputExtension is { } x && OperationRegistry.Normalize(x) == fmt);
+            if (op is null) ProgressWindow.ShowError("Orange", $"These files can't be converted to {fmt.ToUpperInvariant()} here.", null);
+            else _ = ConversionService.Instance.RunAsync(op, files, null, _ui!);
+        }
+        else if (!argv.Contains("--background")) Main.ShowWindow();
     }
 
     private static void Queue(IEnumerable<string> files)

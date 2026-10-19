@@ -77,3 +77,17 @@ Verify: `signtool verify /pa /v out\Orange\Orange.exe`.
 3. Push to `main`; CI runs engine tests, builds, runs the self-test and drag probe, packages and uploads *orange-win-x64*.
 4. Run the manual checklist above on real hardware.
 5. Create a GitHub release with the zip, the installer, SHA-256 hashes (`Get-FileHash`), and the FFmpeg/Pandoc source links (GPL offer).
+
+## Signing (0.2)
+
+`tools/sign/Sign-Files.ps1` signs the app, CLI, context-menu DLL, sparse MSIX and installer. Configure **one** of:
+
+| Secret | Meaning |
+|---|---|
+| `SIGNING_CERT_PFX_BASE64`, `SIGNING_CERT_PASSWORD` | a code-signing .pfx (base64) and its password |
+| `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `TRUSTED_SIGNING_ENDPOINT`, `TRUSTED_SIGNING_ACCOUNT`, `TRUSTED_SIGNING_PROFILE` | Azure Trusted Signing |
+| `SIGNING_CERT_SUBJECT` | the certificate subject (e.g. `CN=Hemanth Kundrapu`), written into the sparse package's Publisher |
+
+Without secrets every signing step prints "signing skipped" and the build stays green. The Windows 11 top-level
+menu needs the signed sparse package; unsigned builds keep the classic "Show more options" verb and Send To.
+Pushing a tag `v0.2.0` builds, signs (when configured) and publishes a GitHub release with CHANGELOG.md as notes.
