@@ -1,0 +1,6 @@
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(230,66): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(232,100): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(256,144): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(230,66): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(232,100): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(256,144): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
