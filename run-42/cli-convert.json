@@ -1,0 +1,10 @@
+{
+  "files": [
+    {
+      "input": "D:\\a\\Orange\\Orange\\tests\\fixtures\\sample.png",
+      "status": "done",
+      "output": "D:\\a\\_temp\\sample.webp",
+      "error": null
+    }
+  ]
+}
