@@ -5,10 +5,10 @@ Blocked = waiting on something outside the repo. Updated with every merged PR.
 
 | # | Item | Status | Evidence | Next step |
 |---|---|---|---|---|
-| 1 | Real-PC drag-and-drop + debug log + checklist | Not started | — | See PLAN.md |
-| 2 | Key scheme (Shift / Shift×2 / Shift+Ctrl) | Not started | — | See PLAN.md |
-| 3 | LGPL FFmpeg, installer < 90 MB, on-demand engines | Not started | — | See PLAN.md |
-| 4 | Code signing | Not started | — | See PLAN.md |
+| 1 | Real-PC drag-and-drop + debug log + checklist | Partial | PR #3, CI run 29 green: button-up fallback + cursor-poll highlight, opt-in log (`LocalLogTests`), `Run-OrangeChecklist.ps1` parses in CI and ships in the zip/installer | Owner runs the checklist on Win11 and Win10 and sends the report |
+| 2 | Key scheme (Shift / Shift×2 / Shift+Ctrl) | Partial | PR #4, CI run 30 green: `WheelKeyInterpreter` + 12 `WheelKeyTests`, v3 migration, hub hint (self-test `wheel-key-hint.png`); drop target answers Copy only | Real-PC check of double-tap and Shift+Ctrl mid-drag (checklist steps 3-4) |
+| 3 | LGPL FFmpeg, installer < 90 MB, on-demand engines | Partial | `EngineManager` (HTTPS allow-list, size cap, pinned SHA-256, safe extract, uninstall) with 7 `EngineManagerTests`; Pandoc 3.5 pinned. Installer still 190 MB (run 30) | Swap CI to BtbN LGPL shared FFmpeg, drop Pandoc from the bundle, Settings > Engines UI, measure size |
+| 4 | Code signing | Blocked | No certificate or Azure Trusted Signing account in repo secrets | Wire skip-when-absent signing; owner adds secrets |
 | 5 | Presets + wheel editor | Not started | — | See PLAN.md |
 | 6 | CLI + watch folders | Not started | — | See PLAN.md |
 | 7 | Office without LibreOffice | Not started | — | See PLAN.md |
