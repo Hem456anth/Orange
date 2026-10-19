@@ -309,6 +309,11 @@ public sealed class MainWindow : Window
         p.Children.Add(Number("Files converted at the same time", s.MaxParallelJobs, 1, 16, v => s.MaxParallelJobs = (int)v));
         p.Children.Add(Number("Largest input file (GB)", s.MaxInputGigabytes, 0.1, 200, v => s.MaxInputGigabytes = v));
 
+        p.Children.Add(Header("Presets"));
+        p.Children.Add(PresetsSettings.Build(Hwnd, () => Show("settings")));
+        p.Children.Add(Header("Wheel editor"));
+        p.Children.Add(PresetsSettings.WheelEditor(() => Show("settings")));
+
         p.Children.Add(Header("Troubleshooting"));
         p.Children.Add(Toggle("Write a debug log", s.DebugLog, v => s.DebugLog = v,
             "Records drag, key and drop events and conversion results in a text file on this PC. Nothing is sent anywhere. Turn it off when you're done."));

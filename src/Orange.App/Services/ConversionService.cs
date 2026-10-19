@@ -4,6 +4,7 @@ using Microsoft.Windows.AppNotifications.Builder;
 using Orange.App.Interop;
 using Orange.App.Views;
 using Orange.Core;
+using Orange.Core.Presets;
 
 namespace Orange.App.Services;
 
@@ -14,6 +15,40 @@ public sealed class ConversionService
     public OperationRegistry Registry { get; } = OperationRegistry.CreateDefault();
     private JobRunner Runner => new(Registry);
     private static bool _notificationsReady;
+    private List<Preset>? _presets;
+
+    /// <summary>Saved presets (presets.json), or the six defaults.</summary>
+    public IReadOnlyList<Preset> Presets => _presets ??= PresetStore.Default.Load(Registry);
+
+    public void SavePresets(List<Preset> presets) { PresetStore.Default.Save(presets, Registry); _presets = presets; }
+
+    /// <summary>Runs a preset on files (wheel petal or main window) and reports like any other run.</summary>
+    public async Task RunPresetAsync(Preset preset, IReadOnlyList<string> files)
+    {
+        var s = AppSettings.Current;
+        Diagnostics.Event($"preset-start {preset.Name} {files.Count}");
+        IReadOnlyList<PresetFileResult> results;
+        try { results = await new PresetRunner(Registry).RunAsync(preset, files); }
+        catch (OrangeException e) { ProgressWindow.ShowError(preset.Name, e.Message, e.Detail); Sounds.Error(); return; }
+        var outputs = results.Where(r => r.State == PresetFileState.Done).Select(r => r.Output!).ToList();
+        var failed = results.Where(r => r.State == PresetFileState.Failed).ToList();
+        Diagnostics.Event($"preset-done {preset.Name} ok={outputs.Count} failed={failed.Count} outputs={string.Join('|', outputs)}");
+        if (outputs.Count > 0)
+        {
+            var op = Registry.Get(preset.OperationId);
+            s.AddRecent(op with { Title = preset.Name }, files.Count, outputs);
+            if (s.RevealWhenDone) Native.RevealInExplorer(outputs);
+        }
+        if (failed.Count > 0)
+        {
+            ProgressWindow.ShowError(preset.Name, failed.Count == 1 ? failed[0].Error ?? "Failed." : $"Finished with {failed.Count} errors",
+                string.Join(Environment.NewLine, failed.Select(f => $"{Path.GetFileName(f.Input)}: {f.Error}")));
+            Sounds.Error();
+        }
+        else if (outputs.Count > 0) Sounds.Success();
+        var skipped = results.Count(r => r.State == PresetFileState.Skipped);
+        if (skipped > 0) ProgressWindow.ShowInfo($"{skipped} file{(skipped == 1 ? " was" : "s were")} skipped because the name was taken.");
+    }
 
     public static void InitNotifications()
     {
