@@ -1,0 +1,173 @@
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.md", ext: "html") [89 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.html", ext: "docx") [2 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.md", ext: "epub") [1 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.txt", ext: "docx") [1 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.rtf", ext: "md") [1 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.md", ext: "docx") [1 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.docx", ext: "txt") [66 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.md", ext: "rtf") [1 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.md", ext: "odt") [1 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(input: "sample.docx", ext: "md") [1 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Pandoc_conversions(String input, String ext) in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 234
+--- End of stack trace from previous location ---
+  Failed Orange.Core.Tests.PdfAndDocumentTests.Plain_text_is_escaped_not_interpreted [3 ms]
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Plain_text_is_escaped_not_interpreted() in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 242
+  Error Message:
+   pandoc is required in this environment but wasn't found
+  Stack Trace:
+     at Orange.Core.Tests.EngineTest.NeedTool(String tool) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 40
+   at Orange.Core.Tests.EngineTest.Run(String opId, IEnumerable`1 inputs, Dictionary`2 opts, OverwritePolicy policy) in D:\a\Orange\Orange\tests\Orange.Core.Tests\TestSupport.cs:line 47
+   at Orange.Core.Tests.PdfAndDocumentTests.Plain_text_is_escaped_not_interpreted() in D:\a\Orange\Orange\tests\Orange.Core.Tests\ConversionTests.cs:line 242
+--- End of stack trace from previous location ---
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [4 ms]
+  Passed Orange.Core.Tests.MediaConversionTests.Wav_converts(ext: "wma") [5 s]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [405 ms]
+  Passed Orange.Core.Tests.StudioTests.Compress_to_target_size_lands_under_target [5 s]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [157 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [283 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [2 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [405 ms]
+  Passed Orange.Core.Tests.StudioTests.Compress_to_target_size_lands_under_target [5 s]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [157 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [283 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [2 ms]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [30 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_bomb_is_rejected [6 ms]
+Total tests: 136
+     Passed: 124
+     Failed: 11
+    Skipped: 1
+ Total time: 24.2600 Seconds
