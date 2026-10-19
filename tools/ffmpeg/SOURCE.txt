@@ -1,0 +1,14 @@
+Orange bundles FFmpeg as separate programs (ffmpeg.exe, ffprobe.exe and their DLLs), run as child processes.
+
+Build: BtbN FFmpeg-Builds, "n8.1 lgpl-shared" Windows x64 variant (no --enable-gpl, no --enable-nonfree).
+FFmpeg is licensed under the GNU Lesser General Public License 2.1 or later; see LICENSE.txt in this folder.
+Some included libraries carry their own LGPL/BSD-style licences (LAME, Opus, libvpx, dav1d, libwebp, ...).
+
+Written offer / source: the exact source for the bundled build is available from
+  https://github.com/BtbN/FFmpeg-Builds (build scripts, pinned library versions per release)
+  https://ffmpeg.org/download.html (FFmpeg source, release 8.1)
+On request the Orange maintainers will provide the same source for three years from the release date:
+open an issue at https://github.com/Hem456anth/Orange/issues.
+
+You may replace these DLLs with your own compatible FFmpeg build (LGPL relinking right).
+H.264/HEVC encoding uses Windows Media Foundation (h264_mf / hevc_mf) or hardware encoders; x264/x265 (GPL) are not included.

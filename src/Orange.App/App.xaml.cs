@@ -42,6 +42,7 @@ public partial class App : Application
         var args = Environment.GetCommandLineArgs().Skip(1).ToList();
         var settings = AppSettings.Current;
         settings.Apply();
+        try { AppSettings.Engines.Register(); } catch { /* a broken engine folder must not stop start-up */ }
         SafePaths.TempWorkspace.CleanupStale();
 
         if (args.Count >= 2 && args[0] == "--uitest")

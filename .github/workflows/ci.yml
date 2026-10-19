@@ -127,22 +127,23 @@ jobs:
           dotnet publish src/Orange.App/Orange.App.csproj -c Release -r win-x64 -p:Platform=x64 --self-contained -o out/Orange 2>&1 | Tee-Object -FilePath evidence/app-build.log
           if ($LASTEXITCODE -ne 0) { exit 1 }
           Get-ChildItem out/Orange | Select-Object -First 15 | Format-Table Name, Length | Out-String | Write-Host
-      - name: Bundle FFmpeg and Pandoc (separate GPL programs, with their licenses)
+      - name: Bundle FFmpeg (LGPL shared build, licence + source offer)
         shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          $t = "out/Orange/tools"; New-Item -ItemType Directory -Force "$t/ffmpeg/bin","$t/pandoc" | Out-Null
-          Invoke-WebRequest https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip -OutFile ff.zip
+          $t = "out/Orange/tools"; New-Item -ItemType Directory -Force "$t/ffmpeg/bin" | Out-Null
+          $zip = "ffmpeg-n8.1-latest-win64-lgpl-shared-8.1.zip"
+          Invoke-WebRequest "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/$zip" -OutFile ff.zip
           Expand-Archive ff.zip ffx; $d = Get-ChildItem ffx -Directory | Select-Object -First 1
-          Copy-Item "$($d.FullName)/bin/ffmpeg.exe","$($d.FullName)/bin/ffprobe.exe" "$t/ffmpeg/bin/"; Copy-Item "$($d.FullName)/LICENSE.txt" "$t/ffmpeg/LICENSE.txt"
-          "Source: https://github.com/BtbN/FFmpeg-Builds (build scripts) and https://ffmpeg.org/download.html (source code)" | Out-File "$t/ffmpeg/SOURCE.txt"
-          $rel = gh release view -R jgm/pandoc --json assets,tagName | ConvertFrom-Json
-          $a = $rel.assets | Where-Object { $_.name -like '*windows-x86_64.zip' } | Select-Object -First 1
-          Invoke-WebRequest $a.url -OutFile pd.zip; Expand-Archive pd.zip pdx
-          $pe = Get-ChildItem pdx -Recurse -Filter pandoc.exe | Select-Object -First 1
-          Copy-Item $pe.FullName "$t/pandoc/"; Get-ChildItem $pe.Directory -Filter 'COPYING*' | Copy-Item -Destination "$t/pandoc/"
-          "Pandoc $($rel.tagName). Source: https://github.com/jgm/pandoc" | Out-File "$t/pandoc/SOURCE.txt"
+          Get-ChildItem "$($d.FullName)/bin" | Where-Object { $_.Name -ne 'ffplay.exe' } | Copy-Item -Destination "$t/ffmpeg/bin/"
+          Copy-Item "$($d.FullName)/LICENSE.txt" "$t/ffmpeg/LICENSE.txt"
+          Copy-Item tools/ffmpeg/SOURCE.txt "$t/ffmpeg/SOURCE.txt"
+          $ver = & "$t/ffmpeg/bin/ffmpeg.exe" -hide_banner -version 2>&1 | Out-String
+          $enc = & "$t/ffmpeg/bin/ffmpeg.exe" -hide_banner -encoders 2>&1 | Out-String
+          New-Item -ItemType Directory -Force evidence | Out-Null
+          $ver | Out-File evidence/ffmpeg-version.txt; $enc | Out-File evidence/ffmpeg-encoders.txt
+          if ($ver -match '--enable-gpl' -or $ver -match '--enable-nonfree') { Write-Host "GPL/nonfree FFmpeg must not ship"; exit 1 }
+          foreach ($e in 'h264_mf','libmp3lame','libopus','libwebp','aac','flac','gif') { "encoder $e present=$($enc -match "\b$e\b")" | Tee-Object -Append evidence/summary.txt }
+          "ffmpeg bundle MB=$([math]::Round((Get-ChildItem "$t/ffmpeg" -Recurse | Measure-Object Length -Sum).Sum/1MB,1))" | Tee-Object -Append evidence/summary.txt
       - name: UI feature bisect
         if: always()
         shell: pwsh
@@ -188,9 +189,13 @@ jobs:
         shell: pwsh
         run: |
           Copy-Item README.md, LICENSE, THIRD-PARTY-NOTICES.md, tools/checklist/Run-OrangeChecklist.ps1 out/Orange/ -ErrorAction SilentlyContinue
-          Compress-Archive out/Orange/* out/Orange-0.1.0-win-x64-portable.zip -Force
-          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DAppVersion=0.1.0 installer/Orange.iss 2>&1 | Tee-Object evidence/installer.log
+          Compress-Archive out/Orange/* out/Orange-0.2.0-win-x64-portable.zip -Force
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DAppVersion=0.2.0 installer/Orange.iss 2>&1 | Tee-Object evidence/installer.log
           Get-ChildItem out/*.zip, out/*.exe | Format-Table Name, Length | Out-String | Tee-Object -Append evidence/summary.txt
+          $setup = Get-ChildItem out/Orange-*-setup.exe | Select-Object -First 1
+          "installer MB=$([math]::Round($setup.Length/1MB,1)) (target < 90)" | Tee-Object -Append evidence/summary.txt
+          Get-ChildItem out/Orange -Directory | ForEach-Object { "dir $($_.Name) MB=$([math]::Round((Get-ChildItem $_.FullName -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" } | Tee-Object -Append evidence/summary.txt
+          "root files MB=$([math]::Round((Get-ChildItem out/Orange -File | Measure-Object Length -Sum).Sum/1MB,1))" | Tee-Object -Append evidence/summary.txt
       - name: Optional code signing
         if: env.HAS_CERT == 'true'
         shell: pwsh

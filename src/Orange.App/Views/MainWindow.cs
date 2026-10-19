@@ -337,6 +337,49 @@ public sealed class MainWindow : Window
             row.Children.Add(b);
             p.Children.Add(row);
         }
+
+        p.Children.Add(Header("Engines"));
+        p.Children.Add(new TextBlock { Text = "Optional helpers Orange can download for you. Downloads happen only when you press Install, come from the project's official release page, and are checked against a fingerprint built into Orange before anything is installed.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+        var installed = AppSettings.Engines.Installed();
+        foreach (var spec in Orange.Core.Engines.EngineManager.Catalog)
+        {
+            var have = installed.FirstOrDefault(e => e.Id == spec.Id);
+            var card = new StackPanel { Spacing = 4 };
+            card.Children.Add(new TextBlock { Text = $"{spec.Name} {spec.Version}", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+            card.Children.Add(new TextBlock { Text = $"{spec.Purpose}. {spec.License}. {spec.SizeBytes / 1048576.0:0} MB download.", FontSize = 12, Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+            var bar = new ProgressBar { Minimum = 0, Maximum = 1, Width = 320, HorizontalAlignment = HorizontalAlignment.Left, Visibility = Visibility.Collapsed };
+            var status = new TextBlock { FontSize = 12, Text = have is null ? "Not installed" : $"Installed in {Path.GetDirectoryName(have.ExePath)}" };
+            var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+            var install = new Button { Content = have is null ? "Install" : "Reinstall" };
+            var remove = new Button { Content = "Uninstall", IsEnabled = have is not null };
+            var cancel = new Button { Content = "Cancel", Visibility = Visibility.Collapsed };
+            CancellationTokenSource? cts = null;
+            var sp = spec;
+            install.Click += async (_, _) =>
+            {
+                cts = new CancellationTokenSource();
+                install.IsEnabled = remove.IsEnabled = false; cancel.Visibility = bar.Visibility = Visibility.Visible;
+                var prog = new Progress<Orange.Core.Engines.EngineProgress>(pr =>
+                {
+                    status.Text = pr.Total > 0 ? $"{pr.Stage} {pr.Done / 1048576.0:0.0} of {pr.Total / 1048576.0:0.0} MB" : pr.Stage;
+                    bar.IsIndeterminate = pr.Total <= 0; if (pr.Total > 0) bar.Value = (double)pr.Done / pr.Total;
+                });
+                try { await Task.Run(() => AppSettings.Engines.InstallAsync(sp, prog, cts.Token)); Diagnostics.Event($"engine-installed {sp.Id}"); Show("settings"); }
+                catch (OperationCanceledException) { status.Text = "Cancelled. Nothing was installed."; }
+                catch (Exception e) { status.Text = e.Message; Diagnostics.Event($"engine-failed {sp.Id} {e.Message}"); }
+                finally { install.IsEnabled = true; cancel.Visibility = bar.Visibility = Visibility.Collapsed; }
+            };
+            cancel.Click += (_, _) => cts?.Cancel();
+            remove.Click += (_, _) => { try { AppSettings.Engines.Uninstall(sp.Id); } catch (Exception e) { status.Text = e.Message; return; } Show("settings"); };
+            buttons.Children.Add(install); buttons.Children.Add(remove); buttons.Children.Add(cancel);
+            card.Children.Add(status); card.Children.Add(bar); card.Children.Add(buttons);
+            p.Children.Add(card);
+        }
+        foreach (var (name, url, why) in new[] {
+            ("LibreOffice", "https://www.libreoffice.org/download/", "legacy DOC, XLS and PPT files"),
+            ("Ghostscript", "https://ghostscript.com/releases/gsdnld.html", "stronger PDF compression"),
+            ("7-Zip", "https://www.7-zip.org/", "RAR and 7z extraction") })
+            p.Children.Add(new TextBlock { Text = $"{name} ({why}): install it from {url} and Orange finds it automatically.", FontSize = 12, Opacity = 0.7, TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true });
         return new ScrollViewer { Content = p };
     }
 
