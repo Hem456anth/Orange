@@ -29,7 +29,7 @@ Compress takes a **target size** (KB/MB) for images, video, audio and PDFs: Oran
 
 ## What it converts
 
-`orange-cli matrix` prints the exact list for your PC. In a standard build:
+`orange matrix` (see [docs/CLI.md](docs/CLI.md)) prints the exact list for your PC. In a standard build:
 
 - **Images** (PNG, JPG, WebP, HEIC\*, TIFF, BMP, GIF, AVIF, ICO, SVG in) → each other and PDF; compress (or to a target size), resize, crop, rotate/flip, grayscale, edit light, add background, redact, annotate, metadata view/edit/remove, read QR; several images → one PDF or a collage. SVGs are rendered only when self-contained (no DOCTYPE, external links or scripts). \*HEIC is read everywhere; writing HEIC isn't supported by the bundled image library and is hidden.
 - **Video** (MP4, MOV, MKV, WebM, AVI, WMV) → MP4, MOV, MKV, WebM, AVI, GIF, MP3, M4A, WAV; compress, trim, mute, resize, crop, speed, snapshot, split, join, remove metadata.

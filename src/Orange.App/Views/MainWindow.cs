@@ -311,6 +311,8 @@ public sealed class MainWindow : Window
 
         p.Children.Add(Header("Presets"));
         p.Children.Add(PresetsSettings.Build(Hwnd, () => Show("settings")));
+        p.Children.Add(Header("Watch folders"));
+        p.Children.Add(WatchFoldersSection());
         p.Children.Add(Header("Wheel editor"));
         p.Children.Add(PresetsSettings.WheelEditor(() => Show("settings")));
 
@@ -386,6 +388,43 @@ public sealed class MainWindow : Window
             ("7-Zip", "https://www.7-zip.org/", "RAR and 7z extraction") })
             p.Children.Add(new TextBlock { Text = $"{name} ({why}): install it from {url} and Orange finds it automatically.", FontSize = 12, Opacity = 0.7, TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true });
         return new ScrollViewer { Content = p };
+    }
+
+    private UIElement WatchFoldersSection()
+    {
+        var p = new StackPanel { Spacing = 8 };
+        p.Children.Add(new TextBlock { Text = "New files dropped into a watched folder are converted with a preset while Orange runs in the tray. Orange waits until a file has finished copying or downloading, and never re-converts its own results.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+        if (WatchService.LastError is { } err) p.Children.Add(new TextBlock { Text = err, Foreground = new SolidColorBrush(Colors.IndianRed), TextWrapping = TextWrapping.Wrap });
+        foreach (var spec in WatchService.Specs)
+        {
+            var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+            row.Children.Add(new TextBlock { Text = $"{spec.Folder}  →  {spec.Preset}{(spec.MoveOriginals ? " (originals moved to Originals)" : "")}", VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, MaxWidth = 520 });
+            var remove = new Button { Content = "Remove" };
+            var folder = spec.Folder;
+            remove.Click += (_, _) => { WatchService.Remove(folder); Show("settings"); };
+            row.Children.Add(remove);
+            p.Children.Add(row);
+        }
+        var presets = ConversionService.Instance.Presets.Select(x => x.Name).ToList();
+        var add = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        var presetBox = new ComboBox { ItemsSource = presets, SelectedIndex = presets.Count > 0 ? 0 : -1, MinWidth = 200, PlaceholderText = "Preset" };
+        var move = new CheckBox { Content = "Move originals to an Originals folder" };
+        var pick = new Button { Content = "Add folder…" };
+        pick.Click += async (_, _) =>
+        {
+            if (presetBox.SelectedIndex < 0) return;
+            var fp = new FolderPicker(); fp.FileTypeFilter.Add("*");
+            WinRT.Interop.InitializeWithWindow.Initialize(fp, Hwnd);
+            var f = await fp.PickSingleFolderAsync(); if (f is null) return;
+            try { WatchService.Add(new Orange.Core.Watch.WatchSpec { Folder = f.Path, Preset = presets[presetBox.SelectedIndex], MoveOriginals = move.IsChecked == true }); }
+            catch (Exception e) { ProgressWindow.ShowError("Watch folders", e.Message, null); }
+            Show("settings");
+        };
+        add.Children.Add(presetBox); add.Children.Add(move); add.Children.Add(pick);
+        p.Children.Add(add);
+        if (WatchService.Count > 0)
+            p.Children.Add(Toggle("Pause all watch folders", WatchService.Paused, WatchService.SetPaused));
+        return p;
     }
 
     private static TextBlock Header(string t) => new() { Text = t, Style = (Style)Application.Current.Resources["SubtitleTextBlockStyle"], Margin = new Thickness(0, 12, 0, 0) };

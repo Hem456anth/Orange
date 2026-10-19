@@ -117,6 +117,7 @@ public partial class App : Application
         try { Watcher.Start(); }
         catch (Exception e) { Diagnostics.Event("hooks-failed " + e.Message); ProgressWindow.ShowError("Orange", "Drag activation is unavailable on this PC.", e.Message); }
 
+        Step("watch-folders", WatchService.Start);
         if (args.Count > 0 && args[0] == "--wheel") Queue(args.Skip(1));
         else if (!args.Contains("--background")) Main.ShowWindow();
         if (!args.Contains("--background")) Step("welcome", WelcomeWindow.ShowIfFirstRun);
@@ -178,6 +179,7 @@ public partial class App : Application
     private static void Quit()
     {
         Watcher?.Dispose();
+        WatchService.Stop();
         Tray?.Dispose();
         Current.Exit();
     }
