@@ -46,6 +46,8 @@ public sealed class AppSettings
     /// <summary>Last options used per operation, so "WebP at 70" sticks.</summary>
     public Dictionary<string, Dictionary<string, string>> LastOptions { get; set; } = new();
     public List<string> Favorites { get; set; } = new();
+    /// <summary>Wheel editor: hidden petals and order per file kind.</summary>
+    public Orange.Core.Presets.WheelLayout Layout { get; set; } = new();
     public List<RecentEntry> Recent { get; set; } = new();
 
     public sealed record RecentEntry(string OperationId, string Title, string Category, DateTimeOffset When, int Files, IReadOnlyList<string> Outputs);

@@ -226,11 +226,18 @@ public sealed class WheelWindow : Window
                 .OrderBy(x => x.o.CombinesInputs && files.Count > 1 ? -1 : Rank(x.o))
                 .ThenBy(x => WheelPriority(x.o))
                 .ThenBy(x => x.i).Select(x => x.o).ToList();
-            var shown = ordered.Count > MaxWedges ? ordered.Take(MaxWedges - 1).ToList() : ordered;
+            // Wheel editor: the user's hidden petals and order for this kind (favourites still float up first).
+            if (files.Count > 0) { var k = FileTypeDetector.Detect(files[0]); var arranged = s.Layout.Apply(k, group, ordered); ordered = arranged.OrderBy(o => s.Favorites.Contains(o.Id) ? 0 : 1).ToList(); }
+            // Pinned presets for these files come first (at most two), then the operations.
+            if (kind == WheelKind.Convert && files.Count > 0 && files.Count == _files.Count)
+                foreach (var pr in new Orange.Core.Presets.PresetRunner(reg).ForFiles(ConversionService.Instance.Presets.Where(p => p.PinnedOnWheel), files).Take(2))
+                    items.Add(new WheelItem(pr.Name, "\uE734", pr, $"Preset {pr.Name}"));
+            var room = MaxWedges - items.Count;
+            var shown = ordered.Count > room ? ordered.Take(room - 1).ToList() : ordered;
             foreach (var o in shown)
                 items.Add(new WheelItem(o.Title, group == OperationGroup.Tool ? Glyphs.For(o) : null, o,
                     group == OperationGroup.Convert ? $"Convert to {o.Title}" : o.Title));
-            if (ordered.Count > MaxWedges) items.Add(new WheelItem("More", "\uE712", "more", $"{ordered.Count - shown.Count} more options"));
+            if (ordered.Count > room) items.Add(new WheelItem("More", "\uE712", "more", $"{ordered.Count - shown.Count} more options"));
             if (ops.Count == 0 && items.Count == 0)
                 idle = _files.Count == 0 ? "No files" : files.Count != _files.Count ? $"Folder: tap {KeyName(s.ActionsKey)} for actions" :
                        FileTypeDetector.Detect(files[0]) == FileKind.Unknown ? "Unsupported file" :
@@ -380,6 +387,10 @@ public sealed class WheelWindow : Window
                     if (!string.IsNullOrEmpty(msg)) ProgressWindow.ShowInfo(msg);
                 }
                 catch (Exception ex) { ProgressWindow.ShowError(a.Title, "That action didn't work.", ex.Message); }
+                return;
+            case Orange.Core.Presets.Preset preset:
+                Close();
+                await ConversionService.Instance.RunPresetAsync(preset, files);
                 return;
             case OperationDescriptor op:
                 Close();
