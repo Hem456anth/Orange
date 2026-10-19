@@ -109,6 +109,16 @@ public sealed class WheelWindow : Window
         else Close();
     }
 
+    /// <summary>For the first three drags, the hub shows which keys open which wheel (they changed in 0.2).</summary>
+    private void ShowKeyHintIfNew()
+    {
+        var s = AppSettings.Current;
+        if (s.KeyHintsShown >= 3) return;
+        _wheel.SetHint($"{KeyName(s.ConvertKey)}: Convert\n{KeyName(s.ToolsKey)}: Tools\n{KeyName(s.ActionsKey)}: Actions");
+        s.KeyHintsShown++;
+        try { s.Save(); } catch { }
+    }
+
     /// <summary>Wedge under the mouse pointer, from the screen position (works even when no OLE DragOver arrives).</summary>
     private int CursorIndex()
     {
@@ -147,6 +157,7 @@ public sealed class WheelWindow : Window
             Native.ShowWindow(w._hwnd, Native.SW_SHOWNOACTIVATE);
             Native.SetWindowPos(w._hwnd, Native.HWND_TOPMOST, 0, 0, 0, 0, Native.SWP_NOMOVE | Native.SWP_NOSIZE | Native.SWP_NOACTIVATE);
             w.StartCursorPoll();
+            w.ShowKeyHintIfNew();
         }
         else
         {
@@ -237,7 +248,7 @@ public sealed class WheelWindow : Window
     /// Wedge order for tools, after favourites and recents: the panels from Tangerine's image wheel first
     /// (Compress, Metadata, Edit, Annotate, Add BG, Crop, Redact), the rest behind "More".
     /// </summary>
-    private static string KeyName(WheelKey k) => k switch { WheelKey.AltShift => "Alt+Shift", _ => k.ToString() };
+    private static string KeyName(WheelKey k) => WheelKeyInterpreter.Label(k);
 
     private static int WheelPriority(OperationDescriptor o) => o.Id switch
     {

@@ -61,7 +61,7 @@ public sealed class WelcomeWindow : Window
         WindowHelpers.Place(this, 560, 600, bottomRight: false);
     }
 
-    private static string Key(WheelKey k) => k switch { WheelKey.AltShift => "Alt+Shift", WheelKey.Ctrl => "Ctrl", WheelKey.Alt => "Alt", _ => "Shift" };
+    private static string Key(WheelKey k) => WheelKeyInterpreter.Label(k);
 
     private static UIElement Step(string n, string title, string text)
     {

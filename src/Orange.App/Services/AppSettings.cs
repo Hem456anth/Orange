@@ -4,8 +4,7 @@ using Orange.Core;
 
 namespace Orange.App.Services;
 
-/// <summary>AltShift is Windows' Option+Shift: hold Alt and tap Shift (or the reverse) while dragging.</summary>
-public enum WheelKey { Shift, Ctrl, Alt, AltShift }
+/// <remarks>WheelKey lives in Orange.Core.Input (shared with the unit-tested key interpreter).</remarks>
 public enum DragSourceFilter { ExplorerAndDesktop, AnyApp }
 public enum ThemeChoice { System, Light, Dark }
 
@@ -14,10 +13,15 @@ public sealed class AppSettings
 {
     public bool DragActivation { get; set; } = true;
     public WheelKey ConvertKey { get; set; } = WheelKey.Shift;
-    public WheelKey ToolsKey { get; set; } = WheelKey.AltShift;     // Tangerine: Option + Shift
-    public WheelKey ActionsKey { get; set; } = WheelKey.Ctrl;
-    /// <summary>2 = Alt+Shift tools wheel defaults. Older files are migrated once on load.</summary>
-    public int SettingsVersion { get; set; } = 2;
+    public WheelKey ToolsKey { get; set; } = WheelKey.ShiftDouble;  // tap Shift twice
+    public WheelKey ActionsKey { get; set; } = WheelKey.ShiftCtrl;
+    /// <summary>
+    /// 3 = 0.2 keys (Shift / Shift twice / Shift+Ctrl), chosen because Explorer gives plain Ctrl and Alt meanings
+    /// (copy / link) during a drag. Older files are migrated once on load, only if the user kept the old defaults.
+    /// </summary>
+    public int SettingsVersion { get; set; } = 3;
+    /// <summary>How many times the wheel has shown the key hint in its hub (shown for the first few drags).</summary>
+    public int KeyHintsShown { get; set; }
     public DragSourceFilter DragSources { get; set; } = DragSourceFilter.ExplorerAndDesktop;
     /// <summary>Global shortcut that opens the wheel for the files selected in the active Explorer window.</summary>
     public string Hotkey { get; set; } = "Ctrl+Alt+O";
@@ -59,11 +63,18 @@ public sealed class AppSettings
             {
                 var json = File.ReadAllText(FilePath);
                 var loaded = JsonSerializer.Deserialize<AppSettings>(json, Json) ?? new AppSettings();
-                if (!json.Contains("\"SettingsVersion\"") && loaded.ToolsKey == WheelKey.Ctrl && loaded.ActionsKey == WheelKey.Alt)
-                {   // 0.1 defaults (Ctrl = tools, Alt = actions) → Tangerine's Alt+Shift for tools, Ctrl for actions.
+                int version = 1;
+                using (var doc = JsonDocument.Parse(json))
+                    if (doc.RootElement.TryGetProperty(nameof(SettingsVersion), out var v) && v.TryGetInt32(out var n)) version = n;
+                if (version < 2 && loaded.ToolsKey == WheelKey.Ctrl && loaded.ActionsKey == WheelKey.Alt)
+                {   // 0.1.0 defaults (Ctrl = tools, Alt = actions) → 0.1 late defaults.
                     loaded.ToolsKey = WheelKey.AltShift; loaded.ActionsKey = WheelKey.Ctrl;
                 }
-                loaded.SettingsVersion = 2;
+                if (version < 3 && loaded.ConvertKey == WheelKey.Shift && loaded.ToolsKey == WheelKey.AltShift && loaded.ActionsKey == WheelKey.Ctrl)
+                {   // Still on the 0.1 defaults → 0.2 defaults. Anyone who picked their own keys keeps them.
+                    loaded.ToolsKey = WheelKey.ShiftDouble; loaded.ActionsKey = WheelKey.ShiftCtrl; loaded.KeyHintsShown = 0;
+                }
+                loaded.SettingsVersion = 3;
                 return loaded;
             }
         }

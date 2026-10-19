@@ -364,7 +364,7 @@ public sealed class MainWindow : Window
 
     private static string Humanize(string s) => s switch
     {
-        "ExplorerAndDesktop" => "File Explorer and desktop", "AnyApp" => "Any app", "KeepBoth" => "Keep both", "Replace" => "Replace the existing file", "Fail" => "Stop and tell me", "AltShift" => "Alt + Shift", "Ctrl" => "Ctrl",
+        "ExplorerAndDesktop" => "File Explorer and desktop", "AnyApp" => "Any app", "KeepBoth" => "Keep both", "Replace" => "Replace the existing file", "Fail" => "Stop and tell me", "AltShift" => "Alt + Shift", "Ctrl" => "Ctrl", "ShiftDouble" => "Shift twice", "ShiftCtrl" => "Shift + Ctrl",
         _ => s,
     };
 
