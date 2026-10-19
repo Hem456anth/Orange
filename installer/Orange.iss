@@ -7,6 +7,7 @@
 #endif
 
 [Setup]
+ChangesEnvironment=yes
 AppId={{6B1E0C55-8F7A-4D8E-9C1E-0A7E0F0A0001}
 AppName=Orange
 AppVersion={#AppVersion}
@@ -32,6 +33,7 @@ LicenseFile=..\LICENSE
 [Tasks]
 Name: "sendto"; Description: "Add Orange to the Send to menu"
 Name: "contextmenu"; Description: "Add ""Convert with Orange"" to the right-click menu"
+Name: "clipath"; Description: "Add the orange command to PATH (for terminals and scripts)"; Flags: unchecked
 Name: "autostart"; Description: "Start Orange when I sign in (needed for Shift-drag)"
 
 [Files]
@@ -42,6 +44,7 @@ Name: "{userprograms}\Orange"; Filename: "{app}\Orange.exe"
 Name: "{usersendto}\Orange (convert)"; Filename: "{app}\Orange.exe"; Parameters: "--wheel"; Tasks: sendto
 
 [Registry]
+Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\cli"; Tasks: clipath; Check: NeedsCliPath(ExpandConstant('{app}\cli'))
 Root: HKCU; Subkey: "Software\Classes\*\shell\Orange"; ValueType: string; ValueName: ""; ValueData: "Convert with Orange"; Flags: uninsdeletekey; Tasks: contextmenu
 Root: HKCU; Subkey: "Software\Classes\*\shell\Orange"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\Orange.exe"",0"; Tasks: contextmenu
 Root: HKCU; Subkey: "Software\Classes\*\shell\Orange"; ValueType: string; ValueName: "MultiSelectModel"; ValueData: "Player"; Tasks: contextmenu
@@ -56,3 +59,27 @@ Filename: "taskkill.exe"; Parameters: "/im Orange.exe /f"; Flags: runhidden; Run
 
 [UninstallDelete]
 Type: files; Name: "{usersendto}\Orange (convert).lnk"
+
+[Code]
+function NeedsCliPath(Dir: string): Boolean;
+var Current: string;
+begin
+  if not RegQueryStringValue(HKCU, 'Environment', 'Path', Current) then Current := '';
+  Result := Pos(';' + Uppercase(Dir) + ';', ';' + Uppercase(Current) + ';') = 0;
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var Current, Dir: string; P: Integer;
+begin
+  if CurUninstallStep <> usPostUninstall then exit;
+  Dir := ExpandConstant('{app}\cli');
+  if RegQueryStringValue(HKCU, 'Environment', 'Path', Current) then
+  begin
+    P := Pos(';' + Uppercase(Dir), Uppercase(Current));
+    if P > 0 then
+    begin
+      Delete(Current, P, Length(Dir) + 1);
+      RegWriteExpandStringValue(HKCU, 'Environment', 'Path', Current);
+    end;
+  end;
+end;

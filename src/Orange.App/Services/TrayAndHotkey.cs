@@ -100,13 +100,15 @@ public sealed class TrayAndHotkey : IDisposable
         var m = Native.CreatePopupMenu();
         Native.AppendMenu(m, Native.MF_STRING, 1, "Open Orange");
         Native.AppendMenu(m, Native.MF_STRING, 2, "Settings");
+        if (WatchService.Count > 0)
+            Native.AppendMenu(m, Native.MF_STRING, 4, WatchService.Paused ? $"Resume watch folders ({WatchService.Count})" : $"Pause watch folders ({WatchService.Count})");
         Native.AppendMenu(m, Native.MF_SEPARATOR, 0, null);
         Native.AppendMenu(m, Native.MF_STRING, 3, "Quit Orange");
         Native.GetCursorPos(out var p);
         Native.SetForegroundWindow(_hwnd);
         var cmd = Native.TrackPopupMenuEx(m, Native.TPM_RETURNCMD | Native.TPM_RIGHTBUTTON, p.X, p.Y, _hwnd, IntPtr.Zero);
         Native.DestroyMenu(m);
-        switch (cmd) { case 1: OpenRequested?.Invoke(); break; case 2: SettingsRequested?.Invoke(); break; case 3: QuitRequested?.Invoke(); break; }
+        switch (cmd) { case 1: OpenRequested?.Invoke(); break; case 2: SettingsRequested?.Invoke(); break; case 3: QuitRequested?.Invoke(); break; case 4: WatchService.SetPaused(!WatchService.Paused); break; }
     }
 
     public void Dispose()

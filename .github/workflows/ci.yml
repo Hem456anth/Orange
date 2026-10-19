@@ -127,6 +127,18 @@ jobs:
           dotnet publish src/Orange.App/Orange.App.csproj -c Release -r win-x64 -p:Platform=x64 --self-contained -o out/Orange 2>&1 | Tee-Object -FilePath evidence/app-build.log
           if ($LASTEXITCODE -ne 0) { exit 1 }
           Get-ChildItem out/Orange | Select-Object -First 15 | Format-Table Name, Length | Out-String | Write-Host
+      - name: Publish the CLI beside the app (shares its runtime files)
+        shell: pwsh
+        run: |
+          dotnet publish src/Orange.Cli/Orange.Cli.csproj -c Release -r win-x64 --self-contained -o out/Orange 2>&1 | Tee-Object -Append evidence/app-build.log
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          New-Item -ItemType Directory -Force out/Orange/cli | Out-Null
+          Copy-Item installer/cli/orange.cmd out/Orange/cli/
+          & out/Orange/orange-cli.exe --version | Tee-Object -Append evidence/summary.txt
+          & out/Orange/orange-cli.exe presets list | Tee-Object -Append evidence/cli-presets.txt
+          & out/Orange/orange-cli.exe convert tests/fixtures/sample.png --to webp -o $env:RUNNER_TEMP --json | Tee-Object evidence/cli-convert.json
+          "cli convert exit=$LASTEXITCODE" | Tee-Object -Append evidence/summary.txt
+          if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Bundle FFmpeg (LGPL shared build, licence + source offer)
         shell: pwsh
         run: |
@@ -195,6 +207,7 @@ jobs:
           $setup = Get-ChildItem out/Orange-*-setup.exe | Select-Object -First 1
           "installer MB=$([math]::Round($setup.Length/1MB,1)) (target < 90)" | Tee-Object -Append evidence/summary.txt
           Get-ChildItem out/Orange -Directory | ForEach-Object { "dir $($_.Name) MB=$([math]::Round((Get-ChildItem $_.FullName -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" } | Tee-Object -Append evidence/summary.txt
+          Get-ChildItem out/Orange -File | Sort-Object Length -Descending | Select-Object -First 15 | ForEach-Object { "file $($_.Name) MB=$([math]::Round($_.Length/1MB,1))" } | Tee-Object -Append evidence/summary.txt
           "root files MB=$([math]::Round((Get-ChildItem out/Orange -File | Measure-Object Length -Sum).Sum/1MB,1))" | Tee-Object -Append evidence/summary.txt
       - name: Optional code signing
         if: env.HAS_CERT == 'true'

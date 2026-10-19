@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Orange.Core\Orange.Core.csproj" />
+    <ProjectReference Include="..\..\src\Orange.Cli\Orange.Cli.csproj" />
   </ItemGroup>
 
 </Project>
