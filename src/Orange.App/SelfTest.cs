@@ -38,7 +38,7 @@ public static class SelfTest
         var fixtures = Environment.GetEnvironmentVariable("ORANGE_FIXTURES") ?? FindFixtures();
         var work = Path.Combine(outDir, "work");
         Directory.CreateDirectory(work);
-        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg", "sample.xlsx", "sample.pptx", "sample.epub", "sample.csv" })
+        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg", "sample.xlsx", "sample.pptx", "sample.epub", "sample.csv", "qr.png" })
             if (File.Exists(Path.Combine(fixtures, f))) File.Copy(Path.Combine(fixtures, f), Path.Combine(work, f), true);
         string W(string n) => Path.Combine(work, n);
         AppSettings.Current.RevealWhenDone = false;
@@ -233,6 +233,49 @@ public static class SelfTest
         await Try("EPUB → PDF built in", true, () => Convert("ebook.to.pdf", W("sample.epub")));
         await Try("RAR/7z: 7-Zip bundled", true, () => Task.FromResult(ToolLocator.Default.Find("7zip") ?? throw new Exception("7-Zip not found")));
         await Try("PNG → JPEG XL", true, () => Convert("image.to.jxl", W("sample.png")));
+        await Try("progress window: finished with errors summary", true, async () =>
+        {
+            var bad = W("broken.png"); File.WriteAllBytes(bad, [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 1, 2, 3]);
+            await svc.RunAsync(svc.Registry.Get("image.to.webp"), [W("sample.png"), bad], null, ui);
+            await Task.Delay(600);
+            var pw = ProgressWindow.Last ?? throw new Exception("no progress window");
+            await Shot(pw, Path.Combine(outDir, "progress-errors.png"));
+            pw.Close();
+            return "ok";
+        });
+        await Try("QR result card", true, async () =>
+        {
+            await svc.RunAsync(svc.Registry.Get("image.qr-read"), [W("qr.png")], null, ui);
+            await Task.Delay(700);
+            var q = QrResultWindow.Last ?? throw new Exception("no QR window");
+            await Shot(q, Path.Combine(outDir, "qr-result.png"));
+            q.Close();
+            return "ok";
+        });
+        await Try("float shelf", true, async () =>
+        {
+            var sh = ShelfWindow.Open([W("sample.png"), W("sample.pdf"), W("sample.xlsx")]);
+            await Task.Delay(700);
+            await Shot(sh, Path.Combine(outDir, "shelf.png"));
+            var n = sh.Paths.Count; sh.Close();
+            if (n != 3) throw new Exception($"shelf holds {n}");
+            return "3 files";
+        });
+        await Try("tray menu (screen capture)", false, async () =>
+        {
+            using var t = new TrayAndHotkey(); t.ShowTray();
+            Native.GetCursorPos(out var p);
+            var path = Path.Combine(outDir, "tray-menu.png");
+            var cap = Task.Run(async () =>
+            {
+                await Task.Delay(900);
+                ScreenCapture.Save(p.X - 20, p.Y - 320, 380, 640, path);
+                PostMessage(t.MessageWindow, 0x001F /*WM_CANCELMODE*/, IntPtr.Zero, IntPtr.Zero);
+            });
+            t.ShowMenuForTest();
+            await cap;
+            return "captured";
+        });
         await Try("Preset 'Web image' via app service", true, async () =>
         {
             var p = Orange.Core.Presets.PresetStore.Find(svc.Presets, "Web image")!;
@@ -290,6 +333,8 @@ public static class SelfTest
         return new Native.POINT { X = area.X + area.Width / 2, Y = area.Y + area.Height / 2 };
     }
 
+    [System.Runtime.InteropServices.DllImport("user32.dll")] private static extern bool PostMessage(IntPtr h, uint m, IntPtr w, IntPtr l);
+
     private static async Task Shot(Window w, string path)
     {
         var rtb = new RenderTargetBitmap();
@@ -307,5 +352,39 @@ public static class SelfTest
         var d = new DirectoryInfo(AppContext.BaseDirectory);
         while (d != null && !Directory.Exists(Path.Combine(d.FullName, "tests", "fixtures"))) d = d.Parent;
         return d is null ? Path.Combine(AppContext.BaseDirectory, "fixtures") : Path.Combine(d.FullName, "tests", "fixtures");
+    }
+}
+
+/// <summary>GDI screen grab for surfaces that aren't XAML (the tray's Win32 popup menu). Self-test only.</summary>
+internal static class ScreenCapture
+{
+    [System.Runtime.InteropServices.DllImport("user32.dll")] private static extern IntPtr GetDC(IntPtr h);
+    [System.Runtime.InteropServices.DllImport("user32.dll")] private static extern int ReleaseDC(IntPtr h, IntPtr dc);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")] private static extern IntPtr CreateCompatibleDC(IntPtr dc);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")] private static extern IntPtr CreateCompatibleBitmap(IntPtr dc, int w, int h);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")] private static extern IntPtr SelectObject(IntPtr dc, IntPtr o);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")] private static extern bool BitBlt(IntPtr d, int x, int y, int w, int h, IntPtr s, int sx, int sy, uint rop);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")] private static extern bool DeleteObject(IntPtr o);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")] private static extern bool DeleteDC(IntPtr dc);
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")] private static extern int GetDIBits(IntPtr dc, IntPtr bmp, uint start, uint lines, byte[] bits, ref BITMAPINFOHEADER bi, uint usage);
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    private struct BITMAPINFOHEADER { public int biSize, biWidth, biHeight; public short biPlanes, biBitCount; public int biCompression, biSizeImage, biXPelsPerMeter, biYPelsPerMeter, biClrUsed, biClrImportant; }
+
+    public static void Save(int x, int y, int w, int h, string path)
+    {
+        x = Math.Max(0, x); y = Math.Max(0, y);
+        var screen = GetDC(IntPtr.Zero); var mem = CreateCompatibleDC(screen); var bmp = CreateCompatibleBitmap(screen, w, h);
+        var old = SelectObject(mem, bmp);
+        BitBlt(mem, 0, 0, w, h, screen, x, y, 0x00CC0020 /*SRCCOPY*/);
+        SelectObject(mem, old);
+        var bi = new BITMAPINFOHEADER { biSize = 40, biWidth = w, biHeight = -h, biPlanes = 1, biBitCount = 32 };
+        var px = new byte[w * h * 4];
+        GetDIBits(mem, bmp, 0, (uint)h, px, ref bi, 0);
+        for (int i = 3; i < px.Length; i += 4) px[i] = 255;
+        DeleteObject(bmp); DeleteDC(mem); ReleaseDC(IntPtr.Zero, screen);
+        using var fs = File.Create(path);
+        var enc = BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fs.AsRandomAccessStream()).AsTask().GetAwaiter().GetResult();
+        enc.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)w, (uint)h, 96, 96, px);
+        enc.FlushAsync().AsTask().GetAwaiter().GetResult();
     }
 }

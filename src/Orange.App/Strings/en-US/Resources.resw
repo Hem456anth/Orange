@@ -28,9 +28,11 @@
   <data name="SBBFA773E5A" xml:space="preserve"><value>Close</value><comment>Close</comment></data>
   <data name="S3F15CE7953" xml:space="preserve"><value>Convert</value><comment>Convert</comment></data>
   <data name="S50382C07AC" xml:space="preserve"><value>Convert and edit files right where they are. Everything stays on this PC.</value><comment>Convert and edit files right where they are. Everything stays on this PC.</comment></data>
+  <data name="SDE1E4FAAA9" xml:space="preserve"><value>Convert to</value><comment>Convert to</comment></data>
   <data name="SA30C9F5918" xml:space="preserve"><value>Convert to {0}</value><comment>Convert to {0}</comment></data>
   <data name="S34DBC8ADF9" xml:space="preserve"><value>Convert wheel key</value><comment>Convert wheel key</comment></data>
   <data name="S6A89FDE6D6" xml:space="preserve"><value>Converters</value><comment>Converters</comment></data>
+  <data name="S4DF2260EC8" xml:space="preserve"><value>Converting to {0}</value><comment>Converting to {0}</comment></data>
   <data name="S8E3DF45A49" xml:space="preserve"><value>Copied</value><comment>Copied</comment></data>
   <data name="SAF74F7C536" xml:space="preserve"><value>Copy</value><comment>Copy</comment></data>
   <data name="SDCE04FD315" xml:space="preserve"><value>Custom…</value><comment>Custom…</comment></data>
@@ -40,6 +42,7 @@
   <data name="S997E94A7BD" xml:space="preserve"><value>Drag files</value><comment>Drag files</comment></data>
   <data name="S9023493CF5" xml:space="preserve"><value>Drags that open the wheel</value><comment>Drags that open the wheel</comment></data>
   <data name="S773489073E" xml:space="preserve"><value>Drop files here</value><comment>Drop files here</comment></data>
+  <data name="SBA622D40DF" xml:space="preserve"><value>Drop files here to keep them handy. Drag them out when you need them.</value><comment>Drop files here to keep them handy. Drag them out when you need them.</comment></data>
   <data name="S7C67E6FB70" xml:space="preserve"><value>Drop here</value><comment>Drop here</comment></data>
   <data name="S7F5D63AA39" xml:space="preserve"><value>Engines</value><comment>Engines</comment></data>
   <data name="S94CAEAF6C8" xml:space="preserve"><value>Example: </value><comment>Example: </comment></data>
@@ -50,6 +53,9 @@
   <data name="S09979A78C9" xml:space="preserve"><value>File name</value><comment>File name</comment></data>
   <data name="S7072340B57" xml:space="preserve"><value>File type</value><comment>File type</comment></data>
   <data name="S732646E539" xml:space="preserve"><value>Files converted at the same time</value><comment>Files converted at the same time</comment></data>
+  <data name="SD1F5B85FED" xml:space="preserve"><value>Files on the shelf</value><comment>Files on the shelf</comment></data>
+  <data name="S8685B92322" xml:space="preserve"><value>Finished with 1 error ({0} of {1} saved)</value><comment>Finished with 1 error ({0} of {1} saved)</comment></data>
+  <data name="S8AE9F54540" xml:space="preserve"><value>Finished with {0} errors ({1} of {2} saved)</value><comment>Finished with {0} errors ({1} of {2} saved)</comment></data>
   <data name="S30BAA24967" xml:space="preserve"><value>Folder</value><comment>Folder</comment></data>
   <data name="S90C9E8E6F3" xml:space="preserve"><value>Folder: tap {0} for actions</value><comment>Folder: tap {0} for actions</comment></data>
   <data name="S90E40D5043" xml:space="preserve"><value>Get started</value><comment>Get started</comment></data>
@@ -79,11 +85,14 @@
   <data name="S4B013BEE83" xml:space="preserve"><value>On wheel</value><comment>On wheel</comment></data>
   <data name="S2362AABD36" xml:space="preserve"><value>Open logs folder</value><comment>Open logs folder</comment></data>
   <data name="S92DFD13345" xml:space="preserve"><value>Open the download page</value><comment>Open the download page</comment></data>
+  <data name="S3A7C7488D3" xml:space="preserve"><value>Open the folder with try-me.png</value><comment>Open the folder with try-me.png</comment></data>
   <data name="S71833AFB3E" xml:space="preserve"><value>Open the wheel while dragging files</value><comment>Open the wheel while dragging files</comment></data>
+  <data name="SA89BFE49DB" xml:space="preserve"><value>Open wheel</value><comment>Open wheel</comment></data>
   <data name="S430D32076E" xml:space="preserve"><value>Operation</value><comment>Operation</comment></data>
   <data name="S60D30FAFF4" xml:space="preserve"><value>Optional helpers Orange can download for you. Downloads happen only when you press Install, come from the project's official release page, and are checked against a fingerprint built into Orange before anything is installed.</value><comment>Optional helpers Orange can download for you. Downloads happen only when you press Install, come from the project's official release page, and are checked against a fingerprint built into Orange before anything is installed.</comment></data>
   <data name="S70E0A39308" xml:space="preserve"><value>Or anywhere: drag files in File Explorer and tap Shift.</value><comment>Or anywhere: drag files in File Explorer and tap Shift.</comment></data>
   <data name="SB50B8238AC" xml:space="preserve"><value>Orange in the Send to menu</value><comment>Orange in the Send to menu</comment></data>
+  <data name="S34BE2C451A" xml:space="preserve"><value>Orange received {0}. Now try it anywhere: drag a file, tap {1}, drop on a format.</value><comment>Orange received {0}. Now try it anywhere: drag a file, tap {1}, drop on a format.</comment></data>
   <data name="SDC77451D8C" xml:space="preserve"><value>Orange uses the new language the next time it starts. Hindi and Telugu translations are new; corrections are welcome.</value><comment>Orange uses the new language the next time it starts. Hindi and Telugu translations are new; corrections are welcome.</comment></data>
   <data name="SF714CDCF58" xml:space="preserve"><value>Orange uses these programs on your PC. Missing ones only hide the operations that need them.</value><comment>Orange uses these programs on your PC. Missing ones only hide the operations that need them.</comment></data>
   <data name="S9A0F8A6EAD" xml:space="preserve"><value>Orange {0} is available.</value><comment>Orange {0} is available.</comment></data>
@@ -91,6 +100,8 @@
   <data name="S4BED336194" xml:space="preserve"><value>Output</value><comment>Output</comment></data>
   <data name="S314D642E91" xml:space="preserve"><value>Pause all watch folders</value><comment>Pause all watch folders</comment></data>
   <data name="S71EDE17FB1" xml:space="preserve"><value>Performance and limits</value><comment>Performance and limits</comment></data>
+  <data name="SE8045E398B" xml:space="preserve"><value>Practice drop zone</value><comment>Practice drop zone</comment></data>
+  <data name="SD92B71A6F1" xml:space="preserve"><value>Practice: drag try-me.png from its folder, tap Shift and drop on WebP. Or drop any file here to check that dragging reaches Orange.</value><comment>Practice: drag try-me.png from its folder, tap Shift and drop on WebP. Or drop any file here to check that dragging reaches Orange.</comment></data>
   <data name="SBCA788763D" xml:space="preserve"><value>Preset</value><comment>Preset</comment></data>
   <data name="SE709E76FF5" xml:space="preserve"><value>Presets</value><comment>Presets</comment></data>
   <data name="SCF01481F62" xml:space="preserve"><value>Privacy</value><comment>Privacy</comment></data>
@@ -102,6 +113,7 @@
   <data name="S0D0E3867A4" xml:space="preserve"><value>Restart Orange to switch language.</value><comment>Restart Orange to switch language.</comment></data>
   <data name="S894A58AB60" xml:space="preserve"><value>Restore defaults</value><comment>Restore defaults</comment></data>
   <data name="S9F5CD8A2E8" xml:space="preserve"><value>Retry</value><comment>Retry</comment></data>
+  <data name="S7B6CA4DF85" xml:space="preserve"><value>Retry failed</value><comment>Retry failed</comment></data>
   <data name="S87B85DCA19" xml:space="preserve"><value>Rotate</value><comment>Rotate</comment></data>
   <data name="S221CC26FEF" xml:space="preserve"><value>Same as Windows</value><comment>Same as Windows</comment></data>
   <data name="S82889739CA" xml:space="preserve"><value>Save preset</value><comment>Save preset</comment></data>
@@ -111,17 +123,25 @@
   <data name="SC7F73BB54D" xml:space="preserve"><value>Settings</value><comment>Settings</comment></data>
   <data name="S080D471C79" xml:space="preserve"><value>Settings and history deleted. They'll be recreated with defaults.</value><comment>Settings and history deleted. They'll be recreated with defaults.</comment></data>
   <data name="S2E7109BDA2" xml:space="preserve"><value>Settings sections</value><comment>Settings sections</comment></data>
+  <data name="S1BF5EAA62F" xml:space="preserve"><value>Shelf</value><comment>Shelf</comment></data>
+  <data name="SFAF45977A5" xml:space="preserve"><value>Shelf · {0}</value><comment>Shelf · {0}</comment></data>
   <data name="S58136BC5AA" xml:space="preserve"><value>Shortcut for the selected files in File Explorer</value><comment>Shortcut for the selected files in File Explorer</comment></data>
   <data name="SD97D1EE339" xml:space="preserve"><value>Show</value><comment>Show</comment></data>
+  <data name="S0A4CB13C05" xml:space="preserve"><value>Show in folder</value><comment>Show in folder</comment></data>
   <data name="S68CDEAD5F8" xml:space="preserve"><value>Show original</value><comment>Show original</comment></data>
   <data name="S4B67E5067F" xml:space="preserve"><value>Show results in File Explorer</value><comment>Show results in File Explorer</comment></data>
+  <data name="SBEE54C9CC3" xml:space="preserve"><value>Something went wrong.</value><comment>Something went wrong.</comment></data>
   <data name="SFB1C39E9F4" xml:space="preserve"><value>Sounds</value><comment>Sounds</comment></data>
   <data name="S44C8EAC0A9" xml:space="preserve"><value>Start Orange when I sign in</value><comment>Start Orange when I sign in</comment></data>
   <data name="SE2CD8B387C" xml:space="preserve"><value>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</value><comment>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</comment></data>
   <data name="SF4F390B6D3" xml:space="preserve"><value>Stereo</value><comment>Stereo</comment></data>
   <data name="SFD97888875" xml:space="preserve"><value>Subfolder name</value><comment>Subfolder name</comment></data>
+  <data name="SEA63C14C3B" xml:space="preserve"><value>Tap {0}</value><comment>Tap {0}</comment></data>
   <data name="S6B3066BB8D" xml:space="preserve"><value>Text to add</value><comment>Text to add</comment></data>
+  <data name="S9EBED88B57" xml:space="preserve"><value>The conversion wheel opens around the pointer. Drop on a format; the new file appears next to the original.</value><comment>The conversion wheel opens around the pointer. Drop on a format; the new file appears next to the original.</comment></data>
   <data name="SA797E30923" xml:space="preserve"><value>Theme</value><comment>Theme</comment></data>
+  <data name="S4FA8CC860C" xml:space="preserve"><value>Tools</value><comment>Tools</comment></data>
+  <data name="S0A2EE32B23" xml:space="preserve"><value>Tools and actions wheels. No dragging? Select files and press {0}, or right-click → Orange.</value><comment>Tools and actions wheels. No dragging? Select files and press {0}, or right-click → Orange.</comment></data>
   <data name="S72C5D67385" xml:space="preserve"><value>Tools wheel key</value><comment>Tools wheel key</comment></data>
   <data name="S366188483E" xml:space="preserve"><value>Trim silent ends automatically</value><comment>Trim silent ends automatically</comment></data>
   <data name="S285EC850C1" xml:space="preserve"><value>Troubleshooting</value><comment>Troubleshooting</comment></data>
@@ -144,8 +164,10 @@
   <data name="S8012FF51A0" xml:space="preserve"><value>unchanged</value><comment>unchanged</comment></data>
   <data name="S9DC9940B61" xml:space="preserve"><value>{0} files</value><comment>{0} files</comment></data>
   <data name="SE69D1C4AF7" xml:space="preserve"><value>{0} more options</value><comment>{0} more options</comment></data>
+  <data name="SD9665855C3" xml:space="preserve"><value>{0} or {1}</value><comment>{0} or {1}</comment></data>
   <data name="SAE536BF5C7" xml:space="preserve"><value>{0}: Actions</value><comment>{0}: Actions</comment></data>
   <data name="S2A48481CB2" xml:space="preserve"><value>{0}: Convert</value><comment>{0}: Convert</comment></data>
   <data name="S60B20DE398" xml:space="preserve"><value>{0}: Tools</value><comment>{0}: Tools</comment></data>
+  <data name="SF459EEDF2C" xml:space="preserve"><value>…and {0} more</value><comment>…and {0} more</comment></data>
   <data name="S02B4EBD4E3" xml:space="preserve"><value>●</value><comment>●</comment></data>
 </root>

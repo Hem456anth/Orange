@@ -17,6 +17,7 @@ public static class FileActions
         new("share", "Share", "\uE72D"),
         new("zip", "Zip", "\uF012"),
         new("7z", "7z", "\uE7B8"),
+        new("shelf", "Shelf", "\uE8F1"),
         new("copy", "Copy", "\uE8C8"),
         new("move", "Move to…", "\uE8DE"),
         new("copy-path", "Copy path", "\uE71B"),
@@ -34,6 +35,9 @@ public static class FileActions
                 Native.RevealInExplorer([zip]);
                 return $"Saved {Path.GetFileName(zip)}";
             }
+            case "shelf":
+                Orange.App.Views.ShelfWindow.Open(paths);
+                return "";
             case "7z":
             {
                 var a7 = await Orange.Core.Providers.ArchiveProvider.Create7zFromSelectionAsync(paths, CancellationToken.None);

@@ -22,9 +22,11 @@
   <data name="SBBFA773E5A" xml:space="preserve"><value>बंद करें</value><comment>Close</comment></data>
   <data name="S3F15CE7953" xml:space="preserve"><value>कन्वर्ट</value><comment>Convert</comment></data>
   <data name="S50382C07AC" xml:space="preserve"><value>फ़ाइलों को वहीं बदलें और संपादित करें जहाँ वे हैं। सब कुछ इसी पीसी पर रहता है।</value><comment>Convert and edit files right where they are. Everything stays on this PC.</comment></data>
+  <data name="SDE1E4FAAA9" xml:space="preserve"><value>इसमें बदलें</value><comment>Convert to</comment></data>
   <data name="SA30C9F5918" xml:space="preserve"><value>{0} में बदलें</value><comment>Convert to {0}</comment></data>
   <data name="S34DBC8ADF9" xml:space="preserve"><value>कन्वर्ट व्हील की कुंजी</value><comment>Convert wheel key</comment></data>
   <data name="S6A89FDE6D6" xml:space="preserve"><value>कनवर्टर</value><comment>Converters</comment></data>
+  <data name="S4DF2260EC8" xml:space="preserve"><value>{0} में बदल रहे हैं</value><comment>Converting to {0}</comment></data>
   <data name="S8E3DF45A49" xml:space="preserve"><value>कॉपी हो गया</value><comment>Copied</comment></data>
   <data name="SAF74F7C536" xml:space="preserve"><value>कॉपी करें</value><comment>Copy</comment></data>
   <data name="SF6FDBE48DC" xml:space="preserve"><value>मिटाएँ</value><comment>Delete</comment></data>
@@ -39,6 +41,8 @@
   <data name="S700869DC5E" xml:space="preserve"><value>फ़ाइल एक्सप्लोरर</value><comment>File Explorer</comment></data>
   <data name="S09979A78C9" xml:space="preserve"><value>फ़ाइल का नाम</value><comment>File name</comment></data>
   <data name="S7072340B57" xml:space="preserve"><value>फ़ाइल का प्रकार</value><comment>File type</comment></data>
+  <data name="S8685B92322" xml:space="preserve"><value>1 त्रुटि के साथ पूरा ({1} में से {0} सहेजी गईं)</value><comment>Finished with 1 error ({0} of {1} saved)</comment></data>
+  <data name="S8AE9F54540" xml:space="preserve"><value>{0} त्रुटियों के साथ पूरा ({2} में से {1} सहेजी गईं)</value><comment>Finished with {0} errors ({1} of {2} saved)</comment></data>
   <data name="S30BAA24967" xml:space="preserve"><value>फ़ोल्डर</value><comment>Folder</comment></data>
   <data name="S90C9E8E6F3" xml:space="preserve"><value>फ़ोल्डर: क्रियाओं के लिए {0} दबाएँ</value><comment>Folder: tap {0} for actions</comment></data>
   <data name="S90E40D5043" xml:space="preserve"><value>शुरू करें</value><comment>Get started</comment></data>
@@ -62,12 +66,14 @@
   <data name="S2362AABD36" xml:space="preserve"><value>लॉग फ़ोल्डर खोलें</value><comment>Open logs folder</comment></data>
   <data name="S92DFD13345" xml:space="preserve"><value>डाउनलोड पेज खोलें</value><comment>Open the download page</comment></data>
   <data name="S71833AFB3E" xml:space="preserve"><value>फ़ाइलें खींचते समय व्हील खोलें</value><comment>Open the wheel while dragging files</comment></data>
+  <data name="SA89BFE49DB" xml:space="preserve"><value>व्हील खोलें</value><comment>Open wheel</comment></data>
   <data name="S430D32076E" xml:space="preserve"><value>क्रिया</value><comment>Operation</comment></data>
   <data name="S70E0A39308" xml:space="preserve"><value>या कहीं भी: फ़ाइल एक्सप्लोरर में फ़ाइलें खींचें और Shift दबाएँ।</value><comment>Or anywhere: drag files in File Explorer and tap Shift.</comment></data>
   <data name="S9A0F8A6EAD" xml:space="preserve"><value>Orange {0} उपलब्ध है।</value><comment>Orange {0} is available.</comment></data>
   <data name="S4BED336194" xml:space="preserve"><value>आउटपुट</value><comment>Output</comment></data>
   <data name="S314D642E91" xml:space="preserve"><value>सभी निगरानी फ़ोल्डर रोकें</value><comment>Pause all watch folders</comment></data>
   <data name="S71EDE17FB1" xml:space="preserve"><value>प्रदर्शन और सीमाएँ</value><comment>Performance and limits</comment></data>
+  <data name="SE8045E398B" xml:space="preserve"><value>अभ्यास ड्रॉप क्षेत्र</value><comment>Practice drop zone</comment></data>
   <data name="SE709E76FF5" xml:space="preserve"><value>प्रीसेट</value><comment>Presets</comment></data>
   <data name="SCF01481F62" xml:space="preserve"><value>निजता</value><comment>Privacy</comment></data>
   <data name="S76EEC760C9" xml:space="preserve"><value>हाल के</value><comment>Recent</comment></data>
@@ -76,6 +82,7 @@
   <data name="S0D0E3867A4" xml:space="preserve"><value>भाषा बदलने के लिए Orange फिर से शुरू करें।</value><comment>Restart Orange to switch language.</comment></data>
   <data name="S894A58AB60" xml:space="preserve"><value>डिफ़ॉल्ट वापस लाएँ</value><comment>Restore defaults</comment></data>
   <data name="S9F5CD8A2E8" xml:space="preserve"><value>फिर से कोशिश करें</value><comment>Retry</comment></data>
+  <data name="S7B6CA4DF85" xml:space="preserve"><value>विफल वाले फिर से</value><comment>Retry failed</comment></data>
   <data name="S221CC26FEF" xml:space="preserve"><value>Windows जैसी</value><comment>Same as Windows</comment></data>
   <data name="S82889739CA" xml:space="preserve"><value>प्रीसेट सहेजें</value><comment>Save preset</comment></data>
   <data name="S7A0E8C6186" xml:space="preserve"><value>परिणाम यहाँ सहेजें</value><comment>Save results to</comment></data>
@@ -83,12 +90,16 @@
   <data name="S8C869B7A3D" xml:space="preserve"><value>खोजें: webp, compress, to mp3, merge pdf…</value><comment>Search: webp, compress, to mp3, merge pdf…</comment></data>
   <data name="SC7F73BB54D" xml:space="preserve"><value>सेटिंग्स</value><comment>Settings</comment></data>
   <data name="S2E7109BDA2" xml:space="preserve"><value>सेटिंग्स के भाग</value><comment>Settings sections</comment></data>
+  <data name="S1BF5EAA62F" xml:space="preserve"><value>शेल्फ़</value><comment>Shelf</comment></data>
   <data name="SD97D1EE339" xml:space="preserve"><value>दिखाएँ</value><comment>Show</comment></data>
+  <data name="S0A4CB13C05" xml:space="preserve"><value>फ़ोल्डर में दिखाएँ</value><comment>Show in folder</comment></data>
   <data name="S4B67E5067F" xml:space="preserve"><value>परिणाम फ़ाइल एक्सप्लोरर में दिखाएँ</value><comment>Show results in File Explorer</comment></data>
   <data name="SFB1C39E9F4" xml:space="preserve"><value>ध्वनियाँ</value><comment>Sounds</comment></data>
   <data name="S44C8EAC0A9" xml:space="preserve"><value>साइन इन पर Orange शुरू करें</value><comment>Start Orange when I sign in</comment></data>
   <data name="SE2CD8B387C" xml:space="preserve"><value>फ़ाइल एक्सप्लोरर या डेस्कटॉप पर एक या अधिक फ़ाइलें खींचना शुरू करें। माउस बटन दबाए रखें।</value><comment>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</comment></data>
+  <data name="SEA63C14C3B" xml:space="preserve"><value>{0} दबाएँ</value><comment>Tap {0}</comment></data>
   <data name="SA797E30923" xml:space="preserve"><value>थीम</value><comment>Theme</comment></data>
+  <data name="S4FA8CC860C" xml:space="preserve"><value>टूल</value><comment>Tools</comment></data>
   <data name="S72C5D67385" xml:space="preserve"><value>टूल व्हील की कुंजी</value><comment>Tools wheel key</comment></data>
   <data name="S285EC850C1" xml:space="preserve"><value>समस्या निवारण</value><comment>Troubleshooting</comment></data>
   <data name="S39FC721248" xml:space="preserve"><value>पूर्ववत करें</value><comment>Undo</comment></data>
