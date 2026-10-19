@@ -59,7 +59,7 @@ Input files are untrusted (downloads, attachments). The user is trusted. Attacke
 | Lossless JPEG/PNG metadata removal (segments dropped, scan/IDAT data byte-identical, orientation kept, refuses if the image-data hash changes) | Verified by engine tests |
 | Compress refuses to save a bigger file | Verified by engine test |
 | Audio visualizer (wave / bars / spectrum → MP4) | Verified by engine tests with real FFmpeg |
-| First-run Welcome window | Built; CI self-test screenshot pending the next green run |
+| First-run Welcome window | Opens and renders in CI self-test (run 25, welcome.png) |
 | Damaged JPEG/PNG input to the metadata cleaner | Refused with a message (test) |
 
 ## 5. Compatibility
