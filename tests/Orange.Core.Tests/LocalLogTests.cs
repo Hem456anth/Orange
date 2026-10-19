@@ -63,3 +63,26 @@ public class LocalLogTests : IDisposable
         Assert.True(File.Exists(Path.Combine(_dir, "notes.txt")));
     }
 }
+
+public class CommitRaceTests
+{
+    [Fact]
+    public void Parallel_commits_to_the_same_name_keep_both()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "orange-race-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            var target = Path.Combine(dir, "photo.jpg");
+            var results = new System.Collections.Concurrent.ConcurrentBag<string>();
+            Parallel.For(0, 8, i =>
+            {
+                var tmp = Path.Combine(dir, $"t{i}.tmp"); File.WriteAllText(tmp, i.ToString());
+                results.Add(SafePaths.Commit(tmp, target, OverwritePolicy.KeepBoth));
+            });
+            Assert.Equal(8, results.Distinct().Count());
+            Assert.Equal(8, Directory.GetFiles(dir, "photo*.jpg").Length);
+        }
+        finally { Directory.Delete(dir, true); }
+    }
+}
