@@ -1,0 +1,18 @@
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [139 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "bmp") [24 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "ico") [34 ms]
+  Passed Orange.Core.Tests.StudioTests.Qr_reader_returns_the_text_without_acting_on_it [288 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "gif") [37 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Animated_gif_to_webp_keeps_frames [19 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [8 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [14 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [3 ms]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [22 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_bomb_is_rejected [4 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_slip_is_stopped_and_nothing_escapes [6 ms]
+  Passed Orange.Core.Tests.StudioTests.Add_background_fills_transparency_and_pads [111 ms]
+Total tests: 191
+     Passed: 190
+    Skipped: 1
+ Total time: 21.3900 Seconds
