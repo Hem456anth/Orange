@@ -31,7 +31,9 @@ public sealed class WheelWindow : Window
     private IntPtr _hwnd;
     private IReadOnlyList<string> _files = Array.Empty<string>();
     private WheelKind _kind;
-    private bool _dragMode, _closed, _dropped;
+    private bool _dragMode, _closed, _dropped, _loggedOver;
+    private DateTime _lastDragOver = DateTime.MinValue;
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _poll;
     private readonly DragWatcher? _watcher;
     private List<object> _tags = new();
 
@@ -74,7 +76,7 @@ public sealed class WheelWindow : Window
         var ex = (long)Native.GetWindowLongPtr(_hwnd, Native.GWL_EXSTYLE);
         Native.SetWindowLongPtr(_hwnd, Native.GWL_EXSTYLE, new IntPtr(ex | Native.WS_EX_TOOLWINDOW | Native.WS_EX_TOPMOST));
         Native.StripFrame(_hwnd);
-        Closed += (_, _) => { _closed = true; _watcher?.SetWheelOpen(false, _kind); if (Active == this) Active = null; Diagnostics.Event("wheel-closed"); };
+        Closed += (_, _) => { _closed = true; _poll?.Stop(); _watcher?.SetWheelOpen(false, _kind); if (Active == this) Active = null; Diagnostics.Event("wheel-closed"); };
         if (_watcher != null)
         {
             _watcher.WheelKindChanged += OnKindChanged;
@@ -90,7 +92,44 @@ public sealed class WheelWindow : Window
     {
         // The drop event (if it landed on us) arrives around the same time as the button-up. Give it a moment.
         await Task.Delay(400);
-        if (!_dropped && !_closed && _dragMode) Close();
+        if (_dropped || _closed || !_dragMode) return;
+        // Fallback: OLE never delivered a Drop (seen when the drag loop doesn't route to an unactivated WinUI window,
+        // or a source only offers formats WinUI can't read). The button went up over a wedge and we already know the
+        // files (drag payload from DragEnter, or the Explorer selection the drag started from), so run that wedge.
+        // Safe: Orange never told the source "move", so the source keeps its files whatever happened.
+        int i = CursorIndex();
+        var known = _files.Where(f => File.Exists(f) || Directory.Exists(f)).ToList();
+        Diagnostics.Event($"drag-ended-without-drop index={i} files={known.Count}/{_files.Count} lastDragOverMsAgo={(int)Math.Min(99999, (DateTime.UtcNow - _lastDragOver).TotalMilliseconds)}");
+        if (i >= 0 && known.Count > 0 && known.Count == _files.Count)
+        {
+            _dropped = true;
+            Diagnostics.Event($"drop-fallback index={i} files={string.Join('|', known)}");
+            await InvokeAsync(i, known);
+        }
+        else Close();
+    }
+
+    /// <summary>Wedge under the mouse pointer, from the screen position (works even when no OLE DragOver arrives).</summary>
+    private int CursorIndex()
+    {
+        if (!Native.GetCursorPos(out var p)) return -1;
+        Native.GetWindowRect(_hwnd, out var r);
+        double scale = (r.Right - r.Left) / _diameterDip;
+        if (scale <= 0) return -1;
+        return _wheel.HitTest(new Windows.Foundation.Point((p.X - r.Left) / scale, (p.Y - r.Top) / scale));
+    }
+
+    /// <summary>While dragging, keep the highlight on the wedge under the pointer when OLE goes quiet.</summary>
+    private void StartCursorPoll()
+    {
+        _poll = DispatcherQueue.CreateTimer();
+        _poll.Interval = TimeSpan.FromMilliseconds(30);
+        _poll.Tick += (_, _) =>
+        {
+            if (_closed || _dropped) { _poll?.Stop(); return; }
+            if ((DateTime.UtcNow - _lastDragOver).TotalMilliseconds > 150) _wheel.SetHighlight(CursorIndex());
+        };
+        _poll.Start();
     }
 
     /// <summary>Shows the wheel centred on a screen point (physical pixels), clamped to that monitor's work area.</summary>
@@ -107,6 +146,7 @@ public sealed class WheelWindow : Window
             // Show without stealing focus from Explorer, which owns the drag loop.
             Native.ShowWindow(w._hwnd, Native.SW_SHOWNOACTIVATE);
             Native.SetWindowPos(w._hwnd, Native.HWND_TOPMOST, 0, 0, 0, 0, Native.SWP_NOMOVE | Native.SWP_NOSIZE | Native.SWP_NOACTIVATE);
+            w.StartCursorPoll();
         }
         else
         {
@@ -246,13 +286,18 @@ public sealed class WheelWindow : Window
 
     private async void OnDragEnter(object sender, DragEventArgs e)
     {
-        Diagnostics.Event("drag-enter");
+        if (Diagnostics.Enabled)
+        {
+            string formats; try { formats = string.Join(',', e.DataView.AvailableFormats); } catch (Exception x) { formats = "error " + x.HResult.ToString("X8"); }
+            Diagnostics.Event($"drag-enter formats={formats} allowed={e.AllowedOperations} modifiers={e.Modifiers}");
+        }
         if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
         var def = e.GetDeferral();
         try
         {
             var items = await e.DataView.GetStorageItemsAsync();
             var paths = items.Select(i => i.Path).Where(p => !string.IsNullOrEmpty(p)).ToList();
+            Diagnostics.Event($"drag-enter items={items.Count} paths={paths.Count}");
             if (paths.Count > 0 && !paths.SequenceEqual(_files, StringComparer.OrdinalIgnoreCase))
             {
                 _files = paths;           // the drag's real payload wins over the Explorer-selection guess
@@ -260,14 +305,16 @@ public sealed class WheelWindow : Window
                 _ = LoadThumbnailAsync();
             }
         }
-        catch { /* some sources only expose items on drop */ }
+        catch (Exception x) { Diagnostics.Event("drag-enter items-unavailable " + x.HResult.ToString("X8")); /* some sources only expose items on drop */ }
         finally { def.Complete(); }
     }
 
     private void OnDragOver(object sender, DragEventArgs e)
     {
+        _lastDragOver = DateTime.UtcNow;
         var i = _wheel.HitTest(e.GetPosition(_wheel));
         _wheel.SetHighlight(i);
+        if (!_loggedOver) { _loggedOver = true; Diagnostics.Event($"drag-over first index={i} hasItems={e.DataView.Contains(StandardDataFormats.StorageItems)} modifiers={e.Modifiers}"); }
         if (i >= 0 && e.DataView.Contains(StandardDataFormats.StorageItems))
         {
             // Copy, never Move: the source keeps its files whatever modifier keys are down.
@@ -281,6 +328,7 @@ public sealed class WheelWindow : Window
 
     private async void OnDrop(object sender, DragEventArgs e)
     {
+        if (_dropped) { e.AcceptedOperation = DataPackageOperation.Copy; Diagnostics.Event("drop ignored: fallback already ran"); return; }
         _dropped = true;
         var i = _wheel.HitTest(e.GetPosition(_wheel));
         Diagnostics.Event($"drop index={i}");
@@ -288,7 +336,13 @@ public sealed class WheelWindow : Window
         var def = e.GetDeferral();
         List<string> paths;
         try { paths = (await e.DataView.GetStorageItemsAsync()).Select(x => x.Path).Where(p => !string.IsNullOrEmpty(p)).ToList(); }
+        catch (Exception x)
+        {   // Couldn't read the payload; fall back to the files we already know.
+            Diagnostics.Event("drop items-unavailable " + x.HResult.ToString("X8"));
+            paths = _files.Where(File.Exists).ToList();
+        }
         finally { e.AcceptedOperation = DataPackageOperation.Copy; def.Complete(); }
+        Diagnostics.Event($"drop files={string.Join('|', paths)}");
         if (paths.Count == 0) { ProgressWindow.ShowError("Orange", "Those items aren't files on this PC.", "Virtual items (e.g. inside a ZIP or phone) need to be copied out first."); Close(); return; }
         await InvokeAsync(i, paths);
     }

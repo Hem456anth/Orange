@@ -110,7 +110,7 @@ public sealed class DragWatcher : IDisposable
                         Math.Abs(ms.pt.Y - _downAt.Y) > Native.GetSystemMetrics(Native.SM_CYDRAG))
                     {
                         _dragging = true;
-                        Diagnostics.Event($"drag-start eligible={_eligible}");
+                        if (Diagnostics.Enabled) Diagnostics.Event($"drag-start eligible={_eligible} source={Native.ClassName(Native.GetAncestor(_sourceWindow, 2))}");
                         // Key already held when the drag starts ("hold Shift while dragging").
                         if (_eligible && !_wheelOpen && HeldWheelKey() is { } held) Raise(held, ms.pt);
                     }
@@ -118,7 +118,7 @@ public sealed class DragWatcher : IDisposable
                 case Native.WM_LBUTTONUP:
                     var was = _dragging;
                     _buttonDown = false; _dragging = false;
-                    if (was) _ui.TryEnqueue(() => DragEnded?.Invoke());
+                    if (was) { if (Diagnostics.Enabled) Diagnostics.Event($"lbutton-up {ms.pt.X},{ms.pt.Y} wheelOpen={_wheelOpen}"); _ui.TryEnqueue(() => DragEnded?.Invoke()); }
                     break;
             }
         }
@@ -156,6 +156,7 @@ public sealed class DragWatcher : IDisposable
     {
         _wheelOpen = true; _current = kind;
         var src = _sourceWindow;
+        Diagnostics.Event($"wheel-request {kind} at {p.X},{p.Y}");
         _ui.TryEnqueue(() => WheelRequested?.Invoke(kind, p, src));
     }
 
@@ -219,16 +220,21 @@ public sealed class DragWatcher : IDisposable
     }
 }
 
-/// <summary>Opt-in event trace for automated UI tests (ORANGE_TEST_EVENTS=path). Off by default; never contains file contents.</summary>
+/// <summary>
+/// Event trace. Two independent, opt-in sinks: the automated-test trace (ORANGE_TEST_EVENTS=path) and the user's
+/// local debug log (Settings → Troubleshooting, %LOCALAPPDATA%\Orange\logs). Neither ever contains file contents,
+/// neither touches the network.
+/// </summary>
 public static class Diagnostics
 {
     private static readonly string? PathOut = Environment.GetEnvironmentVariable("ORANGE_TEST_EVENTS");
     private static readonly object Gate = new();
-    public static bool Enabled => PathOut is not null;
+    public static bool Enabled => PathOut is not null || Orange.Core.Logging.LocalLog.Enabled;
 
     /// <summary>Synchronous (survives a crash right after), shared-read friendly, never throws.</summary>
     public static void Event(string what)
     {
+        Orange.Core.Logging.LocalLog.Write(what);
         if (PathOut is null) return;
         lock (Gate)
             for (int attempt = 0; attempt < 20; attempt++)

@@ -177,10 +177,17 @@ jobs:
           Get-Content evidence/probe/probe.json -ErrorAction SilentlyContinue | Write-Host
           Copy-Item "$env:LOCALAPPDATA\Orange\crash.log" evidence/ -ErrorAction SilentlyContinue
           "probe exit=$($p.ExitCode)" | Tee-Object -Append evidence/summary.txt
+      - name: Parse the laptop checklist script
+        shell: pwsh
+        run: |
+          $errs = $null
+          [System.Management.Automation.Language.Parser]::ParseFile("$PWD\tools\checklist\Run-OrangeChecklist.ps1", [ref]$null, [ref]$errs) | Out-Null
+          if ($errs.Count) { $errs | ForEach-Object { Write-Host $_ }; exit 1 }
+          "checklist script parses" | Tee-Object -Append evidence/summary.txt
       - name: Package (portable zip + per-user installer)
         shell: pwsh
         run: |
-          Copy-Item README.md, LICENSE, THIRD-PARTY-NOTICES.md out/Orange/ -ErrorAction SilentlyContinue
+          Copy-Item README.md, LICENSE, THIRD-PARTY-NOTICES.md, tools/checklist/Run-OrangeChecklist.ps1 out/Orange/ -ErrorAction SilentlyContinue
           Compress-Archive out/Orange/* out/Orange-0.1.0-win-x64-portable.zip -Force
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DAppVersion=0.1.0 installer/Orange.iss 2>&1 | Tee-Object evidence/installer.log
           Get-ChildItem out/*.zip, out/*.exe | Format-Table Name, Length | Out-String | Tee-Object -Append evidence/summary.txt
