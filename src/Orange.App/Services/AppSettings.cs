@@ -30,6 +30,7 @@ public sealed class AppSettings
     public bool PlaySounds { get; set; } = true;
     public ThemeChoice Theme { get; set; } = ThemeChoice.System;
     public bool StartWithWindows { get; set; } = true;
+    public bool WelcomeShown { get; set; }
     public int MaxParallelJobs { get; set; } = Math.Max(1, Environment.ProcessorCount / 2);
     public double MaxInputGigabytes { get; set; } = 8;
     public Dictionary<string, string> ToolPaths { get; set; } = new();

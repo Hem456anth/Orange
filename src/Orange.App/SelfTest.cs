@@ -186,6 +186,13 @@ public static class SelfTest
             });
         }
 
+        await Try("welcome window renders", true, async () =>
+        {
+            WelcomeWindow.Show(); await Task.Delay(1200);
+            if (WelcomeWindow.Last is { } ww) { await Shot(ww, Path.Combine(outDir, "welcome.png")); ww.Close(); }
+            return "ok";
+        });
+
         var svc = ConversionService.Instance;
         async Task<string> Convert(string opId, params string[] files)
         {

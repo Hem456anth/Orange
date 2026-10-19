@@ -7,14 +7,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
             </ResourceDictionary.MergedDictionaries>
-            <!-- Orange accent everywhere WinUI uses the system accent (buttons, toggles, progress). -->
-            <Color x:Key="SystemAccentColor">#FF7A00</Color>
-            <Color x:Key="SystemAccentColorLight1">#FF9433</Color>
-            <Color x:Key="SystemAccentColorLight2">#FFAD66</Color>
-            <Color x:Key="SystemAccentColorLight3">#FFC799</Color>
-            <Color x:Key="SystemAccentColorDark1">#E06A00</Color>
-            <Color x:Key="SystemAccentColorDark2">#B85700</Color>
-            <Color x:Key="SystemAccentColorDark3">#8F4400</Color>
+            <!-- Blue accent everywhere WinUI uses the system accent (buttons, toggles, progress). -->
+            <Color x:Key="SystemAccentColor">#0A64E0</Color>
+            <Color x:Key="SystemAccentColorLight1">#3D9BFF</Color>
+            <Color x:Key="SystemAccentColorLight2">#73B8FF</Color>
+            <Color x:Key="SystemAccentColorLight3">#A8D3FF</Color>
+            <Color x:Key="SystemAccentColorDark1">#0855C2</Color>
+            <Color x:Key="SystemAccentColorDark2">#003FA8</Color>
+            <Color x:Key="SystemAccentColorDark3">#002E7A</Color>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

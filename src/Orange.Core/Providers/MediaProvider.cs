@@ -95,6 +95,16 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
             [new("every", "Part length (seconds)", OptionType.Number, "60", 1, 36000)], ["segments", "chunks", "parts"], single: true, folder: true);
         yield return ATool("audio.speed", "Speed", "Speed", "speed",
             [new("factor", "Speed ×", OptionType.Number, "1.5", 0.25, 4)], ["fast", "slow", "tempo", "playback speed"], single: true);
+        yield return new OperationDescriptor
+        {
+            Id = "audio.visualize", Title = "Visualize", Category = FileKind.Audio, Group = OperationGroup.Tool, InputExtensions = AudioIn.ToHashSet(),
+            OutputExtension = "mp4", RequiresTool = "ffmpeg", Icon = "visualize",
+            Options = [new("style", "Style", OptionType.Choice, "wave", Choices: ["wave", "bars", "spectrum"]),
+                       new("color", "Colour", OptionType.Text, "#3D9BFF"), new("background", "Background", OptionType.Text, "#0B1220",
+                           Help: "A colour (#RRGGBB) or image:<path> for a still picture behind the visualization."),
+                       new("size", "Size", OptionType.Choice, "1280x720", Choices: ["1920x1080", "1280x720", "1080x1080", "1080x1920"])],
+            Keywords = ["video", "waveform", "podcast", "audiogram", "share", "single-only", "suffix:Visualized"],
+        };
         yield return ATool("audio.metadata", "Metadata", "Tagged", "metadata", MetadataOptions, ["tags", "id3", "title", "artist", "album", "edit metadata"]);
         yield return ATool("audio.strip-metadata", "Remove metadata", "Clean", "metadata", [], ["tags", "id3", "privacy"]);
         yield return new OperationDescriptor
@@ -413,6 +423,34 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
                 var f = r.OptDouble("factor");
                 In(input); a.AddRange(["-filter:a", Atempo(f)]); AudioTarget(a, outExt, 192, keepQuality: true);
                 expected = info.DurationSeconds / f; break;
+            }
+            case "audio.visualize":
+            {
+                var size = r.Opt("size"); var wh = size.Split('x'); int W = int.Parse(wh[0]), H = int.Parse(wh[1]);
+                var col = ImageStudioProvider.Color(r.Opt("color")).ToHexString()[..7];
+                var bg = r.Opt("background").Trim();
+                if (bg.StartsWith("image:", StringComparison.OrdinalIgnoreCase))
+                {
+                    var img = SafePaths.ValidateInput(bg[6..].Trim().Trim('"'));
+                    if (FileTypeDetector.Detect(img) != FileKind.Image) throw new OrangeException("The background isn't an image Orange can read.");
+                    // Render the picture to a PNG first so FFmpeg only ever reads a file Orange produced.
+                    var png = tmp.File("png");
+                    using (var b = ImageStudioProvider.MakeBackground("image:" + img, (uint)W, (uint)H)) b.Write(png, ImageMagick.MagickFormat.Png);
+                    a.AddRange(["-loop", "1", "-i", "file:" + png]);
+                }
+                else a.AddRange(["-f", "lavfi", "-i", $"color=c={ImageStudioProvider.Color(bg).ToHexString()[..7]}:s={W}x{H}:r=30"]);
+                In(input);
+                int vh = H / 3;
+                string viz = r.Opt("style") switch
+                {
+                    "bars" => $"[1:a:0]showfreqs=s={W}x{vh}:mode=bar:ascale=sqrt:fscale=log:colors={col},format=rgba,colorkey=black:0.1:0[v]",
+                    "spectrum" => $"[1:a:0]showspectrum=s={W}x{vh}:mode=combined:color=intensity:scale=cbrt:slide=scroll,format=rgba[v]",
+                    _ => $"[1:a:0]showwaves=s={W}x{vh}:mode=cline:rate=30:colors={col},format=rgba,colorkey=black:0.1:0[v]",
+                };
+                a.AddRange(["-filter_complex", $"{viz};[0:v][v]overlay=0:(H-h)/2:shortest=1,format=yuv420p[out]", "-map", "[out]", "-map", "1:a:0"]);
+                H264Args(a, 22); a.AddRange(["-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart"]);
+                outExt = "mp4"; outFile = tmp.File(outExt);
+                break;
             }
             case "audio.metadata":
             case "video.metadata":

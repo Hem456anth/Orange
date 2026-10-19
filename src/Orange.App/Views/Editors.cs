@@ -149,7 +149,7 @@ public abstract class EditorWindow : Window
     private void Cancel() { _tcs.TrySetResult(null); Close(); }
 
     public string StatusText => Status.Text;
-    protected void ShowError(string message) { Status.Text = message; Status.Foreground = new SolidColorBrush(Colors.IndianRed); }
+    protected void ShowError(string message) { Status.Text = message; Status.Foreground = new SolidColorBrush(Brand.Error); }
     protected void ShowNote(string message) { Status.Text = message; Status.ClearValue(TextBlock.ForegroundProperty); }
 
     /// <summary>Writes a preview PNG under %LOCALAPPDATA%\Orange\preview (removed on close) and returns it as an image source.</summary>
@@ -241,7 +241,7 @@ public sealed class PhotoEditor : EditorWindow
         light.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         light.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(64) });
         light.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(32) });
-        var heading = new TextBlock { Text = "Light", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = new SolidColorBrush(WheelControl.Coral), Margin = new Thickness(0, 4, 0, 4) };
+        var heading = new TextBlock { Text = "Light", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = new SolidColorBrush(Brand.Heading), Margin = new Thickness(0, 4, 0, 4) };
         light.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         light.Children.Add(heading);
         int row = 1;
@@ -326,7 +326,7 @@ public sealed class BackgroundEditor : EditorWindow
         Body.Children.Add(Canvasy(_preview));
 
         var controls = new StackPanel { Spacing = 8, Margin = new Thickness(0, 12, 0, 0) };
-        controls.Children.Add(new TextBlock { Text = "Background", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = new SolidColorBrush(WheelControl.Coral) });
+        controls.Children.Add(new TextBlock { Text = "Background", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = new SolidColorBrush(Brand.Heading) });
         var gradRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
         foreach (var (name, (a, bb)) in ImageStudioProvider.Gradients)
         {
@@ -391,7 +391,7 @@ public sealed class BackgroundEditor : EditorWindow
     private void Choose(string value)
     {
         _background = value;
-        foreach (var s in _swatches) s.BorderBrush = new SolidColorBrush(string.Equals(s.Tag as string, value, StringComparison.OrdinalIgnoreCase) ? WheelControl.OrangeAccent : Colors.Transparent);
+        foreach (var s in _swatches) s.BorderBrush = new SolidColorBrush(string.Equals(s.Tag as string, value, StringComparison.OrdinalIgnoreCase) ? Brand.Accent : Colors.Transparent);
         _render.Start();
     }
 
@@ -450,7 +450,7 @@ public sealed class RegionEditor : EditorWindow
     private double _scale = 1;
     private Point _start; private Shape? _live; private bool _dragging;
     private Tool _tool = Tool.Box;
-    private Color _colour = Color.FromArgb(255, 0xFF, 0x6A, 0x00);
+    private Color _colour = Brand.Accent;
     private readonly ComboBox _style = new() { ItemsSource = new[] { "black", "pixelate", "blur" }, SelectedIndex = 0, MinWidth = 120 };
     private readonly ComboBox _aspect = new() { ItemsSource = new[] { "free", "1:1", "4:3", "3:2", "16:9", "9:16", "4:5" }, SelectedIndex = 0, MinWidth = 100 };
     private readonly TextBox _textBox = new() { PlaceholderText = "Text to add", MinWidth = 220 };
@@ -478,7 +478,7 @@ public sealed class RegionEditor : EditorWindow
                 tb.Click += (s, _) => { _tool = (Tool)((ToggleButton)s).Tag; foreach (var o in bar.Children.OfType<ToggleButton>()) o.IsChecked = (Tool)o.Tag == _tool; };
                 bar.Children.Add(tb);
             }
-            foreach (var hex in new[] { "#FF6A00", "#FF3B30", "#FFD60A", "#34C759", "#0A84FF", "#FFFFFF", "#000000" })
+            foreach (var hex in new[] { "#0A64E0", "#FF3B30", "#FFD60A", "#34C759", "#4F46E5", "#FFFFFF", "#000000" })
             {
                 var c = Color.FromArgb(255, Convert.ToByte(hex[1..3], 16), Convert.ToByte(hex[3..5], 16), Convert.ToByte(hex[5..7], 16));
                 var b = new Button { Width = 26, Height = 26, Padding = new Thickness(0), Background = new SolidColorBrush(c), CornerRadius = new CornerRadius(13) };
@@ -523,7 +523,7 @@ public sealed class RegionEditor : EditorWindow
         catch (OrangeException e) { ShowError(e.Message); ApplyButton.IsEnabled = false; }
     }
 
-    private Brush Stroke => new SolidColorBrush(IsAnnotate ? _colour : WheelControl.OrangeAccent);
+    private Brush Stroke => new SolidColorBrush(IsAnnotate ? _colour : Brand.Accent);
 
     private void OnDown(object sender, PointerRoutedEventArgs e)
     {
@@ -644,8 +644,8 @@ public sealed class RegionEditor : EditorWindow
 public sealed class AudioEditor : EditorWindow
 {
     private const double W = 640, H = 120;
-    private readonly Canvas _wave = new() { Width = W, Height = H, Background = new SolidColorBrush(Color.FromArgb(0x20, 0xFF, 0x7A, 0x00)) };
-    private readonly Rectangle _sel = new() { Fill = new SolidColorBrush(Color.FromArgb(0x30, 0xFF, 0x3B, 0x30)), Stroke = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x3B, 0x30)), StrokeThickness = 2, IsHitTestVisible = false };
+    private readonly Canvas _wave = new() { Width = W, Height = H, Background = new SolidColorBrush(Brand.WithAlpha(Brand.Accent, 0x20)) };
+    private readonly Rectangle _sel = new() { Fill = new SolidColorBrush(Brand.WithAlpha(Brand.Accent, 0x30)), Stroke = new SolidColorBrush(Brand.AccentDeep), StrokeThickness = 2, IsHitTestVisible = false };
     private readonly Rectangle _left = Handle(), _right = Handle();
     private readonly Line _playhead = new() { Stroke = new SolidColorBrush(Colors.White), StrokeThickness = 1.5, Y1 = 0, Y2 = H, Visibility = Visibility.Collapsed, IsHitTestVisible = false };
     private readonly TextBlock _startText = Label("Start 0:00.00", 12, 0.85), _endText = Label("End 0:00.00", 12, 0.85), _selText = Label("", 12, 0.85);
@@ -664,7 +664,7 @@ public sealed class AudioEditor : EditorWindow
     private readonly MediaProvider _media = new(ToolLocator.Default);
     private bool IsTrim => Op.Id is "audio.trim" or "video.trim";
 
-    private static Rectangle Handle() => new() { Width = 8, Height = H, Fill = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0x3B, 0x30)), RadiusX = 3, RadiusY = 3 };
+    private static Rectangle Handle() => new() { Width = 8, Height = H, Fill = new SolidColorBrush(Brand.AccentDeep), RadiusX = 3, RadiusY = 3 };
 
     public AudioEditor(OperationDescriptor op, string file, IReadOnlyDictionary<string, string> remembered)
         : base(op, file, op.Id switch { "audio.bleep" => "Bleeps", "audio.channels" => "Convert Audio Channels", _ => op.Category == FileKind.Video ? "Trim Video" : "Trim Audio" }, 700, op.Id == "audio.channels" ? 420 : 470)
@@ -750,7 +750,7 @@ public sealed class AudioEditor : EditorWindow
 
     private void DrawWave()
     {
-        var poly = new Polygon { Fill = new SolidColorBrush(WheelControl.OrangeAccent), IsHitTestVisible = false };
+        var poly = new Polygon { Fill = new SolidColorBrush(Brand.Accent), IsHitTestVisible = false };
         var pts = new PointCollection();
         double step = W / Math.Max(1, _peaks.Length), mid = H / 2;
         for (int i = 0; i < _peaks.Length; i++) pts.Add(new Point(i * step, mid - Math.Max(0.5, _peaks[i] * (mid - 4))));
@@ -777,7 +777,7 @@ public sealed class AudioEditor : EditorWindow
         if (IsTrim) { _drag = Math.Abs(x - X(_start)) < Math.Abs(x - X(_end)) ? 1 : 2; Drag(x); return; }
         if (Op.Id != "audio.bleep") return;
         _drag = 3; _bleepStart = T(x);
-        _liveBleep = new Rectangle { Height = H, Fill = new SolidColorBrush(Color.FromArgb(0x80, 0xFF, 0x3B, 0x30)), IsHitTestVisible = false };
+        _liveBleep = new Rectangle { Height = H, Fill = new SolidColorBrush(Brand.WithAlpha(Brand.Indigo, 0x90)), IsHitTestVisible = false };
         Canvas.SetLeft(_liveBleep, x); _wave.Children.Add(_liveBleep);
     }
 
@@ -951,7 +951,7 @@ public sealed class MetadataEditor : EditorWindow
                 row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(14) });
                 row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(170) });
                 row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                if (e.Sensitive) row.Children.Add(new TextBlock { Text = "●", Foreground = new SolidColorBrush(WheelControl.OrangeAccent), FontSize = 10, VerticalAlignment = VerticalAlignment.Center });
+                if (e.Sensitive) row.Children.Add(new TextBlock { Text = "●", Foreground = new SolidColorBrush(Brand.Accent), FontSize = 10, VerticalAlignment = VerticalAlignment.Center });
                 var k = Label($"{e.Group} · {e.Key}", 12, 0.75); Grid.SetColumn(k, 1); row.Children.Add(k);
                 var v = new TextBlock { Text = e.Value, FontSize = 12, TextTrimming = TextTrimming.CharacterEllipsis, IsTextSelectionEnabled = true }; Grid.SetColumn(v, 2); row.Children.Add(v);
                 AutomationProperties.SetName(row, $"{(e.Sensitive ? "Sensitive. " : "")}{e.Key}: {e.Value}");

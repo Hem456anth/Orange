@@ -143,10 +143,21 @@ public sealed class ImageProvider : IOperationProvider
             return OperationResult.Ok(SafePaths.Commit(outTmp, final, r.Overwrite));
         }
 
+        var srcExt = OperationRegistry.Normalize(FileTypeDetector.Ext(input));
+        if (op.Id == "image.strip-metadata" && LosslessMetadata.Supports(srcExt))
+        {
+            // No re-encode: compressed image data is copied byte for byte (quality and size can only stay or shrink).
+            var res = LosslessMetadata.Strip(input, keepColorProfile: false);
+            var o0 = tmp.File(srcExt); File.WriteAllBytes(o0, res.Bytes);
+            ValidateOutput(o0);
+            var f0 = SafePaths.PlanOutput(input, r.OutputDirectory, stem, SuffixOf(op), srcExt, r.Overwrite, r.Inputs);
+            progress?.Report(1);
+            return new OperationResult(true, [SafePaths.Commit(o0, f0, r.Overwrite)],
+                Detail: res.RemovedBlocks == 0 ? "No metadata found; image data unchanged" : $"Removed {res.RemovedBlocks} metadata block(s), {res.RemovedBytes / 1024.0:0.#} KB, without re-encoding");
+        }
         using var col = Load(input);
         ct.ThrowIfCancellationRequested();
         progress?.Report(0.3);
-        var srcExt = OperationRegistry.Normalize(FileTypeDetector.Ext(input));
         string outExt; string? suffix = null;
 
         if (op.Group == OperationGroup.Convert)
@@ -237,6 +248,8 @@ public sealed class ImageProvider : IOperationProvider
             return new OperationResult(true, [SafePaths.Commit(o, tf, r.Overwrite)], Detail: note);
         }
         if (col.Count > 1 && fmt is MagickFormat.Gif or MagickFormat.WebP or MagickFormat.Tiff) col.Write(o, fmt); else col[0].Write(o, fmt);
+        if (op.Id == "image.compress" && outExt == srcExt && new FileInfo(o).Length >= new FileInfo(input).Length)
+            throw new OrangeException("This image is already as small as these settings make it.", "The compressed copy would be bigger than the original, so nothing was saved. Try a lower quality, a smaller longest side, or a target size.");
         return Finish(o);
 
         OperationResult Finish(string produced)

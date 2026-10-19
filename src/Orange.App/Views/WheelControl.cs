@@ -20,19 +20,9 @@ public sealed record WheelItem(string Title, string? Glyph, object Tag, string A
 /// </summary>
 public sealed class WheelControl : Grid
 {
-    public static readonly Color OrangeAccent = Color.FromArgb(255, 0xFF, 0x7A, 0x00);
-    public static readonly Color Coral = Color.FromArgb(255, 0xFF, 0x4E, 0x50);
-    public static readonly Color Violet = Color.FromArgb(255, 0x9B, 0x5D, 0xE5);
-    /// <summary>The brand gradient (orange → coral → purple) used on headers and the hot wedge.</summary>
-    public static LinearGradientBrush BrandGradient(bool withViolet = false, double angle = 0)
-    {
-        var b = new LinearGradientBrush { StartPoint = new Point(0, 0), EndPoint = angle == 0 ? new Point(1, 1) : new Point(1, 0) };
-        b.GradientStops.Add(new GradientStop { Color = Color.FromArgb(255, 0xFF, 0xA0, 0x1E), Offset = 0 });
-        b.GradientStops.Add(new GradientStop { Color = OrangeAccent, Offset = withViolet ? 0.35 : 0.45 });
-        b.GradientStops.Add(new GradientStop { Color = Coral, Offset = withViolet ? 0.7 : 1 });
-        if (withViolet) b.GradientStops.Add(new GradientStop { Color = Violet, Offset = 1 });
-        return b;
-    }
+    // Kept for callers; all colours live in Brand.
+    public static Color AccentColor => Brand.Accent;
+    public static LinearGradientBrush BrandGradient(bool withViolet = false, double angle = 0) => Brand.Gradient(withViolet, angle != 0);
     private readonly Ellipse _ring = new();
     private readonly Canvas _canvas = new();
     private readonly List<(Microsoft.UI.Xaml.Shapes.Path Shape, StackPanel Label, TextBlock Text, FontIcon? Icon)> _segments = new();
@@ -160,9 +150,9 @@ public sealed class WheelControl : Grid
         bool hc = new Windows.UI.ViewManagement.AccessibilitySettings().HighContrast;
         // Warm, translucent glass petals (light) / smoked glass (dark); solid system colours in high contrast.
         var petal = hc ? (Brush)new SolidColorBrush(dark ? Colors.Black : Colors.White)
-                       : new SolidColorBrush(dark ? Color.FromArgb(0xC8, 0x3A, 0x2E, 0x2A) : Color.FromArgb(0xD9, 0xFF, 0xE9, 0xDC));
+                       : new SolidColorBrush(dark ? Brand.PetalDark : Brand.PetalLight);
         Brush hot = hc ? new SolidColorBrush(Res("SystemColorHighlightColor", Colors.Blue)) : BrandGradient();
-        var fg = new SolidColorBrush(hc ? (dark ? Colors.White : Colors.Black) : dark ? Color.FromArgb(255, 0xFF, 0xEE, 0xE4) : Color.FromArgb(255, 0x5A, 0x2A, 0x12));
+        var fg = new SolidColorBrush(hc ? (dark ? Colors.White : Colors.Black) : dark ? Brand.InkDark : Brand.InkLight);
         var hotFg = new SolidColorBrush(hc ? Res("SystemColorHighlightTextColor", Colors.White) : Colors.White);
         for (int i = 0; i < _segments.Count; i++)
         {
@@ -176,13 +166,13 @@ public sealed class WheelControl : Grid
             label.RenderTransformOrigin = new Point(0.5, 0.5);
             label.RenderTransform = new ScaleTransform { ScaleX = on ? 1.08 : 1, ScaleY = on ? 1.08 : 1 };
         }
-        _ring.Fill = new SolidColorBrush(hc ? Colors.Transparent : dark ? Color.FromArgb(0x60, 0x20, 0x18, 0x16) : Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF));
+        _ring.Fill = new SolidColorBrush(hc ? Colors.Transparent : dark ? Color.FromArgb(0x60, 0x10, 0x18, 0x24) : Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF));
         _ring.Stroke = new SolidColorBrush(hc ? fg.Color : dark ? Color.FromArgb(0x50, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x90, 0xFF, 0xFF, 0xFF));
         _ring.StrokeThickness = 1.5;
-        _centerDisc.Fill = new SolidColorBrush(hc ? (dark ? Colors.Black : Colors.White) : dark ? Color.FromArgb(0xE6, 0x2A, 0x22, 0x20) : Color.FromArgb(0xE0, 0x5A, 0x4A, 0x44));
+        _centerDisc.Fill = new SolidColorBrush(hc ? (dark ? Colors.Black : Colors.White) : dark ? Brand.CentreDark : Brand.CentreLight);
         _centerDisc.Stroke = new SolidColorBrush(dark ? Color.FromArgb(0x40, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x70, 0xFF, 0xFF, 0xFF));
         _centerDisc.StrokeThickness = 1;
-        _pillBorder.Background = _highlight >= 0 && !hc ? BrandGradient() : new SolidColorBrush(hc ? Res("SystemColorHighlightColor", Colors.Blue) : Color.FromArgb(0xD0, 0x3A, 0x30, 0x2C));
+        _pillBorder.Background = _highlight >= 0 && !hc ? BrandGradient() : new SolidColorBrush(hc ? Res("SystemColorHighlightColor", Colors.Blue) : Color.FromArgb(0xD0, 0x22, 0x30, 0x44));
         _pill.Foreground = new SolidColorBrush(Colors.White);
         _name.Foreground = new SolidColorBrush(hc ? fg.Color : Colors.White);
     }

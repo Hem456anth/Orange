@@ -389,7 +389,7 @@ public static class Glyphs
         "snapshot" => "\uE722", "split" => "\uE8B9", "join" or "merge" => "\uE71D", "normalize" => "\uE767", "channels" => "\uE995",
         "pages" => "\uE8A5", "images" => "\uE8B9", "extract" => "\uE8B7", "clock" => "\uE823", "count" => "\uE8EF",
         "edit" => "\uE9E9", "background" => "\uE771", "redact" => "\uED1A", "annotate" => "\uEE56", "collage" => "\uF0E2",
-        "qr" => "\uED14", "bleep" => "\uE7ED", "silence" => "\uE74F", "reorder" => "\uE8CB",
+        "qr" => "\uED14", "visualize" => "\uE93C", "bleep" => "\uE7ED", "silence" => "\uE74F", "reorder" => "\uE8CB",
         _ => "\uE713",
     };
 }

@@ -118,6 +118,7 @@ public partial class App : Application
 
         if (args.Count > 0 && args[0] == "--wheel") Queue(args.Skip(1));
         else if (!args.Contains("--background")) Main.ShowWindow();
+        if (!args.Contains("--background")) Step("welcome", WelcomeWindow.ShowIfFirstRun);
         Diagnostics.Event("ready");
     }
 

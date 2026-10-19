@@ -291,7 +291,7 @@ public sealed class SimpleProgressBar : Grid
         Height = 4;
         CornerRadius = new CornerRadius(2);
         Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0x33, 0x80, 0x80, 0x80));
-        _fill.Background = new SolidColorBrush(WheelControl.OrangeAccent);
+        _fill.Background = new SolidColorBrush(Brand.Accent);
         Children.Add(_fill);
         SizeChanged += (_, _) => Layout();
         _timer.Tick += (_, _) => { _phase = (_phase + 0.025) % 1.3; Layout(); };
@@ -301,7 +301,7 @@ public sealed class SimpleProgressBar : Grid
 
     public double Value { get => _value; set { _value = double.IsFinite(value) ? Math.Clamp(value, 0, 1) : 0; Layout(); } }
     public bool IsIndeterminate { get => _indeterminate; set { _indeterminate = value; if (value) _timer.Start(); else _timer.Stop(); Layout(); } }
-    public bool ShowError { get => _error; set { _error = value; _fill.Background = new SolidColorBrush(value ? Microsoft.UI.Colors.IndianRed : WheelControl.OrangeAccent); } }
+    public bool ShowError { get => _error; set { _error = value; _fill.Background = new SolidColorBrush(value ? Brand.Error : Brand.Accent); } }
 
     private void Layout()
     {
