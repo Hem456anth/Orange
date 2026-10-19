@@ -11,10 +11,10 @@ Orange's own code is MIT-licensed (see LICENSE). It uses these components. Versi
 | ZXing.Net 0.16.9 | QR code reader (decode only) | Apache-2.0 | NuGet. https://github.com/micjahn/ZXing.Net |
 | 7-Zip (optional, not bundled) | RAR/7z extraction when the user has it installed | LGPL-2.1 + unRAR restriction | Found at %ProgramFiles%\\7-Zip or on PATH; run as a separate process. |
 | PdfPig 0.1.16 | PDF text and image extraction | Apache-2.0 | NuGet |
-| FFmpeg (BtbN "gpl" Windows build) | video and audio | GPL-3.0 (the build includes x264/x265) | separate executables in `tools\ffmpeg\`, run as child processes; source: https://github.com/BtbN/FFmpeg-Builds and https://ffmpeg.org |
-| Pandoc | document conversion | GPL-2.0-or-later | separate executable in `tools\pandoc\`, run as a child process; source: https://github.com/jgm/pandoc |
+| FFmpeg 8.1 (BtbN "lgpl-shared" Windows build) | video and audio | LGPL-2.1-or-later (no GPL or nonfree parts; H.264/HEVC via Windows Media Foundation) | separate executables + DLLs in `tools\ffmpeg\`, run as child processes; source offer in `tools\ffmpeg\SOURCE.txt` |
+| Pandoc 3.5 (optional engine) | Markdown/HTML/EPUB/ODT/RTF conversion | GPL-2.0-or-later | **not bundled**; downloaded on request from Settings → Engines (github.com/jgm/pandoc release, SHA-256 pinned), run as a separate program |
 | Ghostscript | PDF compression and PDF→images | AGPL-3.0 | **not bundled**. Used only if you install it yourself (https://ghostscript.com). |
 | LibreOffice | DOCX/ODT/RTF/HTML/Markdown → PDF | MPL-2.0 | **not bundled**. Used only if you install it yourself. |
 
-FFmpeg and Pandoc are independent programs that Orange starts with arguments; Orange does not link to them.
+FFmpeg and Pandoc (when installed) are independent programs that Orange starts with arguments; Orange does not link to them.
 Their licenses and the corresponding source locations are included in `tools\*\LICENSE*` in every build.

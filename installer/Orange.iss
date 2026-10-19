@@ -1,6 +1,6 @@
 ; Inno Setup script: per-user install, no admin rights, no services, no drivers.
 #ifndef AppVersion
-  #define AppVersion "0.1.0"
+  #define AppVersion "0.2.0"
 #endif
 #ifndef SourceDir
   #define SourceDir "..\out\Orange"
@@ -22,7 +22,9 @@ OutputDir=..\out
 OutputBaseFilename=Orange-{#AppVersion}-win-x64-setup
 SetupIconFile=..\src\Orange.App\Assets\orange.ico
 UninstallDisplayIcon={app}\Orange.exe
-Compression=lzma2/max
+Compression=lzma2/ultra64
+LZMAUseSeparateProcess=yes
+LZMANumBlockThreads=4
 SolidCompression=yes
 WizardStyle=modern
 LicenseFile=..\LICENSE

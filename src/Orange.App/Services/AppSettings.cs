@@ -38,6 +38,8 @@ public sealed class AppSettings
     /// <summary>Local troubleshooting log in %LOCALAPPDATA%\Orange\logs. Off by default; never uploaded.</summary>
     public bool DebugLog { get; set; }
     [JsonIgnore] public static string LogFolder => Path.Combine(Folder, "logs");
+    [JsonIgnore] public static string EngineFolder => Path.Combine(Folder, "engines");
+    [JsonIgnore] public static Orange.Core.Engines.EngineManager Engines { get; } = new(EngineFolder);
     public int MaxParallelJobs { get; set; } = Math.Max(1, Environment.ProcessorCount / 2);
     public double MaxInputGigabytes { get; set; } = 8;
     public Dictionary<string, string> ToolPaths { get; set; } = new();
