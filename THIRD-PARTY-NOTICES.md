@@ -9,7 +9,7 @@ Orange's own code is MIT-licensed (see LICENSE). It uses these components. Versi
 | Magick.NET (ImageMagick 7, libheif, libde265, libwebp, libaom, libjpeg-turbo, libpng, libtiff…) | images | Apache-2.0 (Magick.NET, ImageMagick); each native library under its own permissive license (LGPL for libde265) | NuGet native DLL, loaded in-process |
 | PDFsharp 6.2.4 | PDF merge, split, rotate, pages, images→PDF | MIT | NuGet. **6.5 and later are AGPL; Orange pins 6.2.4 on purpose.** |
 | ZXing.Net 0.16.9 | QR code reader (decode only) | Apache-2.0 | NuGet. https://github.com/micjahn/ZXing.Net |
-| 7-Zip (optional, not bundled) | RAR/7z extraction when the user has it installed | LGPL-2.1 + unRAR restriction | Found at %ProgramFiles%\\7-Zip or on PATH; run as a separate process. |
+| 7-Zip (7z.exe + 7z.dll) | 7z creation, RAR/7z extraction | LGPL-2.1 + unRAR licence restriction (RAR code may not be used to recreate the RAR compression algorithm) | bundled in `tools\7zip\`, run as a separate process; source: https://www.7-zip.org |
 | DocumentFormat.OpenXml 3.3 | DOCX/XLSX/PPTX reading and writing | MIT | NuGet |
 | PDFsharp-MigraDoc 6.2.4 | PDF layout for documents and spreadsheets | MIT (pinned like PDFsharp) | NuGet |
 | ExcelDataReader 3.7 | legacy XLS reading | MIT | NuGet |

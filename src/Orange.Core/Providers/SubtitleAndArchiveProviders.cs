@@ -115,6 +115,11 @@ public sealed class ArchiveProvider(ToolLocator? tools = null) : IOperationProvi
             Id = "archive.extract-rar", Title = "Extract", Category = FileKind.Archive, Group = OperationGroup.Tool, InputExtensions = new HashSet<string> { "rar", "7z" },
             ProducesFolder = true, Icon = "extract", RequiresTool = "7zip", Keywords = ["unrar", "rar", "7z", "decompress", "open", "suffix:"],
         };
+        yield return new OperationDescriptor
+        {
+            Id = "archive.to.7z", Title = "7Z", Category = FileKind.Archive, Group = OperationGroup.Convert, InputExtensions = new HashSet<string> { "zip", "tar", "gz", "rar" },
+            OutputExtension = "7z", RequiresTool = "7zip", Keywords = ["7z", "7-zip", "repack", "smaller archive"],
+        };
         foreach (var (ext, title) in new[] { ("zip", "ZIP"), ("tar", "TAR") })
             yield return new OperationDescriptor
             {
@@ -139,7 +144,15 @@ public sealed class ArchiveProvider(ToolLocator? tools = null) : IOperationProvi
         if (stem.EndsWith(".tar", StringComparison.OrdinalIgnoreCase)) stem = stem[..^4];
         using var tmp = new SafePaths.TempWorkspace();
         var dir = tmp.Dir("x");
-        await ExtractAsync(input, dir, ct, progress);
+        if (FileTypeDetector.Ext(input) == "rar") await SevenZipExtractAsync(_tools.Require("7zip"), input, dir, ct, progress);
+        else await ExtractAsync(input, dir, ct, progress);
+        if (r.Operation.Id == "archive.to.7z")
+        {
+            var o7 = tmp.File("7z");
+            await SevenZipCreateAsync(_tools.Require("7zip"), Directory.EnumerateFileSystemEntries(dir).ToList(), o7, ct);
+            var f7 = SafePaths.PlanOutput(input, r.OutputDirectory, stem, null, "7z", r.Overwrite, r.Inputs);
+            return OperationResult.Ok(SafePaths.Commit(o7, f7, r.Overwrite));
+        }
         if (r.Operation.Id == "archive.extract")
         {
             var final = SafePaths.PlanOutput(input, r.OutputDirectory, stem, null, "", r.Overwrite, r.Inputs, isFolder: true);
@@ -277,6 +290,30 @@ public sealed class ArchiveProvider(ToolLocator? tools = null) : IOperationProvi
     }
 
     /// <summary>"Compress to ZIP" for any files and folders (Actions wheel). Folders keep their names inside the zip.</summary>
+    /// <summary>7z archive of files/folders (bundled 7-Zip, no shell, links not followed). Paths are stored relative to their parent.</summary>
+    public static async Task SevenZipCreateAsync(string sevenZip, IReadOnlyList<string> paths, string output, CancellationToken ct)
+    {
+        if (paths.Count == 0) throw new OrangeException("Nothing to compress.");
+        var args = new List<string> { "a", "-t7z", "-mx=7", "-snl-", "-bso0", "-bsp0", "-y", "--", output };
+        args.AddRange(paths.Select(Path.GetFullPath));
+        var res = await ProcessRunner.RunAsync(sevenZip, args, ct, timeout: TimeSpan.FromHours(2));
+        if (res.ExitCode is not (0 or 1) || !File.Exists(output)) throw new OrangeException("7-Zip couldn't create the archive.", ProcessRunner.Tail(res.StdErr));
+    }
+
+    /// <summary>The Actions wheel's "7z": next to the first item, named after it (or "Archive" for several).</summary>
+    public static async Task<string> Create7zFromSelectionAsync(IReadOnlyList<string> paths, CancellationToken ct)
+    {
+        var tool = ToolLocator.Default.Require("7zip");
+        var full = paths.Select(Path.GetFullPath).ToList();
+        var first = full[0].TrimEnd(Path.DirectorySeparatorChar);
+        var dir = Path.GetDirectoryName(first)!;
+        var name = full.Count == 1 ? Path.GetFileNameWithoutExtension(first) : "Archive";
+        using var tmp = new SafePaths.TempWorkspace();
+        var o = tmp.File("7z");
+        await SevenZipCreateAsync(tool, full, o, ct);
+        return SafePaths.Commit(o, SafePaths.PlanOutput(first, dir, name, null, "7z", OverwritePolicy.KeepBoth, full), OverwritePolicy.KeepBoth);
+    }
+
     public static async Task<string> CreateZipAsync(IReadOnlyList<string> paths, string? outputDir, CancellationToken ct, IProgress<double>? progress = null)
     {
         if (paths.Count == 0) throw new OrangeException("Nothing to compress.");

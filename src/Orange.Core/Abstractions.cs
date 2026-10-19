@@ -1,7 +1,7 @@
 namespace Orange.Core;
 
 /// <summary>Broad kind of a file, decided from its content signature first and its extension second.</summary>
-public enum FileKind { Unknown, Image, Video, Audio, Pdf, Document, Subtitle, Archive, Spreadsheet, Presentation }
+public enum FileKind { Unknown, Image, Video, Audio, Pdf, Document, Subtitle, Archive, Spreadsheet, Presentation, Font }
 
 /// <summary>Which wheel an operation lives on. Mirrors the observed Convert / Tools split (actions are shell-side, not here).</summary>
 public enum OperationGroup { Convert, Tool }

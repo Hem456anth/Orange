@@ -10,13 +10,16 @@ namespace Orange.Core.Providers;
 public sealed class ImageProvider : IOperationProvider
 {
     public string Name => "Images (Magick.NET)";
-    private static readonly string[] Inputs = ["png", "jpg", "webp", "heic", "tiff", "bmp", "gif", "avif", "ico", "svg"];
+    /// <summary>Camera RAW, read through ImageMagick's LibRaw delegate (read only). Declared first: Inputs uses it.</summary>
+    public static readonly string[] RawExtensions = ["dng", "cr2", "cr3", "nef", "arw", "orf", "rw2", "raf"];
+    private static readonly string[] Inputs = ["png", "jpg", "webp", "heic", "tiff", "bmp", "gif", "avif", "ico", "svg", "jxl", .. RawExtensions];
     public static readonly HashSet<string> InputExtensionsSet = Inputs.ToHashSet();
     private static readonly (string Ext, string Title, MagickFormat Fmt, bool Lossy)[] Targets =
     [
         ("png", "PNG", MagickFormat.Png, false), ("jpg", "JPG", MagickFormat.Jpeg, true), ("webp", "WebP", MagickFormat.WebP, true),
         ("heic", "HEIC", MagickFormat.Heic, true), ("tiff", "TIFF", MagickFormat.Tiff, false), ("bmp", "BMP", MagickFormat.Bmp, false),
         ("gif", "GIF", MagickFormat.Gif, false), ("avif", "AVIF", MagickFormat.Avif, true), ("ico", "ICO", MagickFormat.Ico, false),
+        ("jxl", "JPEG XL", MagickFormat.Jxl, true),
     ];
 
     static ImageProvider()
@@ -37,7 +40,7 @@ public sealed class ImageProvider : IOperationProvider
             {
                 Id = $"image.to.{t.Ext}", Title = t.Title, Category = FileKind.Image, Group = OperationGroup.Convert,
                 InputExtensions = Inputs.ToHashSet(), OutputExtension = t.Ext,
-                Options = t.Lossy ? [Quality] : t.Ext == "ico" ? [new OptionSpec("size", "Icon size", OptionType.Choice, "256", Choices: ["16", "32", "48", "64", "128", "256"])] : [],
+                Options = t.Lossy ? [Quality] : t.Ext == "ico" ? [new OptionSpec("size", "Icon size", OptionType.Choice, "256", Choices: ["all", "16", "32", "48", "64", "128", "256"], Help: "\"all\" puts 16, 32, 48, 64, 128 and 256 px in one icon.")] : [],
                 Keywords = [t.Ext, "convert", "image", "photo", t.Ext == "jpg" ? "jpeg" : t.Ext],
             };
         yield return new OperationDescriptor
@@ -61,6 +64,11 @@ public sealed class ImageProvider : IOperationProvider
             [new("angle", "Rotate", OptionType.Choice, "90", Choices: ["90", "180", "270", "flip-horizontal", "flip-vertical"])], ["turn", "flip", "mirror", "orientation"]);
         yield return Tool("image.strip-metadata", "Remove metadata", "Clean", "metadata",
             [], ["exif", "gps", "location", "privacy", "strip"]);
+        yield return new OperationDescriptor
+        {
+            Id = "image.ico-extract", Title = "Extract icons", Category = FileKind.Image, Group = OperationGroup.Tool, InputExtensions = new HashSet<string> { "ico" },
+            OutputExtension = "png", ProducesFolder = true, Icon = "extract", Keywords = ["icon sizes", "ico", "frames", "suffix:icons"],
+        };
         yield return Tool("image.grayscale", "Grayscale", "Grayscale", "grayscale", [], ["black and white", "monochrome", "bw"]);
         yield return new OperationDescriptor
         {
@@ -82,6 +90,7 @@ public sealed class ImageProvider : IOperationProvider
 
     public bool IsAvailable(OperationDescriptor op) => op.Id switch
     {
+        "image.to.jxl" => CanWrite(MagickFormat.Jxl),
         "image.to.heic" => CanWrite(MagickFormat.Heic),
         "image.to.avif" => CanWrite(MagickFormat.Avif),
         _ => true,
@@ -101,9 +110,17 @@ public sealed class ImageProvider : IOperationProvider
         if (h[0] == 0xFF && h[1] == 0xD8) return MagickFormat.Jpeg;
         if (A(0, 3) == "GIF") return MagickFormat.Gif;
         if (A(0, 2) == "BM") return MagickFormat.Bmp;
-        if ((h[0] == 0x49 && h[1] == 0x49) || (h[0] == 0x4D && h[1] == 0x4D)) return MagickFormat.Tiff;
+        if ((h[0] == 0x49 && h[1] == 0x49) || (h[0] == 0x4D && h[1] == 0x4D))
+            // TIFF-based RAW files (DNG, CR2, NEF, ARW) are TIFF containers; the extension picks LibRaw instead of the TIFF reader.
+            return FileTypeDetector.Ext(path) switch { "dng" => MagickFormat.Dng, "cr2" => MagickFormat.Cr2, "nef" => MagickFormat.Nef, "arw" => MagickFormat.Arw, _ => MagickFormat.Tiff };
         if (A(0, 4) == "RIFF" && A(8, 4) == "WEBP") return MagickFormat.WebP;
         if (h[0] == 0 && h[1] == 0 && h[2] == 1 && h[3] == 0) return MagickFormat.Ico;
+        var ext = FileTypeDetector.Ext(path);
+        if (A(4, 4) == "ftyp" && A(8, 4) == "crx ") return MagickFormat.Cr3;
+        if (A(0, 15) == "FUJIFILMCCD-RAW") return MagickFormat.Raf;
+        if (A(0, 4) is "IIRO" or "IIRS" or "MMOR") return MagickFormat.Orf;
+        if (h[0] == 0x49 && h[1] == 0x49 && h[2] == 0x55 && h[3] == 0) return MagickFormat.Rw2;
+        if (h[0] == 0xFF && h[1] == 0x0A || h[3] == 0x0C && A(4, 4) == "JXL ") return MagickFormat.Jxl;
         if (A(4, 4) == "ftyp") return A(8, 4).StartsWith("avi") ? MagickFormat.Avif : MagickFormat.Heic;
         if (SvgSafety.LooksLikeSvg(path)) { SvgSafety.EnsureSafe(path); return MagickFormat.Svg; }
         throw new OrangeException($"\"{Path.GetFileName(path)}\" isn't an image Orange can read.", "Its contents don't match a supported image format.");
@@ -157,6 +174,16 @@ public sealed class ImageProvider : IOperationProvider
         }
         using var col = Load(input);
         ct.ThrowIfCancellationRequested();
+        if (op.Id == "image.ico-extract")
+        {
+            var dir = tmp.Dir("icons");
+            int i = 0;
+            foreach (var frame in col)
+                frame.Write(Path.Combine(dir, $"{stem} {frame.Width}x{frame.Height}{(col.Count(f => f.Width == frame.Width) > 1 ? $" {++i}" : "")}.png"), MagickFormat.Png);
+            var folder = SafePaths.PlanOutput(input, r.OutputDirectory, stem, "icons", "", r.Overwrite, r.Inputs, isFolder: true);
+            progress?.Report(1);
+            return OperationResult.Ok(SafePaths.CommitFolder(dir, folder));
+        }
         progress?.Report(0.3);
         string outExt; string? suffix = null;
 
@@ -172,7 +199,7 @@ public sealed class ImageProvider : IOperationProvider
                 img.AutoOrient();
                 if (t.Lossy) img.Quality = (uint)r.OptInt("quality");
                 if (t.Fmt == MagickFormat.Jpeg && img.HasAlpha) { img.BackgroundColor = MagickColors.White; img.Alpha(AlphaAction.Remove); }
-                if (t.Fmt == MagickFormat.Ico)
+                if (t.Fmt == MagickFormat.Ico && r.Opt("size") != "all")
                 {
                     var s = uint.Parse(r.Opt("size"));
                     img.Resize(new MagickGeometry(s, s) { IgnoreAspectRatio = false });
@@ -181,6 +208,19 @@ public sealed class ImageProvider : IOperationProvider
             }
             if (t.Fmt == MagickFormat.Gif && col.Count > 1) col.Optimize();
             var outTmp = tmp.File(outExt);
+            if (t.Fmt == MagickFormat.Ico && r.Opt("size") == "all")
+            {   // One .ico with every standard size, each resampled from the original (not from each other).
+                using var sizes = new MagickImageCollection();
+                foreach (var s in new uint[] { 16, 32, 48, 64, 128, 256 })
+                {
+                    var c = (MagickImage)col[0].Clone();
+                    c.Resize(new MagickGeometry(s, s) { IgnoreAspectRatio = false });
+                    c.Extent(s, s, Gravity.Center, MagickColors.Transparent);
+                    sizes.Add(c);
+                }
+                sizes.Write(outTmp, MagickFormat.Ico);
+                return Finish(outTmp);
+            }
             if (col.Count > 1 && animatedOut || t.Fmt == MagickFormat.Tiff && col.Count > 1) col.Write(outTmp, t.Fmt);
             else col[0].Write(outTmp, t.Fmt);
             return Finish(outTmp);
@@ -324,7 +364,8 @@ public sealed class ImageProvider : IOperationProvider
     private static MagickFormat FormatForExt(string ext) => ext switch
     {
         "png" => MagickFormat.Png, "jpg" => MagickFormat.Jpeg, "webp" => MagickFormat.WebP, "heic" => MagickFormat.Heic,
-        "tiff" => MagickFormat.Tiff, "bmp" => MagickFormat.Bmp, "gif" => MagickFormat.Gif, "avif" => MagickFormat.Avif, "ico" => MagickFormat.Ico,
+        "tiff" => MagickFormat.Tiff, "bmp" => MagickFormat.Bmp, "gif" => MagickFormat.Gif, "avif" => MagickFormat.Avif, "ico" => MagickFormat.Ico, "jxl" => MagickFormat.Jxl,
+        "dng" or "cr2" or "cr3" or "nef" or "arw" or "orf" or "rw2" or "raf" => MagickFormat.Dng,   // read only → tools save JPG
         _ => MagickFormat.Png,
     };
 

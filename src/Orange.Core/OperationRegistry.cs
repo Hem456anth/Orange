@@ -19,6 +19,8 @@ public sealed class OperationRegistry
         r.Add(new MediaProvider(tools));
         r.Add(new PdfProvider(tools));
         r.Add(new OfficeProvider());          // before Documents: the built-in route wins for the same format
+        r.Add(new EbookProvider());
+        r.Add(new FontProvider());
         r.Add(new DocumentProvider(tools));
         r.Add(new SubtitleProvider());
         r.Add(new ArchiveProvider(tools));

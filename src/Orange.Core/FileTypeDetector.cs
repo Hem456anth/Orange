@@ -25,6 +25,12 @@ public static class FileTypeDetector
         ["docx"] = FileKind.Document, ["odt"] = FileKind.Document, ["rtf"] = FileKind.Document, ["txt"] = FileKind.Document,
         ["md"] = FileKind.Document, ["markdown"] = FileKind.Document, ["html"] = FileKind.Document, ["htm"] = FileKind.Document,
         ["epub"] = FileKind.Document, ["doc"] = FileKind.Document,
+        ["mobi"] = FileKind.Document, ["azw"] = FileKind.Document, ["fb2"] = FileKind.Document, ["cbz"] = FileKind.Document,
+        // camera RAW, JPEG XL
+        ["dng"] = FileKind.Image, ["cr2"] = FileKind.Image, ["cr3"] = FileKind.Image, ["nef"] = FileKind.Image, ["arw"] = FileKind.Image,
+        ["orf"] = FileKind.Image, ["rw2"] = FileKind.Image, ["raf"] = FileKind.Image, ["jxl"] = FileKind.Image,
+        // fonts
+        ["ttf"] = FileKind.Font, ["otf"] = FileKind.Font, ["woff"] = FileKind.Font, ["woff2"] = FileKind.Font,
         // spreadsheets and presentations
         ["xlsx"] = FileKind.Spreadsheet, ["xls"] = FileKind.Spreadsheet, ["ods"] = FileKind.Spreadsheet,
         ["csv"] = FileKind.Spreadsheet, ["tsv"] = FileKind.Spreadsheet,
@@ -57,6 +63,12 @@ public static class FileTypeDetector
         if (Ascii(0, "RIFF") && Ascii(8, "WEBP")) return FileKind.Image;
         if (Ascii(0, "RIFF") && Ascii(8, "WAVE")) return FileKind.Audio;
         if (Ascii(0, "RIFF") && Ascii(8, "AVI ")) return FileKind.Video;
+        if (Ascii(4, "ftyp") && Ascii(8, "crx ")) return FileKind.Image;                       // Canon CR3
+        if (Ascii(0, "FUJIFILMCCD-RAW")) return FileKind.Image;                                 // RAF
+        if (Ascii(0, "IIRO") || Ascii(0, "IIRS") || Ascii(0, "MMOR") || At(0, 0x49, 0x49, 0x55, 0x00)) return FileKind.Image; // ORF, RW2
+        if (At(0, 0xFF, 0x0A) || At(0, 0, 0, 0, 0x0C, 0x4A, 0x58, 0x4C, 0x20)) return FileKind.Image; // JPEG XL
+        if (Ascii(0, "wOFF") || Ascii(0, "wOF2") || Ascii(0, "OTTO") || At(0, 0, 1, 0, 0) && h.Length >= 12 && h[4] == 0) return FileKind.Font;
+        if (Ascii(60, "BOOKMOBI") || Ascii(60, "TEXtREAd")) return FileKind.Document;            // MOBI
         if (Ascii(4, "ftyp"))
         {
             var brand = h.Length >= 12 ? System.Text.Encoding.ASCII.GetString(h, 8, 4) : "";
@@ -108,6 +120,7 @@ public static class FileTypeDetector
         // Reconcile containers.
         if (byContent == FileKind.Archive && byExt == FileKind.Document && Ext(path) is "docx" or "epub" or "odt") return FileKind.Document;
         if (byContent == FileKind.Archive && Ext(path) is "xlsx" or "ods") return FileKind.Spreadsheet;
+        if (byContent == FileKind.Archive && Ext(path) is "cbz") return FileKind.Document;
         if (byContent == FileKind.Archive && Ext(path) is "pptx") return FileKind.Presentation;
         if (byContent == FileKind.Video && byExt == FileKind.Audio && Ext(path) is "m4a" or "wma" or "aac") return FileKind.Audio;
         if (byContent == FileKind.Audio && byExt == FileKind.Video) return FileKind.Audio; // e.g. audio-only file named .mp4 → treat as audio
