@@ -1,0 +1,18 @@
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.cbz", op: "ebook.to.epub") [25 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.fb2", op: "ebook.to.epub") [23 ms]
+  Passed Orange.Core.Tests.FormatTests.Heic_write_stays_hidden_when_unsupported [2 ms]
+  Passed Orange.Core.Tests.OfficeTests.Native_sheet_conversions(fixture: "sample.xls", op: "sheet.to.xlsx") [121 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [159 ms]
+  Passed Orange.Core.Tests.FormatTests.Multi_size_ico_create_and_extract [171 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [15 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [8 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [2 ms]
+  Passed Orange.Core.Tests.OfficeTests.Docx_text_survives_a_round_trip_through_pdf_and_markdown [219 ms]
+  Passed Orange.Core.Tests.WatchTests.Paused_watcher_waits_then_resumes [1 s]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [204 ms]
+  Passed Orange.Core.Tests.OfficeTests.Sheet_values_round_trip_across_formats [17 ms]
+Total tests: 257
+     Passed: 256
+    Skipped: 1
+ Total time: 27.3404 Seconds
