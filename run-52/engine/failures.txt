@@ -1,0 +1,33 @@
+  Failed Orange.Core.Tests.LocalisationTests.Every_wrapped_ui_string_has_an_english_resource [25 ms]
+  Error Message:
+   Run tools/l10n/gen_resw.py. Missing: Show unavailable
+  Stack Trace:
+     at Orange.Core.Tests.LocalisationTests.Every_wrapped_ui_string_has_an_english_resource() in D:\a\Orange\Orange\tests\Orange.Core.Tests\LocalisationTests.cs:line 31
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Error Message:
+   Run tools/l10n/gen_resw.py. Missing: Show unavailable
+  Stack Trace:
+     at Orange.Core.Tests.LocalisationTests.Every_wrapped_ui_string_has_an_english_resource() in D:\a\Orange\Orange\tests\Orange.Core.Tests\LocalisationTests.cs:line 31
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed Orange.Core.Tests.LocalisationTests.Translations_use_known_keys_and_keep_placeholders(lang: "hi-IN", settings: "सेटिंग्स") [28 ms]
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.fb2", op: "ebook.to.epub") [24 ms]
+  Passed Orange.Core.Tests.FormatTests.Heic_write_stays_hidden_when_unsupported [2 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [142 ms]
+  Passed Orange.Core.Tests.FormatTests.Multi_size_ico_create_and_extract [159 ms]
+  Passed Orange.Core.Tests.FormatTests.Seven_zip_ops_are_registered_and_need_7zip [5 ms]
+  Passed Orange.Core.Tests.FormatTests.PalmDoc_decompression [3 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [356 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [8 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [2 ms]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [26 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_bomb_is_rejected [5 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_slip_is_stopped_and_nothing_escapes [5 ms]
+  Passed Orange.Core.Tests.StudioTests.Add_background_fills_transparency_and_pads [133 ms]
+Total tests: 250
+     Passed: 248
+     Failed: 1
+    Skipped: 1
+ Total time: 26.8872 Seconds
