@@ -10,7 +10,11 @@ namespace Orange.App.Services;
 public sealed class TrayAndHotkey : IDisposable
 {
     private const int TrayMsg = Native.WM_USER + 1, HotkeyId = 0x4F52;
-    private readonly Native.WndProc _proc;
+    // One window class for the process, with a delegate that lives as long as the process. A per-instance delegate
+    // was registered once and then collected when that instance went away, crashing the next instance (CI run 51).
+    private static readonly Native.WndProc SharedProc = Dispatch;
+    private static readonly Dictionary<IntPtr, TrayAndHotkey> Instances = new();
+    private static bool _classRegistered;
     private readonly IntPtr _hwnd;
     private IntPtr _icon;
     private bool _trayAdded, _hotkeyRegistered;
@@ -24,16 +28,22 @@ public sealed class TrayAndHotkey : IDisposable
 
     public TrayAndHotkey()
     {
-        _proc = WndProc;
-        var cls = new Native.WNDCLASSEX
-        {
-            cbSize = Marshal.SizeOf<Native.WNDCLASSEX>(),
-            lpfnWndProc = Marshal.GetFunctionPointerForDelegate(_proc),
-            hInstance = Native.GetModuleHandle(null),
-            lpszClassName = "OrangeMessageWindow",
-        };
-        Native.RegisterClassEx(ref cls);
-        _hwnd = Native.CreateWindowEx(0, cls.lpszClassName, "Orange", 0, 0, 0, 0, 0, Native.HWND_MESSAGE, IntPtr.Zero, cls.hInstance, IntPtr.Zero);
+        var hInst = Native.GetModuleHandle(null);
+        lock (Instances)
+            if (!_classRegistered)
+            {
+                var cls = new Native.WNDCLASSEX
+                {
+                    cbSize = Marshal.SizeOf<Native.WNDCLASSEX>(),
+                    lpfnWndProc = Marshal.GetFunctionPointerForDelegate(SharedProc),
+                    hInstance = hInst,
+                    lpszClassName = "OrangeMessageWindow",
+                };
+                Native.RegisterClassEx(ref cls);
+                _classRegistered = true;
+            }
+        _hwnd = Native.CreateWindowEx(0, "OrangeMessageWindow", "Orange", 0, 0, 0, 0, 0, Native.HWND_MESSAGE, IntPtr.Zero, hInst, IntPtr.Zero);
+        lock (Instances) Instances[_hwnd] = this;
     }
 
     public void ShowTray()
@@ -120,6 +130,14 @@ public sealed class TrayAndHotkey : IDisposable
         if (_trayAdded) { var d = Data(); Native.Shell_NotifyIcon(Native.NIM_DELETE, ref d); }
         if (_hotkeyRegistered) Native.UnregisterHotKey(_hwnd, HotkeyId);
         if (_icon != IntPtr.Zero) Native.DestroyIcon(_icon);
+        lock (Instances) Instances.Remove(_hwnd);
         Native.DestroyWindow(_hwnd);
+    }
+
+    private static IntPtr Dispatch(IntPtr h, uint msg, IntPtr w, IntPtr l)
+    {
+        TrayAndHotkey? t;
+        lock (Instances) Instances.TryGetValue(h, out t);
+        return t is null ? Native.DefWindowProc(h, msg, w, l) : t.WndProc(h, msg, w, l);
     }
 }

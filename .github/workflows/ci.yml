@@ -136,17 +136,16 @@ jobs:
           dotnet publish src/Orange.App/Orange.App.csproj -c Release -r win-x64 -p:Platform=x64 --self-contained -o out/Orange 2>&1 | Tee-Object -FilePath evidence/app-build.log
           if ($LASTEXITCODE -ne 0) { exit 1 }
           Get-ChildItem out/Orange | Select-Object -First 15 | Format-Table Name, Length | Out-String | Write-Host
-      - name: Publish the CLI beside the app (shares its runtime files)
+      - name: Command line (Orange.exe --cli, via cli\orange.cmd)
         shell: pwsh
         run: |
-          dotnet publish src/Orange.Cli/Orange.Cli.csproj -c Release -r win-x64 --self-contained -o out/Orange 2>&1 | Tee-Object -Append evidence/app-build.log
-          if ($LASTEXITCODE -ne 0) { exit 1 }
           New-Item -ItemType Directory -Force out/Orange/cli | Out-Null
           Copy-Item installer/cli/orange.cmd out/Orange/cli/
-          & out/Orange/orange-cli.exe --version | Tee-Object -Append evidence/summary.txt
-          & out/Orange/orange-cli.exe presets list | Tee-Object -Append evidence/cli-presets.txt
-          & out/Orange/orange-cli.exe convert tests/fixtures/sample.png --to webp -o $env:RUNNER_TEMP --json | Tee-Object evidence/cli-convert.json
+          cmd /c "out\Orange\cli\orange.cmd --version" | Tee-Object -Append evidence/summary.txt
+          cmd /c "out\Orange\cli\orange.cmd presets list" | Tee-Object -Append evidence/cli-presets.txt
+          cmd /c "out\Orange\cli\orange.cmd convert tests\fixtures\sample.png --to webp -o %RUNNER_TEMP% --json" | Tee-Object evidence/cli-convert.json
           "cli convert exit=$LASTEXITCODE" | Tee-Object -Append evidence/summary.txt
+          Get-Content evidence/cli-convert.json -ErrorAction SilentlyContinue | Select-Object -First 20 | Tee-Object -Append evidence/summary.txt
           if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Bundle 7-Zip (7z.exe + 7z.dll, LGPL with unRAR restriction) and drop unused Windows ML binaries
         shell: pwsh
@@ -179,19 +178,32 @@ jobs:
           & $makeappx.FullName pack /o /d $stage /p out/Orange/Orange-ContextMenu.msix /nv 2>&1 | Tee-Object -Append evidence/shellext-build.log
           if (-not (Test-Path out/Orange/Orange-ContextMenu.msix)) { Write-Host "MSIX pack failed"; exit 1 }
           "shell extension dll=$((Get-Item out/Orange/OrangeShellExt.dll).Length) msix=$((Get-Item out/Orange/Orange-ContextMenu.msix).Length)" | Tee-Object -Append evidence/summary.txt
-      - name: Bundle FFmpeg (LGPL shared build, licence + source offer)
+      - name: Bundle FFmpeg (Orange's small LGPL build, BtbN LGPL as fallback)
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $t = "out/Orange/tools"; New-Item -ItemType Directory -Force "$t/ffmpeg/bin" | Out-Null
-          $zip = "ffmpeg-n8.1-latest-win64-lgpl-shared-8.1.zip"
-          Invoke-WebRequest "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/$zip" -OutFile ff.zip
-          Expand-Archive ff.zip ffx; $d = Get-ChildItem ffx -Directory | Select-Object -First 1
-          Get-ChildItem "$($d.FullName)/bin" | Where-Object { $_.Name -ne 'ffplay.exe' } | Copy-Item -Destination "$t/ffmpeg/bin/"
-          Copy-Item "$($d.FullName)/LICENSE.txt" "$t/ffmpeg/LICENSE.txt"
+          New-Item -ItemType Directory -Force evidence | Out-Null
+          gh release download ffmpeg-orange -R ${{ github.repository }} -p "ffmpeg-orange-win64.*" -D ffo 2>$null
+          if (Test-Path ffo/ffmpeg-orange-win64.zip) {
+            $want = (Get-Content ffo/ffmpeg-orange-win64.sha256).Split(' ')[0]
+            $got = (Get-FileHash ffo/ffmpeg-orange-win64.zip -Algorithm SHA256).Hash.ToLower()
+            if ($want -ne $got) { Write-Host "ffmpeg-orange checksum mismatch"; exit 1 }
+            Expand-Archive ffo/ffmpeg-orange-win64.zip ffx
+            Copy-Item ffx/bin/* "$t/ffmpeg/bin/"; Copy-Item ffx/LICENSE.txt "$t/ffmpeg/LICENSE.txt"
+            "ffmpeg source=orange-build" | Tee-Object -Append evidence/summary.txt
+          } else {
+            $zip = "ffmpeg-n8.1-latest-win64-lgpl-shared-8.1.zip"
+            Invoke-WebRequest "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/$zip" -OutFile ff.zip
+            Expand-Archive ff.zip ffx; $d = Get-ChildItem ffx -Directory | Select-Object -First 1
+            Get-ChildItem "$($d.FullName)/bin" | Where-Object { $_.Name -ne 'ffplay.exe' } | Copy-Item -Destination "$t/ffmpeg/bin/"
+            Copy-Item "$($d.FullName)/LICENSE.txt" "$t/ffmpeg/LICENSE.txt"
+            "ffmpeg source=btbn-lgpl-shared (fallback)" | Tee-Object -Append evidence/summary.txt
+          }
           Copy-Item tools/ffmpeg/SOURCE.txt "$t/ffmpeg/SOURCE.txt"
           $ver = & "$t/ffmpeg/bin/ffmpeg.exe" -hide_banner -version 2>&1 | Out-String
           $enc = & "$t/ffmpeg/bin/ffmpeg.exe" -hide_banner -encoders 2>&1 | Out-String
-          New-Item -ItemType Directory -Force evidence | Out-Null
           $ver | Out-File evidence/ffmpeg-version.txt; $enc | Out-File evidence/ffmpeg-encoders.txt
           if ($ver -match '--enable-gpl' -or $ver -match '--enable-nonfree') { Write-Host "GPL/nonfree FFmpeg must not ship"; exit 1 }
           foreach ($e in 'h264_mf','libmp3lame','libopus','libwebp','aac','flac','gif') { "encoder $e present=$($enc -match "\b$e\b")" | Tee-Object -Append evidence/summary.txt }
@@ -214,6 +226,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force evidence/selftest | Out-Null
           $env:ORANGE_TEST_EVENTS = "$PWD\evidence\selftest\events.log"
+          $env:ORANGE_BUNDLED_ONLY = "1"
           $p = Start-Process out/Orange/Orange.exe -ArgumentList '--selftest', "$PWD\evidence\selftest" -PassThru -Wait
           Get-Content evidence/selftest/selftest.json -ErrorAction SilentlyContinue | Write-Host
           "selftest exit=$($p.ExitCode)" | Tee-Object -Append evidence/summary.txt
@@ -240,7 +253,7 @@ jobs:
       - name: Sign app, CLI, shell extension and MSIX (skipped without secrets)
         shell: pwsh
         run: |
-          $r = & tools/sign/Sign-Files.ps1 out/Orange/Orange.exe out/Orange/orange-cli.exe out/Orange/OrangeShellExt.dll out/Orange/Orange-ContextMenu.msix
+          $r = & tools/sign/Sign-Files.ps1 out/Orange/Orange.exe out/Orange/OrangeShellExt.dll out/Orange/Orange-ContextMenu.msix
           $r | Tee-Object -Append evidence/summary.txt
           # The installer registers the sparse package only when it is signed (Windows refuses unsigned ones).
           if ("$r" -like 'signed=*') { New-Item out/Orange/contextmenu.signed -ItemType File -Force | Out-Null }

@@ -1,3 +1,4 @@
+using Orange.Core.Providers;
 namespace Orange.Core;
 
 public enum JobState { Queued, Running, Succeeded, Failed, Cancelled }
@@ -48,7 +49,9 @@ public sealed class JobRunner(OperationRegistry registry)
     {
         SafePaths.TempWorkspace.CleanupStale();
         int done = 0;
-        using var gate = new SemaphoreSlim(EngineLimits.Current.MaxParallelJobs);
+        var parallel = PowerAware.ParallelJobs(EngineLimits.Current.MaxParallelJobs);
+        ImageProvider.SetThreads(PowerAware.ThreadsPerJob(parallel));
+        using var gate = new SemaphoreSlim(parallel);
         void Report(Job j) => progress?.Report(new BatchProgress(done, jobs.Count, (done + jobs.Where(x => x.State == JobState.Running).Sum(x => x.Progress)) / jobs.Count, j));
 
         var tasks = jobs.Select(async job =>

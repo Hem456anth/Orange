@@ -1,7 +1,7 @@
 # Orange command line
 
 The installer can add `orange` to your PATH (task *Add the orange command to PATH*, off by default). The portable zip
-has `orange-cli.exe` in its root and `cli\orange.cmd` you can put on PATH yourself. Everything runs on your PC.
+has `cli\orange.cmd` (it runs `Orange.exe --cli`) that you can put on PATH yourself. Everything runs on your PC.
 
 ```text
 orange convert <files|globs> --to <format> | --preset <name> [-o <dir>] [--quality <1-100>] [--overwrite keep|replace|fail] [--json]

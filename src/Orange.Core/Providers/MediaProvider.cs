@@ -507,6 +507,9 @@ public sealed class MediaProvider(ToolLocator tools) : IOperationProvider
             default: throw new OrangeException($"Unsupported media operation {op.Id}.");
         }
 
+        // Thread cap: about half the cores across parallel jobs, fewer on battery (cooler, quieter, longer battery life).
+        var threads = PowerAware.ThreadsPerJob(PowerAware.ParallelJobs(EngineLimits.Current.MaxParallelJobs)).ToString(CultureInfo.InvariantCulture);
+        a.AddRange(["-threads", threads, "-filter_threads", threads]);
         a.Add(outDir != null ? outFile : "file:" + outFile);
         var res = await ProcessRunner.RunAsync(tools.Require("ffmpeg"), a, ct, onStdOutLine: line =>
         {

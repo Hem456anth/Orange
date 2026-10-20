@@ -204,7 +204,7 @@ public static class PdfIO
         for (int i = 0; i < Math.Min(pages, maxPages); i++)
         {
             using var ms = new MemoryStream();
-            PDFtoImage.Conversion.SavePng(ms, bytes, page: i, options: new PDFtoImage.RenderOptions(Dpi: dpi, WithAnnotations: true, WithFormFill: true));
+            PDFtoImage.Conversion.SavePng(ms, bytes, page: (Index)i, options: new PDFtoImage.RenderOptions(Dpi: dpi, WithAnnotations: true, WithFormFill: true));
             yield return ms.ToArray();
         }
     }

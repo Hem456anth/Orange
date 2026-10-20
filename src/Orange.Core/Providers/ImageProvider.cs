@@ -29,7 +29,11 @@ public sealed class ImageProvider : IOperationProvider
         ResourceLimits.Area = (ulong)l.MaxImagePixels * 4;
         ResourceLimits.Width = 65_000; ResourceLimits.Height = 65_000;
         ResourceLimits.Time = 600;
+        SetThreads(PowerAware.ThreadsPerJob(EngineLimits.Current.MaxParallelJobs));
     }
+
+    /// <summary>Caps ImageMagick's OpenMP threads (it would otherwise use every core for every image).</summary>
+    public static void SetThreads(int n) { try { ResourceLimits.Thread = (ulong)Math.Max(1, n); } catch { } }
 
     private static readonly OptionSpec Quality = new("quality", "Quality", OptionType.Integer, "85", 1, 100, Help: "Higher keeps more detail and makes a bigger file.");
 

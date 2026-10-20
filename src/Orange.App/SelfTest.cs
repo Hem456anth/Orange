@@ -224,7 +224,14 @@ public static class SelfTest
         await Try("convert PNG → WebP via app service", true, () => Convert("image.to.webp", W("sample.png")));
         await Try("convert JPG → HEIC (Magick.NET on Windows)", false, () => Convert("image.to.heic", W("sample.jpg")));
         await Try("merge PDFs via app service", true, () => Convert("pdf.merge", W("sample.pdf"), W("with-image.pdf")));
-        await Try("MP4 → MP3 via app service (FFmpeg)", ToolLocator.Default.Has("ffmpeg"), () => Convert("video.to.mp3", W("sample.mp4")));
+        await Try("bundled FFmpeg and ffprobe are both found (no PATH)", true, () =>
+            Task.FromResult($"{ToolLocator.Default.Find("ffmpeg") ?? throw new Exception("ffmpeg missing")} | {ToolLocator.Default.Find("ffprobe") ?? throw new Exception("ffprobe missing")}"));
+        await Try("MP4 → MP3 via app service (bundled FFmpeg)", true, () => Convert("video.to.mp3", W("sample.mp4")));
+        await Try("MP4 → GIF via app service", true, () => Convert("video.to.gif", W("sample.mp4")));
+        await Try("WAV → MP3 via app service", true, () => Convert("audio.to.mp3", W("sample.wav")));
+        await Try("MP3 → OGG/Opus via app service", true, () => Convert("audio.to.opus", W("sample.mp3")));
+        await Try("PDF → PNG without Ghostscript (PDFium)", true, () => Convert("pdf.to.png", W("sample.pdf")));
+        await Try("PDF compress without Ghostscript", false, () => Convert("pdf.compress", W("with-image.pdf")));
         await Try("DOCX → PDF (LibreOffice)", false, () => Convert("doc.to.pdf", W("sample.docx")));
         await Try("DOCX → PDF built in (no LibreOffice)", true, () => Convert("doc.native.pdf", W("sample.docx")));
         await Try("XLSX → CSV built in", true, () => Convert("sheet.to.csv", W("sample.xlsx")));

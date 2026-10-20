@@ -12,7 +12,12 @@ public sealed class ToolLocator
 {
     private readonly Dictionary<string, string?> _cache = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _overrides = new(StringComparer.OrdinalIgnoreCase);
-    public static ToolLocator Default { get; set; } = new();
+    /// <summary>ORANGE_BUNDLED_ONLY=1 (CI self-test) ignores Program Files and PATH, so a tool missing from the bundle can't hide.</summary>
+    public static ToolLocator Default { get; set; } = new() { SearchSystem = Environment.GetEnvironmentVariable("ORANGE_BUNDLED_ONLY") != "1" };
+    /// <summary>Folder searched for bundled tools; tests point it elsewhere.</summary>
+    public string BundledRoot { get; init; } = Path.Combine(AppContext.BaseDirectory, "tools");
+    /// <summary>Also look in Program Files and PATH (tests turn this off to simulate a clean PC).</summary>
+    public bool SearchSystem { get; init; } = true;
 
     private static readonly Dictionary<string, string[]> Candidates = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -33,9 +38,16 @@ public sealed class ToolLocator
         if (_overrides.TryGetValue(tool, out var o) && File.Exists(o)) found = o;
         var names = Candidates.TryGetValue(tool, out var c) ? c : [tool];
         var exts = OperatingSystem.IsWindows() ? new[] { ".exe", ".com" } : new[] { "" };
-        var bundled = Path.Combine(AppContext.BaseDirectory, "tools");
+        var bundled = BundledRoot;
         var dirs = new List<string> { bundled, Path.Combine(bundled, tool), Path.Combine(bundled, tool, "bin") };
-        if (OperatingSystem.IsWindows())
+        // ffprobe ships in the same folder as ffmpeg (tools\ffmpeg\bin); before 0.2 it was only found on PATH,
+        // which hid every audio and video operation on PCs without a system FFmpeg.
+        if (tool.Equals("ffprobe", StringComparison.OrdinalIgnoreCase))
+        {
+            dirs.Add(Path.Combine(bundled, "ffmpeg")); dirs.Add(Path.Combine(bundled, "ffmpeg", "bin"));
+            if (_overrides.TryGetValue("ffmpeg", out var ff) && Path.GetDirectoryName(ff) is { } ffDir) dirs.Insert(0, ffDir);
+        }
+        if (SearchSystem && OperatingSystem.IsWindows())
         {
             var pf = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             if (tool.Equals("libreoffice", StringComparison.OrdinalIgnoreCase)) dirs.Add(Path.Combine(pf, "LibreOffice", "program"));
@@ -43,7 +55,7 @@ public sealed class ToolLocator
             if (tool.Equals("ghostscript", StringComparison.OrdinalIgnoreCase) && Directory.Exists(Path.Combine(pf, "gs")))
                 dirs.AddRange(Directory.GetDirectories(Path.Combine(pf, "gs")).OrderDescending().Select(d => Path.Combine(d, "bin")));
         }
-        dirs.AddRange((Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries));
+        if (SearchSystem) dirs.AddRange((Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries));
         foreach (var d in dirs)
         {
             if (found != null) break;
@@ -140,6 +152,7 @@ public static class ProcessRunner
     private static void TryLowerPriority(Process p)
     {
         try { p.PriorityClass = ProcessPriorityClass.BelowNormal; } catch { /* not permitted */ }
+        PowerAware.Throttle(p);
     }
 
     /// <summary>The last meaningful lines of a tool's stderr, for the "Details" part of an error.</summary>

@@ -170,3 +170,53 @@ public class OfficeTests : IDisposable
         Assert.Contains(_reg.ForFiles([Copy("sample.pptx")], OperationGroup.Convert), o => o.Id == "slides.to.pdf");
     }
 }
+
+public class PdfWithoutGhostscriptTests : IDisposable
+{
+    private readonly string _dir = Path.Combine(Path.GetTempPath(), "orange-pdfgs-" + Guid.NewGuid().ToString("N"));
+    public PdfWithoutGhostscriptTests() => Directory.CreateDirectory(_dir);
+    public void Dispose() { try { Directory.Delete(_dir, true); } catch { } }
+
+    private static string Fixture(string n)
+    {
+        var d = new DirectoryInfo(AppContext.BaseDirectory);
+        while (d != null && !Directory.Exists(Path.Combine(d.FullName, "tests", "fixtures"))) d = d.Parent;
+        return Path.Combine(d!.FullName, "tests", "fixtures", n);
+    }
+
+    private async Task<Job> Run(string op, string file, Dictionary<string, string>? o = null)
+    {
+        var reg = OperationRegistry.CreateDefault(new ToolLocator { BundledRoot = _dir, SearchSystem = false });   // no Ghostscript here
+        var runner = new JobRunner(reg);
+        var jobs = runner.Plan(reg.Get(op), [file], o);
+        await runner.RunAsync(jobs, null, CancellationToken.None);
+        return jobs[0];
+    }
+
+    [Fact]
+    public async Task Pdf_pages_render_to_png_and_jpg_with_pdfium()
+    {
+        var pdf = Path.Combine(_dir, "doc.pdf"); File.Copy(Fixture("with-image.pdf"), pdf);
+        foreach (var op in new[] { "pdf.to.png", "pdf.to.jpg" })
+        {
+            var j = await Run(op, pdf);
+            Assert.True(j.State == JobState.Succeeded, j.Result?.Error + " " + j.Result?.Detail);
+            Assert.NotEmpty(Directory.GetFiles(j.Result!.Outputs[0]));
+        }
+    }
+
+    [Fact]
+    public async Task Pdf_compress_reencodes_pictures_without_ghostscript()
+    {
+        // A PDF with a big, lightly compressed photo.
+        var big = Path.Combine(_dir, "big.png");
+        using (var img = new ImageMagick.MagickImage(Fixture("sample.jpg"))) { img.Resize(new ImageMagick.Percentage(400), new ImageMagick.Percentage(400)); img.Quality = 100; img.Write(big.Replace(".png", ".jpg")); }
+        var pdf = Path.Combine(_dir, "photo.pdf");
+        Providers.PdfProvider.ImagesToPdf([big.Replace(".png", ".jpg")], pdf, "fit", CancellationToken.None, null);
+        var j = await Run("pdf.compress", pdf, new() { ["level"] = "screen" });
+        Assert.True(j.State == JobState.Succeeded, j.Result?.Error + " " + j.Result?.Detail);
+        Assert.True(new FileInfo(j.Result!.Outputs[0]).Length < new FileInfo(pdf).Length);
+        using var check = UglyToad.PdfPig.PdfDocument.Open(j.Result.Outputs[0]);
+        Assert.Equal(1, check.NumberOfPages);
+    }
+}
