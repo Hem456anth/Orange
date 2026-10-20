@@ -145,6 +145,7 @@ jobs:
           cmd /c "out\Orange\cli\orange.cmd presets list" | Tee-Object -Append evidence/cli-presets.txt
           cmd /c "out\Orange\cli\orange.cmd convert tests\fixtures\sample.png --to webp -o %RUNNER_TEMP% --json" | Tee-Object evidence/cli-convert.json
           "cli convert exit=$LASTEXITCODE" | Tee-Object -Append evidence/summary.txt
+          Get-Content evidence/cli-convert.json -ErrorAction SilentlyContinue | Select-Object -First 20 | Tee-Object -Append evidence/summary.txt
           if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Bundle 7-Zip (7z.exe + 7z.dll, LGPL with unRAR restriction) and drop unused Windows ML binaries
         shell: pwsh

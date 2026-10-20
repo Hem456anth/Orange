@@ -28,10 +28,7 @@
     <NoWarn>$(NoWarn);CA1416</NoWarn>
     <!-- Ship only the UI languages Orange is translated into (cuts the Windows App SDK resource folders). -->
     <SatelliteResourceLanguages>en;hi;te</SatelliteResourceLanguages>
-    <!-- Trim unused framework code (our own and third-party assemblies are kept whole: partial mode). -->
-    <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>partial</TrimMode>
-    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+    <!-- Trimming was tried (CI run 53): it broke the CLI and a WinUI control, so the app ships untrimmed. -->
     <!-- Smaller and faster to start: no debug symbols in the release. -->
     <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
   </PropertyGroup>
