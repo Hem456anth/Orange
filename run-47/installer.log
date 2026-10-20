@@ -1,0 +1,640 @@
+Inno Setup 6 Command-Line Compiler
+Copyright (C) 1997-2026 Jordan Russell. All rights reserved.
+Portions Copyright (C) 2000-2026 Martijn Laan. All rights reserved.
+Portions Copyright (C) 2001-2004 Alex Yackimoff. All rights reserved.
+https://www.innosetup.com
+
+Compiler engine version: Inno Setup 6.7.1
+Non-commercial use only
+
+Preprocessing
+   Reading file: C:\Program Files (x86)\Inno Setup 6\ISPPBuiltins.iss
+Parsing [Setup] section, line 10
+Parsing [Setup] section, line 11
+Parsing [Setup] section, line 12
+Parsing [Setup] section, line 13
+Parsing [Setup] section, line 14
+Parsing [Setup] section, line 15
+Parsing [Setup] section, line 16
+Parsing [Setup] section, line 17
+Parsing [Setup] section, line 18
+Parsing [Setup] section, line 19
+Parsing [Setup] section, line 20
+Parsing [Setup] section, line 21
+Parsing [Setup] section, line 22
+Parsing [Setup] section, line 23
+Parsing [Setup] section, line 24
+Parsing [Setup] section, line 25
+Parsing [Setup] section, line 26
+Parsing [Setup] section, line 27
+Parsing [Setup] section, line 28
+Parsing [Setup] section, line 29
+Parsing [Setup] section, line 30
+Parsing [Setup] section, line 31
+Reading file (LicenseFile)
+Reading file (WizardImageFile)
+Reading file (WizardSmallImageFile)
+Preparing Setup program executable
+   Verification successful
+   Updating icons (Setup.e32)
+   Updating version info (Setup.e32)
+Determining language code pages
+   Reading file: C:\Program Files (x86)\Inno Setup 6\Default.isl
+   Messages in script file
+Reading default messages from Default.isl
+Parsing [LangOptions], [Messages], and [CustomMessages] sections
+   Reading file: C:\Program Files (x86)\Inno Setup 6\Default.isl
+   Messages in script file
+Reading [Code] section
+Parsing [Tasks] section, line 34
+Parsing [Tasks] section, line 35
+Parsing [Tasks] section, line 36
+Parsing [Tasks] section, line 37
+Parsing [Icons] section, line 43
+Parsing [Icons] section, line 44
+Parsing [Registry] section, line 47
+Parsing [Registry] section, line 48
+Parsing [Registry] section, line 49
+Parsing [Registry] section, line 50
+Parsing [Registry] section, line 51
+Parsing [Registry] section, line 52
+Parsing [UninstallDelete] section, line 61
+Parsing [Run] section, line 55
+Parsing [UninstallRun] section, line 58
+Parsing [Files] section, line 40
+Compiling [Code] section
+Creating setup files
+   Verification successful
+   Updating icons (Setup.exe)
+   Using separate process for LZMA compression (islzma64.exe)
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\clretwrc.dll
+   Verification successful
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\clrgc.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\clrjit.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\coreclr.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\CoreMessagingXP.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\createdump.exe
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\dcompi.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\DirectML.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\DocumentFormat.OpenXml.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\DocumentFormat.OpenXml.Framework.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\dwmcorei.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\DwmSceneI.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\DWriteCore.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ExcelDataReader.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hostfxr.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hostpolicy.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\libSkiaSharp.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\LICENSE
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Magick.Native-Q8-x64.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Magick.NET-Q8-AnyCPU.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Magick.NET.Core.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\marshal.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.CSharp.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.DiaSymReader.Native.amd64.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.DirectManipulation.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Extensions.Logging.Abstractions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Foundation.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Graphics.Display.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Graphics.Imaging.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Graphics.Imaging.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Graphics.Imaging.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Graphics.ImagingInternal.ImageObjectRemover.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Graphics.ImagingInternal.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Graphics.Internal.Imaging.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Graphics.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.InputStateManager.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.InteractiveExperiences.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Internal.FrameworkUdk.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.ML.OnnxRuntime.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Security.Authentication.OAuth.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Security.Authentication.OAuth.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Composition.OSSupport.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Designer.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Input.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.pri
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Text.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Windowing.Core.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Windowing.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Xaml.Controls.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Xaml.Controls.pri
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.ui.xaml.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Xaml.Internal.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Xaml.Phone.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.ui.xaml.resources.19h1.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.ui.xaml.resources.common.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Xaml.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.VisualBasic.Core.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.VisualBasic.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Web.WebView2.Core.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Web.WebView2.Core.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Win32.Primitives.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Win32.Registry.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.AICapabilities.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.ContentModerationInternal.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.ContentSafety.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.ContentSafety.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.ContentSafety.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Foundation.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Foundation.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.FoundationInternal.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.GenerativeInternal.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Imaging.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Imaging.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Imaging.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.MachineLearning.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.MachineLearning.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.MachineLearning.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Text.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Text.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.Text.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AI.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.Background.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.Background.UniversalBGTask.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.Background.UniversalBGTask.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.Background.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.DynamicDependency.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.DynamicDependency.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.Resources.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.Resources.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.Resources.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.WindowsAppRuntime.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.ApplicationModel.WindowsAppRuntime.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AppLifecycle.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AppLifecycle.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AppNotifications.Builder.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AppNotifications.Builder.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AppNotifications.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.AppNotifications.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.BadgeNotifications.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.BadgeNotifications.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Foundation.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Foundation.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Globalization.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Internal.Vision.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Management.Deployment.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Management.Deployment.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Media.Capture.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Media.Capture.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Private.Workloads.SessionManager.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.PrivateCommon.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.PushNotifications.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.PushNotifications.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.SDK.NET.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Security.AccessControl.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Security.AccessControl.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.SemanticSearch.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Storage.Pickers.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Storage.Pickers.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Storage.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Storage.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.System.Power.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.System.Power.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.System.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.System.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Vision.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.VisionInternal.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Widgets.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Widgets.Projection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Widgets.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Workloads.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Workloads.Resources.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Workloads.Resources_ec.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.Windows.Workloads.winmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.WindowsAppRuntime.Bootstrap.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.WindowsAppRuntime.Bootstrap.Net.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.WindowsAppRuntime.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.WindowsAppRuntime.Insights.Resource.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.WindowsAppRuntime.pri
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.WinUI.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\MigraDoc.DocumentObjectModel.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\MigraDoc.Rendering.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\MigraDoc.RtfRendering.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\MRM.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mscordaccore.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mscordaccore_amd64_amd64_8.0.3126.42015.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mscordbi.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mscorlib.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mscorrc.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\msquic.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\netstandard.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\onnxruntime.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\onnxruntime_providers_shared.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\orange-cli.deps.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\orange-cli.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\orange-cli.exe
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\orange-cli.pdb
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\orange-cli.runtimeconfig.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Orange.Core.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Orange.Core.pdb
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Orange.deps.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Orange.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Orange.exe
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Orange.pdb
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Orange.pri
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Orange.runtimeconfig.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pdfium.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.BarCodes.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.Charting.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.Cryptography.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.Quality.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.Shared.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.Snippets.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.System.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PdfSharp.WPFonts.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PDFtoImage.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\PushNotificationsLongRunningTask.ProxyStub.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\README.md
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\RestartAgent.exe
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Run-OrangeChecklist.ps1
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\SessionHandleIPCProxyStub.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\SkiaSharp.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.AppContext.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Buffers.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Collections.Concurrent.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Collections.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Collections.Immutable.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Collections.NonGeneric.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Collections.Specialized.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ComponentModel.Annotations.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ComponentModel.DataAnnotations.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ComponentModel.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ComponentModel.EventBasedAsync.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ComponentModel.Primitives.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ComponentModel.TypeConverter.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Configuration.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Console.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Core.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Data.Common.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Data.DataSetExtensions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Data.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.Contracts.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.Debug.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.DiagnosticSource.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.FileVersionInfo.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.Process.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.StackTrace.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.TextWriterTraceListener.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.Tools.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.TraceSource.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Diagnostics.Tracing.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Drawing.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Drawing.Primitives.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Dynamic.Runtime.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Formats.Asn1.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Formats.Tar.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Globalization.Calendars.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Globalization.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Globalization.Extensions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.Compression.Brotli.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.Compression.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.Compression.FileSystem.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.Compression.Native.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.Compression.ZipFile.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.FileSystem.AccessControl.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.FileSystem.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.FileSystem.DriveInfo.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.FileSystem.Primitives.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.FileSystem.Watcher.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.IsolatedStorage.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.MemoryMappedFiles.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.Packaging.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.Pipes.AccessControl.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.Pipes.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.IO.UnmanagedMemoryStream.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Linq.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Linq.Expressions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Linq.Parallel.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Linq.Queryable.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Memory.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Http.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Http.Json.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.HttpListener.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Mail.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.NameResolution.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.NetworkInformation.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Ping.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Primitives.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Quic.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Requests.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Security.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.ServicePoint.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.Sockets.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.WebClient.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.WebHeaderCollection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.WebProxy.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.WebSockets.Client.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Net.WebSockets.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Numerics.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Numerics.Tensors.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Numerics.Vectors.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ObjectModel.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Private.CoreLib.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Private.DataContractSerialization.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Private.Uri.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Private.Xml.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Private.Xml.Linq.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.DispatchProxy.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.Emit.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.Emit.ILGeneration.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.Emit.Lightweight.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.Extensions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.Metadata.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.Primitives.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Reflection.TypeExtensions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Resources.Reader.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Resources.ResourceManager.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Resources.Writer.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.CompilerServices.Unsafe.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.CompilerServices.VisualC.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Extensions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Handles.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.InteropServices.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.InteropServices.JavaScript.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.InteropServices.RuntimeInformation.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Intrinsics.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Loader.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Numerics.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Serialization.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Serialization.Formatters.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Serialization.Json.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Serialization.Primitives.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Runtime.Serialization.Xml.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.AccessControl.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Claims.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.Algorithms.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.Cng.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.Csp.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.Encoding.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.OpenSsl.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.Pkcs.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.Primitives.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Cryptography.X509Certificates.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Principal.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.Principal.Windows.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Security.SecureString.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ServiceModel.Web.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ServiceProcess.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Text.Encoding.CodePages.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Text.Encoding.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Text.Encoding.Extensions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Text.Encodings.Web.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Text.Json.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Text.RegularExpressions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.Channels.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.Overlapped.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.Tasks.Dataflow.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.Tasks.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.Tasks.Extensions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.Tasks.Parallel.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.Thread.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.ThreadPool.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Threading.Timer.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Transactions.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Transactions.Local.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.ValueTuple.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Web.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Web.HttpUtility.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Windows.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.Linq.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.ReaderWriter.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.Serialization.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.XDocument.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.XmlDocument.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.XmlSerializer.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.XPath.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\System.Xml.XPath.XDocument.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\THIRD-PARTY-NOTICES.md
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\UglyToad.PdfPig.Core.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\UglyToad.PdfPig.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\UglyToad.PdfPig.DocumentLayoutAnalysis.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\UglyToad.PdfPig.Fonts.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\UglyToad.PdfPig.Package.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\UglyToad.PdfPig.Tokenization.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\UglyToad.PdfPig.Tokens.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\WebView2Loader.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\WindowsAppRuntime.DeploymentExtensions.OneCore.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\WindowsAppRuntime.png
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\WindowsAppSdk.AppxDeploymentExtensions.Desktop-EventLog-Instrumentation.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\WindowsAppSdk.AppxDeploymentExtensions.Desktop.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\WindowsBase.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\WinRT.Runtime.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\WinUIEdit.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\workloads.365.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\workloads.j32.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\workloads.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\workloads.lnl.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\workloads.qnn.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\workloads.stx.json
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\wuceffectsi.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\zxing.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\af-ZA\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\af-ZA\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\am-ET\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\am-ET\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ar-SA\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ar-SA\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\as-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\as-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Assets\orange.ico
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Assets\orange.png
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\az-Latn-AZ\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\az-Latn-AZ\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\bg-BG\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\bg-BG\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\bn-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\bn-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\bs-Latn-BA\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\bs-Latn-BA\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ca-ES\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ca-ES\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ca-Es-VALENCIA\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ca-Es-VALENCIA\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\cli\orange.cmd
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\cs-CZ\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\cs-CZ\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\cy-GB\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\cy-GB\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\da-DK\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\da-DK\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\de-DE\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\de-DE\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\el-GR\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\el-GR\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\en-GB\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\en-GB\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\en-us\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\en-us\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\es-ES\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\es-ES\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\es-MX\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\es-MX\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\et-EE\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\et-EE\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\eu-ES\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\eu-ES\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fa-IR\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fa-IR\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fi-FI\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fi-FI\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fil-PH\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fil-PH\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fr-CA\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fr-CA\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fr-FR\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\fr-FR\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ga-IE\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ga-IE\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\gd-gb\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\gd-gb\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\gl-ES\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\gl-ES\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\gu-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\gu-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\he-IL\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\he-IL\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hi-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hi-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hr-HR\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hr-HR\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hu-HU\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hu-HU\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hy-AM\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\hy-AM\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\id-ID\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\id-ID\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\is-IS\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\is-IS\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\it-IT\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\it-IT\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ja-JP\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ja-JP\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ka-GE\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ka-GE\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\kk-KZ\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\kk-KZ\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\km-KH\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\km-KH\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\kn-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\kn-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ko-KR\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ko-KR\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\kok-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\kok-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\lb-LU\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\lb-LU\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\lo-LA\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\lo-LA\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\lt-LT\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\lt-LT\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\lv-LV\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\lv-LV\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mi-NZ\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mi-NZ\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Xaml\Assets\map.html
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\Microsoft.UI.Xaml\Assets\NoiseAsset_256x256_PNG.png
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mk-MK\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mk-MK\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ml-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ml-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mr-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mr-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ms-MY\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ms-MY\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mt-MT\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\mt-MT\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\nb-NO\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\nb-NO\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ne-NP\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ne-NP\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\nl-NL\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\nl-NL\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\nn-NO\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\nn-NO\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\NpuDetect\NPUDetect.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\or-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\or-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pa-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pa-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pl-PL\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pl-PL\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pt-BR\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pt-BR\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pt-PT\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\pt-PT\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\quz-PE\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\quz-PE\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ro-RO\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ro-RO\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ru-RU\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ru-RU\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sk-SK\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sk-SK\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sl-SI\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sl-SI\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sq-AL\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sq-AL\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sr-Cyrl-BA\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sr-Cyrl-BA\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sr-Cyrl-RS\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sr-Cyrl-RS\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sr-Latn-RS\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sr-Latn-RS\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sv-SE\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\sv-SE\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ta-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ta-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\te-IN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\te-IN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\th-TH\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\th-TH\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\LICENSE.txt
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\SOURCE.txt
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\avcodec-62.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\avdevice-62.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\avfilter-11.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\avformat-62.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\avutil-60.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\ffmpeg.exe
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\ffprobe.exe
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\swresample-6.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tools\ffmpeg\bin\swscale-9.dll
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tr-TR\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tr-TR\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tt-RU\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\tt-RU\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ug-CN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ug-CN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\uk-UA\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\uk-UA\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ur-PK\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\ur-PK\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\uz-Latn-UZ\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\uz-Latn-UZ\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\vi-VN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\vi-VN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\zh-CN\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\zh-CN\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\zh-TW\Microsoft.ui.xaml.dll.mui
+   Compressing: D:\a\Orange\Orange\installer\..\out\Orange\zh-TW\Microsoft.UI.Xaml.Phone.dll.mui
+   Compressing Setup program executable
+   Updating version info (Setup.exe)
+   Updating manifest (Setup.exe)
+
+
+Successful compile (73.625 sec). Resulting Setup program filename is:
+D:\a\Orange\Orange\out\Orange-0.2.0-win-x64-setup.exe
