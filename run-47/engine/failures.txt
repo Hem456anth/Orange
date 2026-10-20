@@ -1,0 +1,18 @@
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [146 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "bmp") [26 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "ico") [35 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "gif") [42 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Animated_gif_to_webp_keeps_frames [37 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Crop_outside_the_image_is_an_actionable_error [13 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [434 ms]
+  Passed Orange.Core.Tests.MediaConversionTests.Wav_converts(ext: "wma") [9 s]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [196 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [3 ms]
+  Passed Orange.Core.Tests.WatchTests.Converts_with_a_preset_ignores_its_own_output_and_moves_originals [9 s]
+  Passed Orange.Core.Tests.WatchTests.Ignores_partial_and_temp_names(name: ".hidden.png", ignored: True) [3 ms]
+  Passed Orange.Core.Tests.WatchTests.Ignores_partial_and_temp_names(name: "video.mp4.crdownload", ignored: True) [1 ms]
+Total tests: 215
+     Passed: 214
+    Skipped: 1
+ Total time: 27.7313 Seconds
