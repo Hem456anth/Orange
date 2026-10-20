@@ -206,6 +206,9 @@ public sealed class EngineManager
             var tail = File.Exists(log) ? ProcessRunner.Tail(File.ReadAllText(log), 8) : "";
             throw new OrangeException($"Windows Installer couldn't unpack this engine (code {res.ExitCode}).", tail);
         }
+        // An administrative image keeps a copy of the .msi beside the files (as large as the download): drop it.
+        foreach (var copy in Directory.EnumerateFiles(dest, "*.msi", SearchOption.TopDirectoryOnly))
+            try { File.Delete(copy); } catch { }
         foreach (var m in Directory.EnumerateFiles(dest, "*.msi", SearchOption.TopDirectoryOnly)) File.Delete(m);   // the copied package
         CheckInside(dest);
     }

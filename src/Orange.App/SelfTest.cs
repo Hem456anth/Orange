@@ -38,7 +38,7 @@ public static class SelfTest
         var fixtures = Environment.GetEnvironmentVariable("ORANGE_FIXTURES") ?? FindFixtures();
         var work = Path.Combine(outDir, "work");
         Directory.CreateDirectory(work);
-        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg", "sample.xlsx", "sample.pptx", "sample.epub", "sample.csv", "qr.png" })
+        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg", "sample.xlsx", "sample.pptx", "sample.epub", "sample.csv", "qr.png", "sample.doc", "sample.ppt" })
             if (File.Exists(Path.Combine(fixtures, f))) File.Copy(Path.Combine(fixtures, f), Path.Combine(work, f), true);
         string W(string n) => Path.Combine(work, n);
         AppSettings.Current.RevealWhenDone = false;

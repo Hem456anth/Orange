@@ -248,11 +248,13 @@ jobs:
         continue-on-error: true
         shell: pwsh
         run: |
+          New-Item -ItemType Directory -Force evidence/sweep | Out-Null
           $env:ORANGE_BUNDLED_ONLY = "1"
           $t0 = Get-Date
           cmd /c "out\Orange\cli\orange.cmd engines install all" 2>&1 | Tee-Object evidence/sweep/engines-install.txt
           "engines install exit=$LASTEXITCODE in $([int]((Get-Date)-$t0).TotalSeconds)s" | Tee-Object -Append evidence/summary.txt
           cmd /c "out\Orange\cli\orange.cmd engines list" | Tee-Object -Append evidence/sweep/engines-install.txt
+          Get-ChildItem "$env:LOCALAPPDATA\Orange\engines" -Directory | ForEach-Object { "engine $($_.Name) MB=$([math]::Round((Get-ChildItem $_.FullName -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" } | Tee-Object -Append evidence/summary.txt
           "engines MB=$([math]::Round((Get-ChildItem "$env:LOCALAPPDATA\Orange\engines" -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" | Tee-Object -Append evidence/summary.txt
           cmd /c "out\Orange\cli\orange.cmd sweep tests\fixtures --json evidence\sweep\engines.json --work %RUNNER_TEMP%\sweep2" | Tee-Object evidence/sweep/engines.txt
           $code = $LASTEXITCODE
