@@ -168,8 +168,32 @@ public sealed class MainWindow : Window
         }
         if (_category.SelectedIndex > 0 && Enum.TryParse<FileKind>((string)_category.SelectedItem, out var k)) pool = pool.Where(o => o.Category == k);
         _ops.Items.Clear();
-        foreach (var op in pool.OrderBy(o => o.Category).ThenBy(o => o.Group).ThenBy(o => o.Title).Take(400)) _ops.Items.Add(Row(op));
+        // Grouped by input type ("Image", "Video"…), each with "Convert to" and "Tools", instead of "Image → X" rows.
+        foreach (var kind in pool.Take(600).GroupBy(o => o.Category).OrderBy(g => g.Key))
+        {
+            _ops.Items.Add(GroupHeader(kind.Key, kind.Count()));
+            foreach (var grp in kind.GroupBy(o => o.Group).OrderBy(g => g.Key))
+            {
+                _ops.Items.Add(new TextBlock { Text = grp.Key == OperationGroup.Convert ? L.T("Convert to") : L.T("Tools"), FontSize = 12, Opacity = 0.6, Margin = new Thickness(44, 6, 0, 0), IsHitTestVisible = false });
+                foreach (var op in grp.OrderBy(o => o.Title)) _ops.Items.Add(Row(op));
+            }
+        }
         if (_ops.Items.Count == 0) _ops.Items.Add(new TextBlock { Text = _files.Count > 0 ? "Nothing matches for these files." : "Nothing matches.", Opacity = 0.7, Margin = new Thickness(8) });
+    }
+
+    private static UIElement GroupHeader(FileKind kind, int count)
+    {
+        var glyph = kind switch
+        {
+            FileKind.Image => "\uEB9F", FileKind.Video => "\uE714", FileKind.Audio => "\uE8D6", FileKind.Pdf => "\uEA90", FileKind.Document => "\uE8A5",
+            FileKind.Spreadsheet => "\uE80A", FileKind.Presentation => "\uE8FD", FileKind.Subtitle => "\uE7F0", FileKind.Archive => "\uF012", FileKind.Font => "\uE8D2", _ => "\uE7C3",
+        };
+        var sp = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, Margin = new Thickness(4, 14, 0, 2), IsHitTestVisible = false };
+        sp.Children.Add(new FontIcon { Glyph = glyph, FontSize = 20, Foreground = new SolidColorBrush(Brand.Accent) });
+        sp.Children.Add(new TextBlock { Text = L.T(kind.ToString()), FontSize = 18, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+        sp.Children.Add(new TextBlock { Text = count.ToString(), Opacity = 0.5, VerticalAlignment = VerticalAlignment.Bottom });
+        AutomationProperties.SetName(sp, $"{kind}, {count} operations");
+        return sp;
     }
 
     private static bool Matches(OperationDescriptor o, string q) =>
@@ -190,7 +214,14 @@ public sealed class MainWindow : Window
         star.Click += (_, _) => { AppSettings.Current.ToggleFavorite(op.Id); RefreshOps(); };
         g.Children.Add(star);
         var text = new StackPanel();
-        text.Children.Add(new TextBlock { Text = op.Group == OperationGroup.Convert ? $"{op.Category} → {op.Title}" : $"{op.Category}: {op.Title}", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+        var titleRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        if (op.Group == OperationGroup.Convert && op.OutputExtension is { } ext)
+            titleRow.Children.Add(new Border { CornerRadius = new CornerRadius(4), Padding = new Thickness(5, 1, 5, 1), VerticalAlignment = VerticalAlignment.Center,
+                Background = new SolidColorBrush(Brand.Accent), Child = new TextBlock { Text = ext.ToUpperInvariant(), FontSize = 11, FontWeight = Microsoft.UI.Text.FontWeights.Bold, Foreground = new SolidColorBrush(Colors.White) } });
+        else titleRow.Children.Add(new FontIcon { Glyph = Glyphs.For(op) ?? "\uE90F", FontSize = 14, VerticalAlignment = VerticalAlignment.Center });
+        titleRow.Children.Add(new TextBlock { Text = op.Title, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, VerticalAlignment = VerticalAlignment.Center });
+        AutomationProperties.SetName(titleRow, op.Group == OperationGroup.Convert ? $"{op.Category} to {op.Title}" : $"{op.Category}: {op.Title}");
+        text.Children.Add(titleRow);
         var sub = op.Group == OperationGroup.Convert ? $"Save as .{op.OutputExtension}" : op.ProducesFolder ? "Saves into a new folder" : op.CombinesInputs ? $"Needs {op.MinInputs}+ files" : "Saves a new copy";
         if (!available) sub = op.RequiresTool is { } t && !ToolLocator.Default.Has(t) ? $"Needs {ToolNames.Friendly(t)} (not installed)" : "Not supported on this PC";
         text.Children.Add(new TextBlock { Text = sub, FontSize = 12, Opacity = available ? 0.65 : 0.9, Foreground = available ? null : new SolidColorBrush(Colors.IndianRed) });

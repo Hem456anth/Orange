@@ -22,9 +22,11 @@
   <data name="SBBFA773E5A" xml:space="preserve"><value>మూసివేయి</value><comment>Close</comment></data>
   <data name="S3F15CE7953" xml:space="preserve"><value>మార్చు</value><comment>Convert</comment></data>
   <data name="S50382C07AC" xml:space="preserve"><value>ఫైళ్లను అవి ఉన్న చోటే మార్చండి, సవరించండి. అంతా ఈ PCలోనే ఉంటుంది.</value><comment>Convert and edit files right where they are. Everything stays on this PC.</comment></data>
+  <data name="SDE1E4FAAA9" xml:space="preserve"><value>దీనికి మార్చు</value><comment>Convert to</comment></data>
   <data name="SA30C9F5918" xml:space="preserve"><value>{0}కి మార్చు</value><comment>Convert to {0}</comment></data>
   <data name="S34DBC8ADF9" xml:space="preserve"><value>కన్వర్ట్ వీల్ కీ</value><comment>Convert wheel key</comment></data>
   <data name="S6A89FDE6D6" xml:space="preserve"><value>కన్వర్టర్‌లు</value><comment>Converters</comment></data>
+  <data name="S4DF2260EC8" xml:space="preserve"><value>{0}కి మారుస్తోంది</value><comment>Converting to {0}</comment></data>
   <data name="S8E3DF45A49" xml:space="preserve"><value>కాపీ అయింది</value><comment>Copied</comment></data>
   <data name="SAF74F7C536" xml:space="preserve"><value>కాపీ చేయి</value><comment>Copy</comment></data>
   <data name="SF6FDBE48DC" xml:space="preserve"><value>తొలగించు</value><comment>Delete</comment></data>
@@ -39,6 +41,8 @@
   <data name="S700869DC5E" xml:space="preserve"><value>ఫైల్ ఎక్స్‌ప్లోరర్</value><comment>File Explorer</comment></data>
   <data name="S09979A78C9" xml:space="preserve"><value>ఫైల్ పేరు</value><comment>File name</comment></data>
   <data name="S7072340B57" xml:space="preserve"><value>ఫైల్ రకం</value><comment>File type</comment></data>
+  <data name="S8685B92322" xml:space="preserve"><value>1 లోపంతో పూర్తయింది ({1}లో {0} సేవ్ అయ్యాయి)</value><comment>Finished with 1 error ({0} of {1} saved)</comment></data>
+  <data name="S8AE9F54540" xml:space="preserve"><value>{0} లోపాలతో పూర్తయింది ({2}లో {1} సేవ్ అయ్యాయి)</value><comment>Finished with {0} errors ({1} of {2} saved)</comment></data>
   <data name="S30BAA24967" xml:space="preserve"><value>ఫోల్డర్</value><comment>Folder</comment></data>
   <data name="S90C9E8E6F3" xml:space="preserve"><value>ఫోల్డర్: చర్యల కోసం {0} నొక్కండి</value><comment>Folder: tap {0} for actions</comment></data>
   <data name="S90E40D5043" xml:space="preserve"><value>ప్రారంభించండి</value><comment>Get started</comment></data>
@@ -62,12 +66,14 @@
   <data name="S2362AABD36" xml:space="preserve"><value>లాగ్ ఫోల్డర్ తెరువు</value><comment>Open logs folder</comment></data>
   <data name="S92DFD13345" xml:space="preserve"><value>డౌన్‌లోడ్ పేజీ తెరువు</value><comment>Open the download page</comment></data>
   <data name="S71833AFB3E" xml:space="preserve"><value>ఫైళ్లను లాగుతున్నప్పుడు వీల్ తెరవు</value><comment>Open the wheel while dragging files</comment></data>
+  <data name="SA89BFE49DB" xml:space="preserve"><value>వీల్ తెరువు</value><comment>Open wheel</comment></data>
   <data name="S430D32076E" xml:space="preserve"><value>ఆపరేషన్</value><comment>Operation</comment></data>
   <data name="S70E0A39308" xml:space="preserve"><value>లేదా ఎక్కడైనా: ఫైల్ ఎక్స్‌ప్లోరర్‌లో ఫైళ్లను లాగి Shift నొక్కండి.</value><comment>Or anywhere: drag files in File Explorer and tap Shift.</comment></data>
   <data name="S9A0F8A6EAD" xml:space="preserve"><value>Orange {0} అందుబాటులో ఉంది.</value><comment>Orange {0} is available.</comment></data>
   <data name="S4BED336194" xml:space="preserve"><value>అవుట్‌పుట్</value><comment>Output</comment></data>
   <data name="S314D642E91" xml:space="preserve"><value>అన్ని వాచ్ ఫోల్డర్‌లను ఆపు</value><comment>Pause all watch folders</comment></data>
   <data name="S71EDE17FB1" xml:space="preserve"><value>పనితీరు మరియు పరిమితులు</value><comment>Performance and limits</comment></data>
+  <data name="SE8045E398B" xml:space="preserve"><value>ప్రాక్టీస్ డ్రాప్ ప్రాంతం</value><comment>Practice drop zone</comment></data>
   <data name="SE709E76FF5" xml:space="preserve"><value>ప్రీసెట్‌లు</value><comment>Presets</comment></data>
   <data name="SCF01481F62" xml:space="preserve"><value>గోప్యత</value><comment>Privacy</comment></data>
   <data name="S76EEC760C9" xml:space="preserve"><value>ఇటీవలివి</value><comment>Recent</comment></data>
@@ -76,6 +82,7 @@
   <data name="S0D0E3867A4" xml:space="preserve"><value>భాష మార్చడానికి Orangeని మళ్ళీ ప్రారంభించండి.</value><comment>Restart Orange to switch language.</comment></data>
   <data name="S894A58AB60" xml:space="preserve"><value>డిఫాల్ట్‌లను పునరుద్ధరించు</value><comment>Restore defaults</comment></data>
   <data name="S9F5CD8A2E8" xml:space="preserve"><value>మళ్ళీ ప్రయత్నించు</value><comment>Retry</comment></data>
+  <data name="S7B6CA4DF85" xml:space="preserve"><value>విఫలమైనవి మళ్ళీ</value><comment>Retry failed</comment></data>
   <data name="S221CC26FEF" xml:space="preserve"><value>Windows లాగే</value><comment>Same as Windows</comment></data>
   <data name="S82889739CA" xml:space="preserve"><value>ప్రీసెట్ సేవ్ చేయి</value><comment>Save preset</comment></data>
   <data name="S7A0E8C6186" xml:space="preserve"><value>ఫలితాలను ఇక్కడ సేవ్ చేయి</value><comment>Save results to</comment></data>
@@ -83,12 +90,16 @@
   <data name="S8C869B7A3D" xml:space="preserve"><value>వెతకండి: webp, compress, to mp3, merge pdf…</value><comment>Search: webp, compress, to mp3, merge pdf…</comment></data>
   <data name="SC7F73BB54D" xml:space="preserve"><value>సెట్టింగ్‌లు</value><comment>Settings</comment></data>
   <data name="S2E7109BDA2" xml:space="preserve"><value>సెట్టింగ్‌ల విభాగాలు</value><comment>Settings sections</comment></data>
+  <data name="S1BF5EAA62F" xml:space="preserve"><value>షెల్ఫ్</value><comment>Shelf</comment></data>
   <data name="SD97D1EE339" xml:space="preserve"><value>చూపించు</value><comment>Show</comment></data>
+  <data name="S0A4CB13C05" xml:space="preserve"><value>ఫోల్డర్‌లో చూపించు</value><comment>Show in folder</comment></data>
   <data name="S4B67E5067F" xml:space="preserve"><value>ఫలితాలను ఫైల్ ఎక్స్‌ప్లోరర్‌లో చూపించు</value><comment>Show results in File Explorer</comment></data>
   <data name="SFB1C39E9F4" xml:space="preserve"><value>శబ్దాలు</value><comment>Sounds</comment></data>
   <data name="S44C8EAC0A9" xml:space="preserve"><value>సైన్ ఇన్ అయినప్పుడు Orange ప్రారంభించు</value><comment>Start Orange when I sign in</comment></data>
   <data name="SE2CD8B387C" xml:space="preserve"><value>ఫైల్ ఎక్స్‌ప్లోరర్ లేదా డెస్క్‌టాప్‌లో ఒకటి లేదా ఎక్కువ ఫైళ్లను లాగడం ప్రారంభించండి. మౌస్ బటన్‌ను నొక్కి ఉంచండి.</value><comment>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</comment></data>
+  <data name="SEA63C14C3B" xml:space="preserve"><value>{0} నొక్కండి</value><comment>Tap {0}</comment></data>
   <data name="SA797E30923" xml:space="preserve"><value>థీమ్</value><comment>Theme</comment></data>
+  <data name="S4FA8CC860C" xml:space="preserve"><value>టూల్స్</value><comment>Tools</comment></data>
   <data name="S72C5D67385" xml:space="preserve"><value>టూల్స్ వీల్ కీ</value><comment>Tools wheel key</comment></data>
   <data name="S285EC850C1" xml:space="preserve"><value>సమస్య పరిష్కారం</value><comment>Troubleshooting</comment></data>
   <data name="S39FC721248" xml:space="preserve"><value>రద్దు చేయి</value><comment>Undo</comment></data>

@@ -413,9 +413,9 @@ public sealed class WheelWindow : Window
         int n = _a11yList.Items.Count;
         switch (e.Key)
         {
-            case VirtualKey.Right:
+            case VirtualKey.Right: case VirtualKey.Down:
                 if (n > 0) _a11yList.SelectedIndex = (_a11yList.SelectedIndex + 1 + n) % n; e.Handled = true; break;
-            case VirtualKey.Left:
+            case VirtualKey.Left: case VirtualKey.Up:
                 if (n > 0) _a11yList.SelectedIndex = (_a11yList.SelectedIndex - 1 + n) % n; e.Handled = true; break;
             case VirtualKey.Home: if (n > 0) _a11yList.SelectedIndex = 0; e.Handled = true; break;
             case VirtualKey.End: if (n > 0) _a11yList.SelectedIndex = n - 1; e.Handled = true; break;

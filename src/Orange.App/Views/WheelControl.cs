@@ -39,9 +39,9 @@ public sealed class WheelControl : Grid
     private readonly Ellipse _centerDisc = new();
     private readonly Image _thumb = new() { Stretch = Stretch.UniformToFill };
     private readonly Border _thumbClip = new() { CornerRadius = new CornerRadius(14) };
-    private readonly TextBlock _pill = new() { FontSize = 12, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
+    private readonly TextBlock _pill = new() { FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
     private readonly Border _pillBorder = new() { CornerRadius = new CornerRadius(10), Padding = new Thickness(10, 3, 10, 3) };
-    private readonly TextBlock _name = new() { FontSize = 10.5, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, Opacity = 0.9 };
+    private readonly TextBlock _name = new() { FontSize = 13, TextAlignment = TextAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, Opacity = 0.9 };
     private readonly TextBlock _hint = new() { FontSize = 11, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, TextAlignment = TextAlignment.Center, TextWrapping = TextWrapping.Wrap, LineHeight = 14 };
     private bool _hintOn;
     private IReadOnlyList<WheelItem> _items = Array.Empty<WheelItem>();
@@ -118,8 +118,9 @@ public sealed class WheelControl : Grid
             }
             var text = new TextBlock
             {
-                Text = items[i].Title.ToUpperInvariant(), FontSize = items[i].Glyph is null ? (items[i].Title.Length > 5 ? 13 : 16) : 10.5, FontWeight = Microsoft.UI.Text.FontWeights.Bold,
-                CharacterSpacing = 40, TextAlignment = TextAlignment.Center, MaxWidth = (OuterRadius - InnerRadius) * 1.1, TextWrapping = TextWrapping.Wrap,
+                // Labels are at least 13 px (readability, high-DPI and Narrator users zoomed in).
+                Text = items[i].Title.ToUpperInvariant(), FontSize = items[i].Glyph is null ? (items[i].Title.Length > 5 ? 13 : 16) : 13, FontWeight = Microsoft.UI.Text.FontWeights.Bold,
+                CharacterSpacing = items[i].Glyph is null ? 40 : 0, TextAlignment = TextAlignment.Center, MaxWidth = (OuterRadius - InnerRadius) * 1.1, TextWrapping = TextWrapping.Wrap,
             };
             label.Children.Add(text);
             label.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
@@ -196,13 +197,15 @@ public sealed class WheelControl : Grid
         _ring.Fill = new SolidColorBrush(hc ? Colors.Transparent : dark ? Color.FromArgb(0x60, 0x20, 0x18, 0x16) : Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF));
         _ring.Stroke = new SolidColorBrush(hc ? fg.Color : dark ? Color.FromArgb(0x50, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x90, 0xFF, 0xFF, 0xFF));
         _ring.StrokeThickness = 1.5;
-        _centerDisc.Fill = new SolidColorBrush(hc ? (dark ? Colors.Black : Colors.White) : dark ? Color.FromArgb(0xE6, 0x2A, 0x22, 0x20) : Color.FromArgb(0xE0, 0x5A, 0x4A, 0x44));
-        _centerDisc.Stroke = new SolidColorBrush(dark ? Color.FromArgb(0x40, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x70, 0xFF, 0xFF, 0xFF));
+        // Neutral, translucent hub that follows the theme (frosted white in light, smoked glass in dark).
+        _centerDisc.Fill = new SolidColorBrush(hc ? (dark ? Colors.Black : Colors.White) : dark ? Color.FromArgb(0xD0, 0x26, 0x22, 0x21) : Color.FromArgb(0xD8, 0xFA, 0xF7, 0xF5));
         _centerDisc.StrokeThickness = 1;
         _pillBorder.Background = _highlight >= 0 && !hc ? BrandGradient() : new SolidColorBrush(hc ? Res("SystemColorHighlightColor", Colors.Blue) : Color.FromArgb(0xD0, 0x3A, 0x30, 0x2C));
         _pill.Foreground = new SolidColorBrush(Colors.White);
-        _name.Foreground = new SolidColorBrush(hc ? fg.Color : Colors.White);
-        _hint.Foreground = new SolidColorBrush(hc ? fg.Color : Colors.White);
+        var hubText = hc ? fg.Color : dark ? Colors.White : Color.FromArgb(255, 0x3A, 0x2A, 0x22);
+        _name.Foreground = new SolidColorBrush(hubText);
+        _hint.Foreground = new SolidColorBrush(hubText);
+        _centerDisc.Stroke = new SolidColorBrush(hc ? fg.Color : dark ? Color.FromArgb(0x40, 0xFF, 0xFF, 0xFF) : Color.FromArgb(0x50, 0x5A, 0x2A, 0x12));
     }
 
     /// <summary>A sector whose sides are pulled in by different angles at the inner and outer radius (even gap width).</summary>

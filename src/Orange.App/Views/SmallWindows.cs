@@ -153,7 +153,9 @@ public sealed class OptionsWindow : Window
 public sealed class ProgressWindow : Window
 {
     private readonly TextBlock _title = new() { FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, FontSize = 15, TextTrimming = TextTrimming.CharacterEllipsis };
-    private readonly TextBlock _status = new() { Opacity = 0.75, TextWrapping = TextWrapping.Wrap, MaxLines = 3 };
+    private readonly TextBlock _status = new() { Opacity = 0.75, TextWrapping = TextWrapping.Wrap, MaxLines = 5 };
+    /// <summary>The most recent progress window (self-test screenshots).</summary>
+    public static ProgressWindow? Last { get; private set; }
     private readonly SimpleProgressBar _bar = new() { IsIndeterminate = true };
     private readonly Button _primary = new() { Content = L.T("Cancel") };
     private readonly Button _details = new() { Content = L.T("Details"), Visibility = Visibility.Collapsed };
@@ -202,7 +204,8 @@ public sealed class ProgressWindow : Window
     public static ProgressWindow Show(OperationDescriptor op, IReadOnlyList<Job> jobs)
     {
         Diagnostics.Event("pw-ctor");
-        var w = new ProgressWindow(op.Group == OperationGroup.Convert ? $"Converting to {op.Title}" : op.Title, op) { _jobs = jobs };
+        var w = new ProgressWindow(op.Group == OperationGroup.Convert ? L.F("Converting to {0}", op.Title) : op.Title, op) { _jobs = jobs };
+        Last = w;
         w._status.Text = jobs.Count == 1 ? jobs[0].DisplayName : $"0 of {jobs.Count} done";
         Diagnostics.Event("pw-activate");
         w.Activate();
@@ -229,11 +232,15 @@ public sealed class ProgressWindow : Window
         _title.Text = failed == 0 && cancelled == 0 ? (ok == 1 ? $"Saved {Path.GetFileName(_outputs.FirstOrDefault() ?? "")}" : $"{ok} of {jobs.Count} saved") : $"{ok} of {jobs.Count} saved";
         if (failed > 0)
         {
-            var first = jobs.First(j => j.State == JobState.Failed);
-            _status.Text = first.Result?.Error ?? "Something went wrong.";
+            // "Finished with N errors": the reason for each file (first four), full details behind Details.
+            _title.Text = jobs.Count == 1 ? (jobs[0].Result?.Error ?? L.T("Something went wrong.")) : failed == 1 ? L.F("Finished with 1 error ({0} of {1} saved)", ok, jobs.Count) : L.F("Finished with {0} errors ({1} of {2} saved)", failed, ok, jobs.Count);
+            var reasons = jobs.Where(j => j.State == JobState.Failed).Take(4).Select(j => $"{Path.GetFileName(j.Request.Inputs[0])}: {j.Result?.Error}");
+            _status.Text = jobs.Count == 1 ? (jobs[0].Result?.Detail ?? "") : string.Join("\n", reasons) + (failed > 4 ? "\n" + L.F("…and {0} more", failed - 4) : "");
             _detailText = string.Join("\n\n", jobs.Where(j => j.State == JobState.Failed).Select(j => $"{j.DisplayName}\n{j.Result?.Error}\n{j.Result?.Detail}"));
             _details.Visibility = Visibility.Visible;
+            _retry.Content = L.T("Retry failed");
             _retry.Visibility = RetryRequested != null ? Visibility.Visible : Visibility.Collapsed;
+            WindowHelpers.Place(this, 420, 230, bottomRight: true);
             _bar.ShowError = true;
         }
         else
@@ -245,7 +252,7 @@ public sealed class ProgressWindow : Window
             if (cancelled > 0 && RetryRequested != null) _retry.Visibility = Visibility.Visible;
         }
         _primary.IsEnabled = true;
-        _primary.Content = _outputs.Count > 0 ? "Show in folder" : "Close";
+        _primary.Content = _outputs.Count > 0 ? L.T("Show in folder") : L.T("Close");
         if (failed == 0 && cancelled == 0) _ = AutoClose();
     }
 

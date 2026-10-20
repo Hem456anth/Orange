@@ -1059,9 +1059,11 @@ public sealed class ReorderEditor : EditorWindow
 /// <summary>Shows what a QR code says. The text is data: shown and copyable, never opened or followed.</summary>
 public sealed class QrResultWindow : Window
 {
+    public static QrResultWindow? Last { get; private set; }
     public static void Show(string file, string text)
     {
         var w = new QrResultWindow(file, text);
+        Last = w;
         w.Activate();
     }
 

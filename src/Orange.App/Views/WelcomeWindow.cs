@@ -38,9 +38,17 @@ public sealed class WelcomeWindow : Window
         root.Children.Add(hero);
 
         var body = new StackPanel { Spacing = 14, Padding = new Thickness(28, 20, 28, 20) };
-        body.Children.Add(Step("1", L.T("Drag files"), L.T("Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.")));
-        body.Children.Add(Step("2", $"While dragging, tap {Key(s.ConvertKey)}", "The conversion wheel opens around the pointer. Drop on a format; the new file appears next to the original."));
-        body.Children.Add(Step("3", $"Or tap {Key(s.ToolsKey)} for tools, {Key(s.ActionsKey)} for actions", "Compress, edit, trim, bleep, metadata and more. No dragging? Select files and press " + s.Hotkey + "."));
+        var cards = new Grid { ColumnSpacing = 10 };
+        for (int c = 0; c < 3; c++) cards.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        (string Glyph, string Title, string Text)[] steps =
+        [
+            ("\uE7C9", L.T("Drag files"), L.T("Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.")),
+            ("\uE7FC", L.F("Tap {0}", Key(s.ConvertKey)), L.T("The conversion wheel opens around the pointer. Drop on a format; the new file appears next to the original.")),
+            ("\uE90F", L.F("{0} or {1}", Key(s.ToolsKey), Key(s.ActionsKey)), L.F("Tools and actions wheels. No dragging? Select files and press {0}, or right-click → Orange.", s.Hotkey)),
+        ];
+        for (int c = 0; c < 3; c++) { var card = Card(c + 1, steps[c].Glyph, steps[c].Title, steps[c].Text); Grid.SetColumn(card, c); cards.Children.Add(card); }
+        body.Children.Add(cards);
+        body.Children.Add(PracticeZone(s));
         var autostart = new ToggleSwitch { Header = L.T("Start Orange when I sign in"), IsOn = ExplorerIntegration.AutostartInstalled || s.StartWithWindows };
         AutomationProperties.SetName(autostart, "Start Orange when I sign in");
         body.Children.Add(autostart);
@@ -58,10 +66,52 @@ public sealed class WelcomeWindow : Window
         Content = root;
         Closed += (_, _) => { if (!s.WelcomeShown) { s.WelcomeShown = true; s.Save(); } };
         WindowHelpers.Compact(this, "Welcome to Orange", topmost: false);
-        WindowHelpers.Place(this, 560, 600, bottomRight: false);
+        WindowHelpers.Place(this, 720, 640, bottomRight: false);
     }
 
     private static string Key(WheelKey k) => WheelKeyInterpreter.Label(k);
+
+    private static FrameworkElement Card(int n, string glyph, string title, string text)
+    {
+        var sp = new StackPanel { Spacing = 6 };
+        sp.Children.Add(new FontIcon { Glyph = glyph, FontSize = 26, Foreground = new SolidColorBrush(Brand.Accent), HorizontalAlignment = HorizontalAlignment.Left });
+        sp.Children.Add(new TextBlock { Text = $"{n}. {title}", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, FontSize = 15, TextWrapping = TextWrapping.Wrap });
+        sp.Children.Add(new TextBlock { Text = text, Opacity = 0.75, TextWrapping = TextWrapping.Wrap, FontSize = 13 });
+        var b = new Border { Padding = new Thickness(14), CornerRadius = new CornerRadius(10), BorderThickness = new Thickness(1), Child = sp,
+            BorderBrush = (Brush)Application.Current.Resources["CardStrokeColorDefaultBrush"], Background = (Brush)Application.Current.Resources["CardBackgroundFillColorDefaultBrush"] };
+        AutomationProperties.SetName(b, $"Step {n}: {title}. {text}");
+        return b;
+    }
+
+    /// <summary>
+    /// Practice: a sample picture the user can drag (from here or from the folder it lives in) and a drop zone that
+    /// confirms the drag reached Orange. Real conversions still happen through the wheel.
+    /// </summary>
+    private UIElement PracticeZone(AppSettings s)
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "Orange practice");
+        var sample = Path.Combine(dir, "try-me.png");
+        try { Directory.CreateDirectory(dir); if (!File.Exists(sample)) File.Copy(Path.Combine(AppContext.BaseDirectory, "Assets", "orange.png"), sample); } catch { }
+        var zone = new Border { Height = 120, CornerRadius = new CornerRadius(12), BorderThickness = new Thickness(2), AllowDrop = true,
+            BorderBrush = new SolidColorBrush(Brand.Accent), Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0x18, 0xFF, 0x7A, 0x00)) };
+        var msg = new TextBlock { Text = L.T("Practice: drag try-me.png from its folder, tap Shift and drop on WebP. Or drop any file here to check that dragging reaches Orange."),
+            TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(16) };
+        zone.Child = msg;
+        AutomationProperties.SetName(zone, L.T("Practice drop zone"));
+        zone.DragOver += (_, e) => { e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy; };
+        zone.Drop += async (_, e) =>
+        {
+            if (!e.DataView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems)) return;
+            var items = await e.DataView.GetStorageItemsAsync();
+            msg.Text = L.F("Orange received {0}. Now try it anywhere: drag a file, tap {1}, drop on a format.", items.FirstOrDefault()?.Name ?? "", Key(s.ConvertKey));
+            Diagnostics.Event("practice-drop " + items.Count);
+        };
+        var open = new HyperlinkButton { Content = L.T("Open the folder with try-me.png") };
+        open.Click += (_, _) => Native.RevealInExplorer([sample]);
+        var sp = new StackPanel { Spacing = 6 };
+        sp.Children.Add(zone); sp.Children.Add(open);
+        return sp;
+    }
 
     private static UIElement Step(string n, string title, string text)
     {

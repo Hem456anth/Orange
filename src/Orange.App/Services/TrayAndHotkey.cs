@@ -95,6 +95,10 @@ public sealed class TrayAndHotkey : IDisposable
         return Native.DefWindowProc(h, msg, w, l);
     }
 
+    public IntPtr MessageWindow => _hwnd;
+    /// <summary>Self-test: opens the tray menu at the cursor (blocks until it closes).</summary>
+    public void ShowMenuForTest() => ShowMenu();
+
     private void ShowMenu()
     {
         var m = Native.CreatePopupMenu();
