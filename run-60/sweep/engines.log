@@ -1,0 +1,123 @@
+pass     image.add-background            0.1s sample.bmp → sample Background.bmp
+pass     image.annotate                  0.0s sample.bmp → sample Annotated.bmp
+pass     image.collage                   0.3s sample.bmp → sample and 1 more Collage.png
+pass     image.compress                  0.1s sample.png → sample Compressed.png
+pass     image.create-pdf                0.1s sample.bmp → sample and 1 more.pdf
+pass     image.crop                      0.0s sample.bmp → sample Cropped.bmp
+pass     image.edit                      0.0s sample.bmp → sample Edited.bmp
+pass     image.grayscale                 0.0s sample.bmp → sample Grayscale.bmp
+pass     image.metadata                  0.0s sample.bmp → sample Metadata.bmp
+pass     image.qr-read                   0.0s qr.png → “https://github.com/Hem456anth/Orange”
+pass     image.redact                    0.0s sample.bmp → sample Redacted.bmp
+pass     image.resize                    0.0s sample.bmp → sample Resized.bmp
+pass     image.rotate                    0.0s sample.bmp → sample Rotated.bmp
+pass     image.strip-metadata            0.0s sample.bmp → sample Clean.bmp
+pass     image.to.avif                   0.1s sample.bmp → sample.avif
+pass     image.to.bmp                    0.0s sample.jpg → sample.bmp
+pass     image.to.gif                    0.0s sample.bmp → sample.gif
+pass     image.to.ico                    0.0s sample.bmp → sample.ico
+pass     image.to.jpg                    0.0s sample.bmp → sample.jpg
+pass     image.to.jxl                    0.1s sample.bmp → sample.jxl
+pass     image.to.pdf                    0.0s sample.bmp → sample.pdf
+pass     image.to.png                    0.0s sample.bmp → sample.png
+pass     image.to.tiff                   0.5s sample.bmp → sample.tiff
+pass     image.to.webp                   0.0s sample.bmp → sample.webp
+pass     video.compress                  0.6s sample.mp4 → sample Compressed.mp4
+pass     video.crop                      0.4s sample.mp4 → sample Cropped.mp4
+pass     video.join                      0.4s sample.mp4 → sample and 1 more Joined.mp4
+pass     video.metadata                  0.1s sample.mp4 → sample Tagged.mp4
+pass     video.mute                      0.2s sample.mp4 → sample Muted.mp4
+pass     video.resize                    0.3s sample.mp4 → sample Resized.mp4
+pass     video.snapshot                  0.1s sample.mp4 → sample Snapshot.png
+pass     video.speed                     0.2s sample.mp4 → sample Speed.mp4
+pass     video.split                     0.6s sample.mp4 → sample Clips
+pass     video.strip-metadata            0.2s sample.mp4 → sample Clean.mp4
+pass     video.to.avi                    0.2s sample.mp4 → sample.avi
+pass     video.to.gif                    0.3s sample.mp4 → sample.gif
+pass     video.to.m4a                    0.8s sample.mp4 → sample.m4a
+pass     video.to.mkv                    0.3s sample.mp4 → sample.mkv
+pass     video.to.mov                    0.3s sample.mp4 → sample.mov
+pass     video.to.mp3                    0.1s sample.mp4 → sample.mp3
+pass     video.to.mp4                    0.3s sample.avi → sample.mp4
+pass     video.to.wav                    0.1s sample.mp4 → sample.wav
+pass     video.to.webm                   0.4s sample.mp4 → sample.webm
+pass     video.trim                      0.3s sample.mp4 → sample Trimmed.mp4
+pass     audio.bleep                     0.1s sample.mp3 → sample Bleeped.mp3
+pass     audio.channels                  0.1s sample.mp3 → sample Mono.mp3
+pass     audio.compress                  0.1s sample.mp3 → sample Compressed.mp3
+pass     audio.merge                     0.2s sample.mp3 → sample and 1 more Merged.mp3
+pass     audio.metadata                  0.1s sample.mp3 → sample Tagged.mp3
+pass     audio.normalize                 0.2s sample.mp3 → sample Normalized.mp3
+pass     audio.silence-trim              0.1s sample.mp3 → sample Trimmed.mp3
+pass     audio.speed                     0.1s sample.mp3 → sample Speed.mp3
+pass     audio.split                     0.1s sample.mp3 → sample Parts
+pass     audio.strip-metadata            0.1s sample.mp3 → sample Clean.mp3
+pass     audio.to.aac                    0.2s sample.mp3 → sample.aac
+pass     audio.to.aiff                   0.1s sample.mp3 → sample.aiff
+pass     audio.to.flac                   0.1s sample.mp3 → sample.flac
+pass     audio.to.m4a                    0.3s sample.mp3 → sample.m4a
+pass     audio.to.mp3                    0.1s sample.wav → sample.mp3
+pass     audio.to.ogg                    0.2s sample.mp3 → sample.ogg
+pass     audio.to.opus                   0.1s sample.mp3 → sample.opus
+pass     audio.to.wav                    0.1s sample.mp3 → sample.wav
+pass     audio.to.wma                    0.1s sample.mp3 → sample.wma
+pass     audio.trim                      0.1s sample.mp3 → sample Trimmed.mp3
+pass     audio.visualize                 0.4s sample.mp3 → sample Visualized.mp4
+pass     pdf.compress                    1.4s photo-heavy.pdf → photo-heavy Compressed.pdf
+pass     pdf.extract-images              0.2s with-image.pdf → with-image Images
+pass     pdf.extract-pages               0.0s sample.pdf → sample Extract.pdf
+pass     pdf.merge                       0.0s sample.pdf → sample and 1 more Merged.pdf
+pass     pdf.reorder                     0.0s sample.pdf → sample Reordered.pdf
+pass     pdf.rotate                      0.0s sample.pdf → sample Rotated.pdf
+pass     pdf.split                       0.1s sample.pdf → sample Pages
+pass     pdf.strip-metadata              0.0s sample.pdf → sample Clean.pdf
+pass     pdf.to.docx                     0.4s sample.pdf → sample.docx
+pass     pdf.to.jpg                      0.6s sample.pdf → sample
+pass     pdf.to.md                       0.0s sample.pdf → sample.md
+pass     pdf.to.png                      0.7s sample.pdf → sample
+pass     pdf.to.pptx                     0.5s sample.pdf → sample.pptx
+pass     pdf.to.txt                      0.0s sample.pdf → sample.txt
+pass     doc.native.docx                 0.0s sample.doc → sample.docx
+pass     doc.native.epub                 0.2s sample.doc → sample.epub
+pass     doc.native.html                 0.0s sample.doc → sample.html
+pass     doc.native.md                   0.0s sample.doc → sample.md
+pass     doc.native.odt                  0.0s sample.doc → sample.odt
+pass     doc.native.pdf                  0.1s sample.doc → sample.pdf
+pass     doc.native.rtf                  0.0s sample.doc → sample.rtf
+pass     doc.native.txt                  0.0s sample.doc → sample.txt
+pass     doc.to.docx                     0.1s sample.html → sample.docx
+pass     doc.to.epub                     0.1s sample.docx → sample.epub
+pass     doc.to.html                     0.1s sample.docx → sample.html
+pass     doc.to.md                       0.0s sample.docx → sample.md
+pass     doc.to.odt                      0.1s sample.docx → sample.odt
+pass     doc.to.pdf                     19.9s sample.doc → sample.pdf
+pass     doc.to.rtf                      0.1s sample.docx → sample.rtf
+pass     doc.to.txt                      0.0s sample.docx → sample.txt
+pass     doc.word-count                  0.0s sample.md → sample Stats.txt
+pass     ebook.to.epub                   0.0s sample.cbz → sample.epub
+pass     ebook.to.pdf                    0.0s sample.cbz → sample.pdf
+pass     ebook.to.txt                    0.0s sample.fb2 → sample.txt
+pass     sub.shift                       0.0s sample.srt → sample Shifted.srt
+pass     sub.to.srt                      0.0s sample.vtt → sample.srt
+pass     sub.to.txt                      0.0s sample.srt → sample.txt
+pass     sub.to.vtt                      0.0s sample.srt → sample.vtt
+pass     archive.extract                 0.0s sample.zip → sample
+pass     archive.to.7z                   0.0s sample.zip → sample.7z
+pass     archive.to.tar                  0.0s sample.zip → sample.tar
+pass     archive.to.zip                  0.0s sample.tar.gz → sample.zip
+pass     sheet.to.csv                    0.0s sample.ods → sample.csv
+pass     sheet.to.ods                    0.0s sample.csv → sample.ods
+pass     sheet.to.pdf                    0.0s sample.csv → sample.pdf
+pass     sheet.to.tsv                    0.0s sample.csv → sample.tsv
+pass     sheet.to.xlsx                   0.5s sample.csv → sample.xlsx
+pass     ppt.to.pdf                      9.0s sample.ppt → sample.pdf
+pass     slides.to.pdf                   0.0s sample.ppt → sample.pdf
+pass     slides.to.png                   0.1s sample.ppt → sample slides
+pass     slides.to.pptx                  0.2s sample.ppt → sample.pptx
+pass     font.to.woff                    0.0s sample.ttf → sample.woff
+pass     font.to.woff2                   0.7s sample.ttf → sample.woff2
+pass     image.ico-extract               0.0s sample.ico → sample icons
+pass     archive.extract-rar             0.0s sample.7z → sample
+pass     font.to.desktop                 0.0s sample.woff → sample.ttf
+skip     image.to.heic                   0.0s  · needs a helper
+summary: pass=121, skip=1

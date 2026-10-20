@@ -1,0 +1,13 @@
+2026-10-20T17:59:04.9575502Z step-ok notifications
+2026-10-20T17:59:05.0324409Z step-ok main-window
+2026-10-20T17:59:05.0433362Z step-ok tray
+2026-10-20T17:59:05.0447454Z step-ok hotkey
+2026-10-20T17:59:05.0469120Z hooks-installed
+2026-10-20T17:59:05.0482325Z step-ok watch-folders
+2026-10-20T17:59:05.0523515Z step-ok menu-file
+2026-10-20T17:59:05.0532448Z dispatch --background
+2026-10-20T17:59:05.0535788Z ready
+2026-10-20T17:59:07.5450301Z lbutton-down 300,251 injected=True
+2026-10-20T17:59:08.3513994Z key 160 dragging=False eligible=True open=False
+2026-10-20T17:59:45.9087023Z lbutton-down 370,275 injected=True
+2026-10-20T17:59:46.7281611Z key 160 dragging=False eligible=True open=False

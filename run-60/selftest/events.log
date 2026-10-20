@@ -1,0 +1,250 @@
+2026-10-20T17:55:39.4985383Z hooks-installed
+2026-10-20T17:55:39.5284359Z hooks-installed
+2026-10-20T17:55:40.4586894Z wheel-kind Convert items=Web image|JPG|WebP|TIFF|BMP|GIF|AVIF|More
+2026-10-20T17:55:40.4730004Z highlight 0
+2026-10-20T17:55:40.4889356Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=Web image|JPG|WebP|TIFF|BMP|GIF|AVIF|More
+2026-10-20T17:55:41.2643075Z highlight 1
+2026-10-20T17:55:41.4864654Z wheel-kind Tools items=Compress|Metadata|Edit|Annotate|Add BG|Crop|Redact|More
+2026-10-20T17:55:41.8339105Z wheel-kind Actions items=Share|Zip|7z|Shelf|Copy|Move to…|Copy path|Terminal|Show in folder
+2026-10-20T17:55:42.1816753Z wheel-kind Convert items=Web image|JPG|WebP|TIFF|BMP|GIF|AVIF|More
+2026-10-20T17:55:42.8079683Z wheel-closed
+2026-10-20T17:55:42.8388675Z wheel-kind Convert items=Web image|JPG|WebP|TIFF|BMP|GIF|AVIF|More
+2026-10-20T17:55:42.8473593Z highlight 0
+2026-10-20T17:55:42.8508896Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=Web image|JPG|WebP|TIFF|BMP|GIF|AVIF|More
+2026-10-20T17:55:43.2556959Z wheel-closed
+2026-10-20T17:55:43.3315958Z wheel-kind Convert items=WhatsApp video|Discord video|MOV|MKV|WebM|AVI|GIF|More
+2026-10-20T17:55:43.3394141Z highlight 0
+2026-10-20T17:55:43.3426687Z wheel-shown kind=Convert drag=False files=1 rect=322,170,702,550 items=WhatsApp video|Discord video|MOV|MKV|WebM|AVI|GIF|More
+2026-10-20T17:55:43.8881832Z wheel-closed
+2026-10-20T17:55:43.9127844Z wheel-kind Tools items=Merge PDFs|Compress|Split|Rotate|Extract images|Remove metadata
+2026-10-20T17:55:43.9233899Z highlight 0
+2026-10-20T17:55:43.9254141Z wheel-shown kind=Tools drag=False files=2 rect=322,170,702,550 items=Merge PDFs|Compress|Split|Rotate|Extract images|Remove metadata
+2026-10-20T17:55:44.4638151Z wheel-closed
+2026-10-20T17:56:22.6994845Z run-start image.to.webp 1
+2026-10-20T17:56:22.7001101Z pw-ctor
+2026-10-20T17:56:22.7120102Z pw-compact
+2026-10-20T17:56:22.7138644Z pw-place
+2026-10-20T17:56:22.7146176Z pw-activate
+2026-10-20T17:56:22.7277145Z pw-shown
+2026-10-20T17:56:22.7284406Z jobs-running
+2026-10-20T17:56:22.7652187Z jobs-finished Succeeded
+2026-10-20T17:56:22.7698756Z run-done image.to.webp ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample.webp
+2026-10-20T17:56:22.7797937Z pw-compact
+2026-10-20T17:56:22.7819851Z pw-place
+2026-10-20T17:56:22.7901295Z run-start pdf.merge 1
+2026-10-20T17:56:22.7905066Z pw-ctor
+2026-10-20T17:56:22.7955493Z pw-compact
+2026-10-20T17:56:22.7975203Z pw-place
+2026-10-20T17:56:22.8000099Z pw-activate
+2026-10-20T17:56:22.8055662Z pw-shown
+2026-10-20T17:56:22.8059648Z jobs-running
+2026-10-20T17:56:22.8830898Z jobs-finished Succeeded
+2026-10-20T17:56:22.8835872Z run-done pdf.merge ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample and 1 more Merged.pdf
+2026-10-20T17:56:22.8856202Z run-start video.to.mp3 1
+2026-10-20T17:56:22.8858503Z pw-ctor
+2026-10-20T17:56:22.8901226Z pw-compact
+2026-10-20T17:56:22.8918087Z pw-place
+2026-10-20T17:56:22.8923270Z pw-activate
+2026-10-20T17:56:22.8981916Z pw-shown
+2026-10-20T17:56:22.8985009Z jobs-running
+2026-10-20T17:56:23.0532772Z jobs-finished Succeeded
+2026-10-20T17:56:23.0537577Z run-done video.to.mp3 ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 2.mp3
+2026-10-20T17:56:23.0554914Z run-start video.to.gif 1
+2026-10-20T17:56:23.0557193Z pw-ctor
+2026-10-20T17:56:23.0600383Z pw-compact
+2026-10-20T17:56:23.0617623Z pw-place
+2026-10-20T17:56:23.0622910Z pw-activate
+2026-10-20T17:56:23.0678605Z pw-shown
+2026-10-20T17:56:23.0681738Z jobs-running
+2026-10-20T17:56:23.3122505Z jobs-finished Succeeded
+2026-10-20T17:56:23.3127171Z run-done video.to.gif ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample.gif
+2026-10-20T17:56:23.3143597Z run-start audio.to.mp3 1
+2026-10-20T17:56:23.3145819Z pw-ctor
+2026-10-20T17:56:23.3191135Z pw-compact
+2026-10-20T17:56:23.3212475Z pw-place
+2026-10-20T17:56:23.3217925Z pw-activate
+2026-10-20T17:56:23.3268874Z pw-shown
+2026-10-20T17:56:23.3271631Z jobs-running
+2026-10-20T17:56:23.4784397Z jobs-finished Succeeded
+2026-10-20T17:56:23.4790247Z run-done audio.to.mp3 ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 3.mp3
+2026-10-20T17:56:23.4905730Z run-start audio.to.opus 1
+2026-10-20T17:56:23.4908503Z pw-ctor
+2026-10-20T17:56:23.4956212Z pw-compact
+2026-10-20T17:56:23.4974091Z pw-place
+2026-10-20T17:56:23.4979571Z pw-activate
+2026-10-20T17:56:23.5034184Z pw-shown
+2026-10-20T17:56:23.5037740Z jobs-running
+2026-10-20T17:56:23.6494242Z jobs-finished Succeeded
+2026-10-20T17:56:23.6498990Z run-done audio.to.opus ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample.opus
+2026-10-20T17:56:23.6535856Z run-start pdf.to.png 1
+2026-10-20T17:56:23.6538460Z pw-ctor
+2026-10-20T17:56:23.6581128Z pw-compact
+2026-10-20T17:56:23.6598252Z pw-place
+2026-10-20T17:56:23.6604124Z pw-activate
+2026-10-20T17:56:23.6653992Z pw-shown
+2026-10-20T17:56:23.6656802Z jobs-running
+2026-10-20T17:56:23.9962272Z jobs-finished Succeeded
+2026-10-20T17:56:23.9966770Z run-done pdf.to.png ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample
+2026-10-20T17:56:23.9983539Z run-start pdf.compress 1
+2026-10-20T17:56:23.9985939Z pw-ctor
+2026-10-20T17:56:24.0031846Z pw-compact
+2026-10-20T17:56:24.0048680Z pw-place
+2026-10-20T17:56:24.0053491Z pw-activate
+2026-10-20T17:56:24.0104846Z pw-shown
+2026-10-20T17:56:24.0107932Z jobs-running
+2026-10-20T17:56:24.0301605Z jobs-finished Succeeded
+2026-10-20T17:56:24.0307151Z run-done pdf.compress ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\with-image Compressed.pdf
+2026-10-20T17:56:24.0324187Z run-start doc.to.pdf 1
+2026-10-20T17:56:24.0327466Z pw-ctor
+2026-10-20T17:56:24.0389021Z pw-compact
+2026-10-20T17:56:24.0410824Z pw-place
+2026-10-20T17:56:24.0417356Z pw-activate
+2026-10-20T17:56:24.0475752Z pw-shown
+2026-10-20T17:56:24.0479370Z jobs-running
+2026-10-20T17:56:24.4281539Z jobs-finished Succeeded
+2026-10-20T17:56:24.4286279Z run-done doc.to.pdf ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 2.pdf
+2026-10-20T17:56:24.4311256Z run-start doc.native.docx 1
+2026-10-20T17:56:24.4313640Z pw-ctor
+2026-10-20T17:56:24.4364121Z pw-compact
+2026-10-20T17:56:24.4381994Z pw-place
+2026-10-20T17:56:24.4387384Z pw-activate
+2026-10-20T17:56:24.4437255Z pw-shown
+2026-10-20T17:56:24.4440940Z jobs-running
+2026-10-20T17:56:24.4904858Z jobs-finished Succeeded
+2026-10-20T17:56:24.4909447Z run-done doc.native.docx ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 2.docx
+2026-10-20T17:56:24.4931354Z run-start slides.to.pdf 1
+2026-10-20T17:56:24.4933854Z pw-ctor
+2026-10-20T17:56:24.4974242Z pw-compact
+2026-10-20T17:56:24.4990070Z pw-place
+2026-10-20T17:56:24.4995355Z pw-activate
+2026-10-20T17:56:24.5036946Z pw-shown
+2026-10-20T17:56:24.5039620Z jobs-running
+2026-10-20T17:56:24.5193189Z jobs-finished Succeeded
+2026-10-20T17:56:24.5197221Z run-done slides.to.pdf ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 3.pdf
+2026-10-20T17:56:24.5223694Z run-start doc.native.odt 1
+2026-10-20T17:56:24.5226120Z pw-ctor
+2026-10-20T17:56:24.5275682Z pw-compact
+2026-10-20T17:56:24.5292980Z pw-place
+2026-10-20T17:56:24.5298150Z pw-activate
+2026-10-20T17:56:24.5348586Z pw-shown
+2026-10-20T17:56:24.5351828Z jobs-running
+2026-10-20T17:56:24.5632195Z jobs-finished Succeeded
+2026-10-20T17:56:24.5636632Z run-done doc.native.odt ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample.odt
+2026-10-20T17:56:24.5652200Z run-start doc.native.rtf 1
+2026-10-20T17:56:24.5654457Z pw-ctor
+2026-10-20T17:56:24.5705441Z pw-compact
+2026-10-20T17:56:24.5723663Z pw-place
+2026-10-20T17:56:24.5729126Z pw-activate
+2026-10-20T17:56:24.5779729Z pw-shown
+2026-10-20T17:56:24.5782681Z jobs-running
+2026-10-20T17:56:24.5915978Z jobs-finished Succeeded
+2026-10-20T17:56:24.5920167Z run-done doc.native.rtf ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample.rtf
+2026-10-20T17:56:24.5936929Z run-start doc.native.pdf 1
+2026-10-20T17:56:24.5939705Z pw-ctor
+2026-10-20T17:56:24.5985499Z pw-compact
+2026-10-20T17:56:24.6002661Z pw-place
+2026-10-20T17:56:24.6009386Z pw-activate
+2026-10-20T17:56:24.6070597Z pw-shown
+2026-10-20T17:56:24.6073615Z jobs-running
+2026-10-20T17:56:24.6216539Z jobs-finished Succeeded
+2026-10-20T17:56:24.6220560Z run-done doc.native.pdf ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 4.pdf
+2026-10-20T17:56:24.6240294Z run-start sheet.to.csv 1
+2026-10-20T17:56:24.6242515Z pw-ctor
+2026-10-20T17:56:24.6284108Z pw-compact
+2026-10-20T17:56:24.6300624Z pw-place
+2026-10-20T17:56:24.6305999Z pw-activate
+2026-10-20T17:56:24.6380750Z pw-shown
+2026-10-20T17:56:24.6384482Z jobs-running
+2026-10-20T17:56:24.6988356Z jobs-finished Succeeded
+2026-10-20T17:56:24.6992848Z run-done sheet.to.csv ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample Fruit.csv
+2026-10-20T17:56:24.7011584Z run-start slides.to.pdf 1
+2026-10-20T17:56:24.7014097Z pw-ctor
+2026-10-20T17:56:24.7057316Z pw-compact
+2026-10-20T17:56:24.7074336Z pw-place
+2026-10-20T17:56:24.7079495Z pw-activate
+2026-10-20T17:56:24.7136766Z pw-shown
+2026-10-20T17:56:24.7140093Z jobs-running
+2026-10-20T17:56:24.8075306Z jobs-finished Succeeded
+2026-10-20T17:56:24.8079601Z run-done slides.to.pdf ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 5.pdf
+2026-10-20T17:56:24.8099927Z run-start pdf.to.pptx 1
+2026-10-20T17:56:24.8102178Z pw-ctor
+2026-10-20T17:56:24.8145800Z pw-compact
+2026-10-20T17:56:24.8163558Z pw-place
+2026-10-20T17:56:24.8168612Z pw-activate
+2026-10-20T17:56:24.8233367Z pw-shown
+2026-10-20T17:56:24.8237108Z jobs-running
+2026-10-20T17:56:25.0798116Z jobs-finished Succeeded
+2026-10-20T17:56:25.0802090Z run-done pdf.to.pptx ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 2.pptx
+2026-10-20T17:56:25.0825354Z run-start ebook.to.pdf 1
+2026-10-20T17:56:25.0827620Z pw-ctor
+2026-10-20T17:56:25.0872033Z pw-compact
+2026-10-20T17:56:25.0889179Z pw-place
+2026-10-20T17:56:25.0894535Z pw-activate
+2026-10-20T17:56:25.0949051Z pw-shown
+2026-10-20T17:56:25.0951993Z jobs-running
+2026-10-20T17:56:25.1397542Z jobs-finished Succeeded
+2026-10-20T17:56:25.1402381Z run-done ebook.to.pdf ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 6.pdf
+2026-10-20T17:56:25.1432134Z run-start image.to.jxl 1
+2026-10-20T17:56:25.1434522Z pw-ctor
+2026-10-20T17:56:25.1506951Z pw-compact
+2026-10-20T17:56:25.1526451Z pw-place
+2026-10-20T17:56:25.1532335Z pw-activate
+2026-10-20T17:56:25.1614458Z pw-shown
+2026-10-20T17:56:25.1620208Z jobs-running
+2026-10-20T17:56:25.2404005Z jobs-finished Succeeded
+2026-10-20T17:56:25.2408943Z run-done image.to.jxl ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample.jxl
+2026-10-20T17:56:25.2435118Z run-start image.to.webp 2
+2026-10-20T17:56:25.2437443Z pw-ctor
+2026-10-20T17:56:25.2483271Z pw-compact
+2026-10-20T17:56:25.2502678Z pw-place
+2026-10-20T17:56:25.2510661Z pw-activate
+2026-10-20T17:56:25.2633386Z pw-shown
+2026-10-20T17:56:25.2636901Z jobs-running
+2026-10-20T17:56:25.2859526Z jobs-finished Succeeded,Failed
+2026-10-20T17:56:25.2883491Z run-done image.to.webp ok=1 failed=1 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample 2.webp
+2026-10-20T17:56:25.9782928Z run-start image.qr-read 1
+2026-10-20T17:56:25.9786587Z pw-ctor
+2026-10-20T17:56:25.9839728Z pw-compact
+2026-10-20T17:56:25.9855902Z pw-place
+2026-10-20T17:56:25.9861066Z pw-activate
+2026-10-20T17:56:25.9901402Z pw-shown
+2026-10-20T17:56:25.9904131Z jobs-running
+2026-10-20T17:56:26.0423991Z jobs-finished Succeeded
+2026-10-20T17:56:26.0657703Z run-done image.qr-read ok=0 failed=0 outputs=
+2026-10-20T17:56:26.8250154Z shelf 3
+2026-10-20T17:56:28.6108842Z run-start image.edit 1
+2026-10-20T17:56:28.6112068Z pw-ctor
+2026-10-20T17:56:28.6163992Z pw-compact
+2026-10-20T17:56:28.6185517Z pw-place
+2026-10-20T17:56:28.6190666Z pw-activate
+2026-10-20T17:56:28.6240126Z pw-shown
+2026-10-20T17:56:28.6242755Z jobs-running
+2026-10-20T17:56:28.6500019Z jobs-finished Succeeded
+2026-10-20T17:56:28.6504866Z run-done image.edit ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample Edited.png
+2026-10-20T17:56:28.6542014Z run-start image.add-background 1
+2026-10-20T17:56:28.6545194Z pw-ctor
+2026-10-20T17:56:28.6598121Z pw-compact
+2026-10-20T17:56:28.6617307Z pw-place
+2026-10-20T17:56:28.6623149Z pw-activate
+2026-10-20T17:56:28.6700405Z pw-shown
+2026-10-20T17:56:28.6703886Z jobs-running
+2026-10-20T17:56:28.6975288Z jobs-finished Succeeded
+2026-10-20T17:56:28.6979692Z run-done image.add-background ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample-alpha Background.png
+2026-10-20T17:56:28.7011240Z run-start image.redact 1
+2026-10-20T17:56:28.7013321Z pw-ctor
+2026-10-20T17:56:28.7064947Z pw-compact
+2026-10-20T17:56:28.7083983Z pw-place
+2026-10-20T17:56:28.7089342Z pw-activate
+2026-10-20T17:56:28.7193187Z pw-shown
+2026-10-20T17:56:28.7196419Z jobs-running
+2026-10-20T17:56:28.7450897Z jobs-finished Succeeded
+2026-10-20T17:56:28.7455884Z run-done image.redact ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample Redacted.png
+2026-10-20T17:56:28.7495646Z run-start audio.bleep 1
+2026-10-20T17:56:28.7498547Z pw-ctor
+2026-10-20T17:56:28.7555892Z pw-compact
+2026-10-20T17:56:28.7578745Z pw-place
+2026-10-20T17:56:28.7584590Z pw-activate
+2026-10-20T17:56:28.7679053Z pw-shown
+2026-10-20T17:56:28.7683141Z jobs-running
+2026-10-20T17:56:28.9626614Z jobs-finished Succeeded
+2026-10-20T17:56:28.9631008Z run-done audio.bleep ok=1 failed=0 outputs=D:\a\Orange\Orange\evidence\selftest\work\sample Bleeped.wav
