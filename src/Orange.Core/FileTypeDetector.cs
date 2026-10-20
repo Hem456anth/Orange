@@ -24,7 +24,11 @@ public static class FileTypeDetector
         // documents
         ["docx"] = FileKind.Document, ["odt"] = FileKind.Document, ["rtf"] = FileKind.Document, ["txt"] = FileKind.Document,
         ["md"] = FileKind.Document, ["markdown"] = FileKind.Document, ["html"] = FileKind.Document, ["htm"] = FileKind.Document,
-        ["epub"] = FileKind.Document,
+        ["epub"] = FileKind.Document, ["doc"] = FileKind.Document,
+        // spreadsheets and presentations
+        ["xlsx"] = FileKind.Spreadsheet, ["xls"] = FileKind.Spreadsheet, ["ods"] = FileKind.Spreadsheet,
+        ["csv"] = FileKind.Spreadsheet, ["tsv"] = FileKind.Spreadsheet,
+        ["pptx"] = FileKind.Presentation, ["ppt"] = FileKind.Presentation,
         // subtitles
         ["srt"] = FileKind.Subtitle, ["vtt"] = FileKind.Subtitle,
         // archives
@@ -88,10 +92,13 @@ public static class FileTypeDetector
             n = fs.ReadAtLeast(head, head.Length, throwOnEndOfStream: false);
         var byContent = KindFromContent(head[..n]);
 
+        // Legacy Office (OLE compound file): only the extension can say which kind; LibreOffice/ExcelDataReader validate further.
+        if (n >= 8 && head[..8].SequenceEqual(new byte[] { 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1 }))
+            return Ext(path) is "xls" or "ppt" or "doc" ? byExt : FileKind.Unknown;
         if (byContent == FileKind.Unknown)
         {
             // Text-based formats have no signature. Only trust the extension for those, and only if it looks like text.
-            if (byExt is FileKind.Document or FileKind.Subtitle && LooksLikeText(head[..n]))
+            if ((byExt is FileKind.Document or FileKind.Subtitle || Ext(path) is "csv" or "tsv") && Ext(path) is not ("doc" or "xls" or "ppt") && LooksLikeText(head[..n]))
                 return byExt;
             if (Ext(path) == "svg" && LooksLikeText(head[..n]) && SvgSafety.LooksLikeSvg(path)) return FileKind.Image;
             if (Ext(path) == "mp3" && n > 0) return FileKind.Audio;   // raw MPEG frames without ID3 sync quirks; ffprobe validates
@@ -100,6 +107,8 @@ public static class FileTypeDetector
         if (byContent == byExt) return byExt;
         // Reconcile containers.
         if (byContent == FileKind.Archive && byExt == FileKind.Document && Ext(path) is "docx" or "epub" or "odt") return FileKind.Document;
+        if (byContent == FileKind.Archive && Ext(path) is "xlsx" or "ods") return FileKind.Spreadsheet;
+        if (byContent == FileKind.Archive && Ext(path) is "pptx") return FileKind.Presentation;
         if (byContent == FileKind.Video && byExt == FileKind.Audio && Ext(path) is "m4a" or "wma" or "aac") return FileKind.Audio;
         if (byContent == FileKind.Audio && byExt == FileKind.Video) return FileKind.Audio; // e.g. audio-only file named .mp4 → treat as audio
         if (byContent == FileKind.Video && byExt == FileKind.Image && Ext(path) is "gif") return FileKind.Image;

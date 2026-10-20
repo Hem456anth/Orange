@@ -10,6 +10,10 @@ Orange's own code is MIT-licensed (see LICENSE). It uses these components. Versi
 | PDFsharp 6.2.4 | PDF merge, split, rotate, pages, images→PDF | MIT | NuGet. **6.5 and later are AGPL; Orange pins 6.2.4 on purpose.** |
 | ZXing.Net 0.16.9 | QR code reader (decode only) | Apache-2.0 | NuGet. https://github.com/micjahn/ZXing.Net |
 | 7-Zip (optional, not bundled) | RAR/7z extraction when the user has it installed | LGPL-2.1 + unRAR restriction | Found at %ProgramFiles%\\7-Zip or on PATH; run as a separate process. |
+| DocumentFormat.OpenXml 3.3 | DOCX/XLSX/PPTX reading and writing | MIT | NuGet |
+| PDFsharp-MigraDoc 6.2.4 | PDF layout for documents and spreadsheets | MIT (pinned like PDFsharp) | NuGet |
+| ExcelDataReader 3.7 | legacy XLS reading | MIT | NuGet |
+| PDFtoImage 4.1 + PDFium (bblanchon build) + SkiaSharp | rendering PDF pages to pictures (PDF → PPTX, slides → PNG) | MIT / BSD-3-Clause / MIT | NuGet, native DLLs loaded in-process |
 | PdfPig 0.1.16 | PDF text and image extraction | Apache-2.0 | NuGet |
 | FFmpeg 8.1 (BtbN "lgpl-shared" Windows build) | video and audio | LGPL-2.1-or-later (no GPL or nonfree parts; H.264/HEVC via Windows Media Foundation) | separate executables + DLLs in `tools\ffmpeg\`, run as child processes; source offer in `tools\ffmpeg\SOURCE.txt` |
 | Pandoc 3.5 (optional engine) | Markdown/HTML/EPUB/ODT/RTF conversion | GPL-2.0-or-later | **not bundled**; downloaded on request from Settings → Engines (github.com/jgm/pandoc release, SHA-256 pinned), run as a separate program |
