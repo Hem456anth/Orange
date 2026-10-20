@@ -239,10 +239,12 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force evidence/sweep | Out-Null
           $env:ORANGE_BUNDLED_ONLY = "1"
-          cmd /c "out\Orange\cli\orange.cmd sweep tests\fixtures --json evidence\sweep\bundled.json --work %RUNNER_TEMP%\sweep1" | Tee-Object evidence/sweep/bundled.txt
-          $code = $LASTEXITCODE
-          "sweep bundled exit=$code $(Select-String -Path evidence/sweep/bundled.txt -Pattern '^summary:' | ForEach-Object Line)" | Tee-Object -Append evidence/summary.txt
-          if ($code -ne 0) { exit 1 }
+          $p = Start-Process out/Orange/Orange.exe -ArgumentList '--cli','sweep',"$PWD\tests\fixtures",'--json',"$PWD\evidence\sweep\bundled.json",'--work',"$env:RUNNER_TEMP\sweep-bundled" `
+                 -RedirectStandardOutput evidence/sweep/bundled.log -RedirectStandardError evidence/sweep/bundled.err.log -PassThru -Wait -NoNewWindow
+          $r = Get-Content evidence/sweep/bundled.json -Raw | ConvertFrom-Json
+          "sweep bundled exit=$($p.ExitCode) $(($r | Group-Object Status | ForEach-Object { "$($_.Name)=$($_.Count)" }) -join ' ')" | Tee-Object -Append evidence/summary.txt
+          $r | Where-Object { $_.Status -ne 'pass' } | ForEach-Object { "  $($_.Status) $($_.Op) $($_.Error)" } | Tee-Object -Append evidence/summary.txt
+          if (@($r | Where-Object { $_.Status -in 'fail','no-input' }).Count) { exit 1 }
       - name: Optional engines (Pandoc, Ghostscript, LibreOffice) via orange engines install, then sweep again
         if: always()
         continue-on-error: true
@@ -251,15 +253,17 @@ jobs:
           New-Item -ItemType Directory -Force evidence/sweep | Out-Null
           $env:ORANGE_BUNDLED_ONLY = "1"
           $t0 = Get-Date
-          cmd /c "out\Orange\cli\orange.cmd engines install all" 2>&1 | Tee-Object evidence/sweep/engines-install.txt
-          "engines install exit=$LASTEXITCODE in $([int]((Get-Date)-$t0).TotalSeconds)s" | Tee-Object -Append evidence/summary.txt
-          cmd /c "out\Orange\cli\orange.cmd engines list" | Tee-Object -Append evidence/sweep/engines-install.txt
+          $p = Start-Process out/Orange/Orange.exe -ArgumentList '--cli','engines','install','all' -RedirectStandardOutput evidence/sweep/engines-install.log -RedirectStandardError evidence/sweep/engines-install.err.log -PassThru -Wait -NoNewWindow
+          "engines install exit=$($p.ExitCode) in $([int]((Get-Date)-$t0).TotalSeconds)s" | Tee-Object -Append evidence/summary.txt
+          Start-Process out/Orange/Orange.exe -ArgumentList '--cli','tools' -RedirectStandardOutput evidence/sweep/tools-after-engines.log -Wait -NoNewWindow
+          Get-Content evidence/sweep/tools-after-engines.log | Select-String 'pandoc|ghostscript|gs|libreoffice|soffice' | ForEach-Object { "tool $($_.Line.Trim())" } | Tee-Object -Append evidence/summary.txt
           Get-ChildItem "$env:LOCALAPPDATA\Orange\engines" -Directory | ForEach-Object { "engine $($_.Name) MB=$([math]::Round((Get-ChildItem $_.FullName -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" } | Tee-Object -Append evidence/summary.txt
-          "engines MB=$([math]::Round((Get-ChildItem "$env:LOCALAPPDATA\Orange\engines" -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" | Tee-Object -Append evidence/summary.txt
-          cmd /c "out\Orange\cli\orange.cmd sweep tests\fixtures --json evidence\sweep\engines.json --work %RUNNER_TEMP%\sweep2" | Tee-Object evidence/sweep/engines.txt
-          $code = $LASTEXITCODE
-          "sweep engines exit=$code $(Select-String -Path evidence/sweep/engines.txt -Pattern '^summary:' | ForEach-Object Line)" | Tee-Object -Append evidence/summary.txt
-          if ($code -ne 0) { exit 1 }
+          $p = Start-Process out/Orange/Orange.exe -ArgumentList '--cli','sweep',"$PWD\tests\fixtures",'--json',"$PWD\evidence\sweep\engines.json",'--work',"$env:RUNNER_TEMP\sweep-engines" `
+                 -RedirectStandardOutput evidence/sweep/engines.log -RedirectStandardError evidence/sweep/engines.err.log -PassThru -Wait -NoNewWindow
+          $r = Get-Content evidence/sweep/engines.json -Raw | ConvertFrom-Json
+          "sweep engines exit=$($p.ExitCode) $(($r | Group-Object Status | ForEach-Object { "$($_.Name)=$($_.Count)" }) -join ' ')" | Tee-Object -Append evidence/summary.txt
+          $r | Where-Object { $_.Status -ne 'pass' } | ForEach-Object { "  $($_.Status) $($_.Op) $($_.Error)" } | Tee-Object -Append evidence/summary.txt
+          if (@($r | Where-Object { $_.Status -in 'fail','no-input' }).Count) { exit 1 }
       - name: Real drag probe (SendInput + OLE + File Explorer)
         if: always()
         shell: pwsh
