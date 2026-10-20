@@ -71,7 +71,7 @@ public sealed class WelcomeWindow : Window
 
     private static string Key(WheelKey k) => WheelKeyInterpreter.Label(k);
 
-    private static UIElement Card(int n, string glyph, string title, string text)
+    private static FrameworkElement Card(int n, string glyph, string title, string text)
     {
         var sp = new StackPanel { Spacing = 6 };
         sp.Children.Add(new FontIcon { Glyph = glyph, FontSize = 26, Foreground = new SolidColorBrush(Brand.Accent), HorizontalAlignment = HorizontalAlignment.Left });

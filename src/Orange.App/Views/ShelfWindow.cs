@@ -61,21 +61,26 @@ public sealed class ShelfWindow : Window
                 finally { e.AcceptedOperation = DataPackageOperation.Copy; def.Complete(); }
             };
         }
-        _list.DragItemsStarting += async (_, e) =>
+        _list.DragItemsStarting += (_, e) =>
         {
-            var def = e.Data.GetDeferral();
-            try
+            var paths = e.Items.Cast<ListViewItem>().Select(i => (string)i.Tag).ToList();
+            e.Data.RequestedOperation = DataPackageOperation.Copy;
+            // Storage items are produced on demand, when the drop target asks for them.
+            e.Data.SetDataProvider(StandardDataFormats.StorageItems, async request =>
             {
-                var items = new List<IStorageItem>();
-                foreach (var p in e.Items.Cast<ListViewItem>().Select(i => (string)i.Tag))
+                var def = request.GetDeferral();
+                try
                 {
-                    if (File.Exists(p)) items.Add(await StorageFile.GetFileFromPathAsync(p));
-                    else if (Directory.Exists(p)) items.Add(await StorageFolder.GetFolderFromPathAsync(p));
+                    var items = new List<IStorageItem>();
+                    foreach (var p in paths)
+                    {
+                        if (File.Exists(p)) items.Add(await StorageFile.GetFileFromPathAsync(p));
+                        else if (Directory.Exists(p)) items.Add(await StorageFolder.GetFolderFromPathAsync(p));
+                    }
+                    request.SetData(items);
                 }
-                e.Data.SetStorageItems(items);
-                e.Data.RequestedOperation = DataPackageOperation.Copy;
-            }
-            finally { def.Complete(); }
+                finally { def.Complete(); }
+            });
         };
         WindowHelpers.Compact(this, L.T("Shelf"), topmost: true);
         WindowHelpers.Place(this, 320, 360, bottomRight: true);
