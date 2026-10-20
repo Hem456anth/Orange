@@ -1,0 +1,18 @@
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.FormatTests.Ebook_conversions(fixture: "sample.fb2", op: "ebook.to.epub") [9 ms]
+  Passed Orange.Core.Tests.FormatTests.Heic_write_stays_hidden_when_unsupported [1 ms]
+  Passed Orange.Core.Tests.SubtitleArchiveTests.Extracts_zip_and_targz [79 ms]
+  Passed Orange.Core.Tests.StudioTests.Qr_reader_returns_the_text_without_acting_on_it [378 ms]
+  Passed Orange.Core.Tests.FormatTests.Multi_size_ico_create_and_extract [155 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [165 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [11 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [6 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [1 ms]
+  Passed Orange.Core.Tests.SecurityTests.Shell_metacharacters_in_names_are_just_names [19 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_bomb_is_rejected [3 ms]
+  Passed Orange.Core.Tests.SecurityTests.Zip_slip_is_stopped_and_nothing_escapes [3 ms]
+  Passed Orange.Core.Tests.StudioTests.Collage_lays_out_a_grid [578 ms]
+Total tests: 250
+     Passed: 249
+    Skipped: 1
+ Total time: 21.9771 Seconds
