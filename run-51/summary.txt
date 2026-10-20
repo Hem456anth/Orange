@@ -1,0 +1,29 @@
+orange 0.2.0
+cli convert exit=0
+shell extension dll=267776 msix=11705
+encoder h264_mf present=True
+encoder libmp3lame present=True
+encoder libopus present=True
+encoder libwebp present=True
+encoder aac present=True
+encoder flac present=True
+encoder gif present=True
+ffmpeg bundle MB=159.8
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.UI.pri 101528
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.UI.Xaml.Controls.pri 1258296
+pri: D:\a\Orange\Orange\out\Orange\Microsoft.WindowsAppRuntime.pri 8648
+pri: D:\a\Orange\Orange\out\Orange\Orange.pri 1375688
+uitest plain exit=0
+uitest bar exit=0
+uitest nav exit=0
+uitest combo exit=0
+uitest number exit=0
+uitest toggle exit=0
+uitest infobar exit=0
+uitest textbox exit=0
+uitest list exit=0
+uitest ring exit=0
+uitest orangebar exit=0
+uitest full exit=0
+selftest exit=-2146232797
+probe exit=1

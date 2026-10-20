@@ -1,0 +1,6 @@
+WhatsApp video       Video → Compress  targetMB=15 maxHeight=720
+Discord video        Video → Compress  targetMB=9.5
+Email PDF            Pdf → Compress  targetMB=1.9
+Web image            Image → Compress  quality=80 maxSide=1920
+WebP for web         Image → WebP  quality=80
+Podcast MP3          Audio → MP3  bitrate=128

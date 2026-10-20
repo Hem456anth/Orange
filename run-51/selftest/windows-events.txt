@@ -1,0 +1,48 @@
+[10/20/2026 03:17:39] Application Error
+Faulting application name: Orange.exe, version: 0.2.0.0, time stamp: 0x6a870000
+Faulting module name: coreclr.dll, version: 8.0.3126.42015, time stamp: 0x6a876a4d
+Exception code: 0x80131623
+Fault offset: 0x00000000002540af
+Faulting process id: 0x262C
+Faulting application start time: 0x1DD6041732BBCDB
+Faulting application path: D:\a\Orange\Orange\out\Orange\Orange.exe
+Faulting module path: D:\a\Orange\Orange\out\Orange\coreclr.dll
+Report Id: 2df45a71-c04a-44ed-8083-308f6c0675c9
+Faulting package full name: 
+Faulting package-relative application ID: 
+
+[10/20/2026 03:17:39] .NET Runtime
+Application: Orange.exe
+CoreCLR Version: 8.0.3126.42015
+.NET Version: 8.0.31
+Description: The application requested process termination through System.Environment.FailFast.
+Message: A callback was made on a garbage collected delegate of type 'Orange!Orange.App.Interop.Native+WndProc::Invoke'.
+Stack:
+   at Orange.App.Interop.Native.CreateWindowEx(UInt32, System.String, System.String, UInt32, Int32, Int32, Int32, Int32, IntPtr, IntPtr, IntPtr, IntPtr)
+   at Orange.App.Interop.Native.CreateWindowEx(UInt32, System.String, System.String, UInt32, Int32, Int32, Int32, Int32, IntPtr, IntPtr, IntPtr, IntPtr)
+   at Orange.App.Services.TrayAndHotkey..ctor()
+   at Orange.App.SelfTest+<>c__DisplayClass1_0+<<RunAsync>b__31>d.MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Orange.App.SelfTest+<>c__DisplayClass1_0+<<RunAsync>b__31>d, Orange, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null]](<<RunAsync>b__31>d ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1[[System.__Canon, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]].Start[[Orange.App.SelfTest+<>c__DisplayClass1_0+<<RunAsync>b__31>d, Orange, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null]](<<RunAsync>b__31>d ByRef)
+   at Orange.App.SelfTest+<>c__DisplayClass1_0.<RunAsync>b__31()
+   at Orange.App.SelfTest+<>c__DisplayClass1_0+<<RunAsync>g__Try|1>d.MoveNext()
+   at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[[Orange.App.SelfTest+<>c__DisplayClass1_0+<<RunAsync>g__Try|1>d, Orange, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null]](<<RunAsync>g__Try|1>d ByRef)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder.Start[[Orange.App.SelfTest+<>c__DisplayClass1_0+<<RunAsync>g__Try|1>d, Orange, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null]](<<RunAsync>g__Try|1>d ByRef)
+   at Orange.App.SelfTest+<>c__DisplayClass1_0.<RunAsync>g__Try|1(System.String, Boolean, System.Func`1<System.Threading.Tasks.Task`1<System.String>>)
+   at Orange.App.SelfTest+<RunAsync>d__1.MoveNext()
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1+AsyncStateMachineBox`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[Orange.App.SelfTest+<RunAsync>d__1, Orange, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null]].ExecutionContextCallback(System.Object)
+   at System.Threading.ExecutionContext.RunInternal(System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1+AsyncStateMachineBox`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[Orange.App.SelfTest+<RunAsync>d__1, Orange, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null]].MoveNext(System.Threading.Thread)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1+AsyncStateMachineBox`1[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[Orange.App.SelfTest+<RunAsync>d__1, Orange, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null]].MoveNext()
+   at System.Threading.Tasks.AwaitTaskContinuation.RunCallback(System.Threading.ContextCallback, System.Object, System.Threading.Tasks.Task ByRef)
+   at System.Threading.Tasks.Task.RunContinuations(System.Object)
+   at Orange.App.SelfTest+<>c__DisplayClass1_0+<<RunAsync>g__Try|1>d.MoveNext()
+   at System.Threading.ExecutionContext.RunInternal(System.Threading.ExecutionContext, System.Threading.ContextCallback, System.Object)
+   at System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1+AsyncStateMachineBox`1[[System.Threading.Tasks.VoidTaskResult, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[Orange.App.SelfTest+<>c__DisplayClass1_0+<<RunAsync>g__Try|1>d, Orange, Version=0.2.0.0, Culture=neutral, PublicKeyToken=null]].MoveNext(System.Threading.Thread)
+   at Microsoft.UI.Dispatching.DispatcherQueueSynchronizationContext+<>c__DisplayClass2_0.<Post>b__0()
+   at ABI.Microsoft.UI.Dispatching.DispatcherQueueHandler.Do_Abi_Invoke(IntPtr)
+   at ABI.Microsoft.UI.Xaml.IApplicationStaticsMethods.Start(WinRT.IObjectReference, Microsoft.UI.Xaml.ApplicationInitializationCallback)
+   at Microsoft.UI.Xaml.Application.Start(Microsoft.UI.Xaml.ApplicationInitializationCallback)
+   at Orange.App.Program.Main(System.String[])
+
+

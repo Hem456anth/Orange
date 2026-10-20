@@ -1,0 +1,30 @@
+  Determining projects to restore...
+  Restored D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj (in 54.39 sec).
+  Restored D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj (in 1.11 min).
+D:\a\Orange\Orange\src\Orange.Core\Office\PdfIO.cs(207,13): warning CS0618: 'Conversion.SavePng(Stream, byte[], string?, int, RenderOptions)' is obsolete: 'This method is deprecated and will be removed in a future release. Use SavePng with a System.Index instead.' [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+D:\a\Orange\Orange\src\Orange.Core\Office\Fonts.cs(73,49): warning CA1831: Use 'AsSpan' instead of the 'System.Range'-based indexer on 'string' to avoid creating unnecessary data copies (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1831) [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+D:\a\Orange\Orange\src\Orange.Core\Office\Fonts.cs(158,49): warning CA1831: Use 'AsSpan' instead of the 'System.Range'-based indexer on 'string' to avoid creating unnecessary data copies (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1831) [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+D:\a\Orange\Orange\src\Orange.Core\Office\PdfIO.cs(203,21): warning CA1416: This call site is reachable on all platforms. 'Conversion.GetPageCount(byte[], string?)' is only supported on: 'Android' 31.0 and later, 'Linux', 'macOS/OSX', 'Windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+D:\a\Orange\Orange\src\Orange.Core\Office\PdfIO.cs(207,13): warning CA1416: This call site is reachable on all platforms. 'Conversion.SavePng(Stream, byte[], string?, int, RenderOptions)' is only supported on: 'Android' 31.0 and later, 'Linux', 'macOS/OSX', 'Windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+  Orange.Core -> D:\a\Orange\Orange\src\Orange.Core\bin\x64\Release\net8.0\Orange.Core.dll
+D:\a\Orange\Orange\src\Orange.App\Views\ShelfWindow.cs(18,32): warning CS0108: 'ShelfWindow.Current' hides inherited member 'Window.Current'. Use the new keyword if hiding was intended. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(230,66): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(232,100): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(256,144): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\ShelfWindow.cs(18,32): warning CS0108: 'ShelfWindow.Current' hides inherited member 'Window.Current'. Use the new keyword if hiding was intended. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(230,66): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(232,100): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+D:\a\Orange\Orange\src\Orange.App\Views\Editors.cs(256,144): warning CS8602: Dereference of a possibly null reference. [D:\a\Orange\Orange\src\Orange.App\Orange.App.csproj]
+  Orange.App -> D:\a\Orange\Orange\src\Orange.App\bin\x64\Release\net8.0-windows10.0.19041.0\win-x64\Orange.dll
+  Orange.App -> D:\a\Orange\Orange\out\Orange\
+  Determining projects to restore...
+  Restored D:\a\Orange\Orange\src\Orange.Cli\Orange.Cli.csproj (in 480 ms).
+  1 of 2 projects are up-to-date for restore.
+D:\a\Orange\Orange\src\Orange.Core\Office\PdfIO.cs(207,13): warning CS0618: 'Conversion.SavePng(Stream, byte[], string?, int, RenderOptions)' is obsolete: 'This method is deprecated and will be removed in a future release. Use SavePng with a System.Index instead.' [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+D:\a\Orange\Orange\src\Orange.Core\Office\Fonts.cs(73,49): warning CA1831: Use 'AsSpan' instead of the 'System.Range'-based indexer on 'string' to avoid creating unnecessary data copies (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1831) [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+D:\a\Orange\Orange\src\Orange.Core\Office\Fonts.cs(158,49): warning CA1831: Use 'AsSpan' instead of the 'System.Range'-based indexer on 'string' to avoid creating unnecessary data copies (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1831) [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+D:\a\Orange\Orange\src\Orange.Core\Office\PdfIO.cs(207,13): warning CA1416: This call site is reachable on all platforms. 'Conversion.SavePng(Stream, byte[], string?, int, RenderOptions)' is only supported on: 'Android' 31.0 and later, 'Linux', 'macOS/OSX', 'Windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+D:\a\Orange\Orange\src\Orange.Core\Office\PdfIO.cs(203,21): warning CA1416: This call site is reachable on all platforms. 'Conversion.GetPageCount(byte[], string?)' is only supported on: 'Android' 31.0 and later, 'Linux', 'macOS/OSX', 'Windows'. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [D:\a\Orange\Orange\src\Orange.Core\Orange.Core.csproj]
+  Orange.Core -> D:\a\Orange\Orange\src\Orange.Core\bin\Release\net8.0\Orange.Core.dll
+  Orange.Cli -> D:\a\Orange\Orange\src\Orange.Cli\bin\Release\net8.0\win-x64\orange-cli.dll
+  Orange.Cli -> D:\a\Orange\Orange\out\Orange\
