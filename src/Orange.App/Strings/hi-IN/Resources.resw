@@ -94,6 +94,7 @@
   <data name="SD97D1EE339" xml:space="preserve"><value>दिखाएँ</value><comment>Show</comment></data>
   <data name="S0A4CB13C05" xml:space="preserve"><value>फ़ोल्डर में दिखाएँ</value><comment>Show in folder</comment></data>
   <data name="S4B67E5067F" xml:space="preserve"><value>परिणाम फ़ाइल एक्सप्लोरर में दिखाएँ</value><comment>Show results in File Explorer</comment></data>
+  <data name="S8AF0D60689" xml:space="preserve"><value>अनुपलब्ध भी दिखाएँ</value><comment>Show unavailable</comment></data>
   <data name="SFB1C39E9F4" xml:space="preserve"><value>ध्वनियाँ</value><comment>Sounds</comment></data>
   <data name="S44C8EAC0A9" xml:space="preserve"><value>साइन इन पर Orange शुरू करें</value><comment>Start Orange when I sign in</comment></data>
   <data name="SE2CD8B387C" xml:space="preserve"><value>फ़ाइल एक्सप्लोरर या डेस्कटॉप पर एक या अधिक फ़ाइलें खींचना शुरू करें। माउस बटन दबाए रखें।</value><comment>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</comment></data>

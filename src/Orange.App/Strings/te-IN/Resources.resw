@@ -94,6 +94,7 @@
   <data name="SD97D1EE339" xml:space="preserve"><value>చూపించు</value><comment>Show</comment></data>
   <data name="S0A4CB13C05" xml:space="preserve"><value>ఫోల్డర్‌లో చూపించు</value><comment>Show in folder</comment></data>
   <data name="S4B67E5067F" xml:space="preserve"><value>ఫలితాలను ఫైల్ ఎక్స్‌ప్లోరర్‌లో చూపించు</value><comment>Show results in File Explorer</comment></data>
+  <data name="S8AF0D60689" xml:space="preserve"><value>అందుబాటులో లేనివీ చూపించు</value><comment>Show unavailable</comment></data>
   <data name="SFB1C39E9F4" xml:space="preserve"><value>శబ్దాలు</value><comment>Sounds</comment></data>
   <data name="S44C8EAC0A9" xml:space="preserve"><value>సైన్ ఇన్ అయినప్పుడు Orange ప్రారంభించు</value><comment>Start Orange when I sign in</comment></data>
   <data name="SE2CD8B387C" xml:space="preserve"><value>ఫైల్ ఎక్స్‌ప్లోరర్ లేదా డెస్క్‌టాప్‌లో ఒకటి లేదా ఎక్కువ ఫైళ్లను లాగడం ప్రారంభించండి. మౌస్ బటన్‌ను నొక్కి ఉంచండి.</value><comment>Start dragging one or more files in File Explorer or on the desktop. Keep holding the mouse button.</comment></data>
