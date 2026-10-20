@@ -86,3 +86,24 @@ public class CommitRaceTests
         finally { Directory.Delete(dir, true); }
     }
 }
+
+public class ToolLocatorTests
+{
+    [Fact]
+    public void Ffprobe_is_found_next_to_the_bundled_ffmpeg()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "orange-tools-" + Guid.NewGuid().ToString("N"));
+        var bin = Path.Combine(root, "ffmpeg", "bin");
+        Directory.CreateDirectory(bin);
+        var ext = OperatingSystem.IsWindows() ? ".exe" : "";
+        File.WriteAllText(Path.Combine(bin, "ffmpeg" + ext), "");
+        File.WriteAllText(Path.Combine(bin, "ffprobe" + ext), "");
+        try
+        {
+            var t = new ToolLocator { BundledRoot = root };
+            Assert.Equal(Path.Combine(bin, "ffprobe" + ext), t.Find("ffprobe"));
+            Assert.Equal(Path.Combine(bin, "ffmpeg" + ext), t.Find("ffmpeg"));
+        }
+        finally { Directory.Delete(root, true); }
+    }
+}

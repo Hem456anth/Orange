@@ -164,6 +164,7 @@ public sealed record EngineLimits
     public long MaxArchiveExpandedBytes { get; init; } = 20L * 1024 * 1024 * 1024;
     public int MaxArchiveEntries { get; init; } = 100_000;
     public TimeSpan ProcessTimeout { get; init; } = TimeSpan.FromHours(4);
-    public int MaxParallelJobs { get; init; } = Math.Max(1, Environment.ProcessorCount / 2);
+    // Each job is itself multi-threaded (FFmpeg, ImageMagick), so a few at a time is the fast and cool setting.
+    public int MaxParallelJobs { get; init; } = Math.Clamp(Environment.ProcessorCount / 4, 1, 3);
     public static EngineLimits Current { get; set; } = new();
 }

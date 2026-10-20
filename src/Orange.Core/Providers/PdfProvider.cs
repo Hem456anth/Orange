@@ -22,9 +22,9 @@ public sealed class PdfProvider(ToolLocator tools) : IOperationProvider
     {
         yield return Conv("pdf.to.txt", "TXT", "txt", null, ["text", "extract text", "plain"]);
         yield return Conv("pdf.to.md", "Markdown", "md", null, ["markdown", "text"]);
-        yield return Conv("pdf.to.png", "PNG", "png", "ghostscript", ["image", "pages to images", "render"], folder: true,
+        yield return Conv("pdf.to.png", "PNG", "png", null, ["image", "pages to images", "render"], folder: true,
             [new("dpi", "Resolution (DPI)", OptionType.Choice, "150", Choices: ["72", "150", "300"]), Pages]);
-        yield return Conv("pdf.to.jpg", "JPG", "jpg", "ghostscript", ["image", "jpeg", "pages to images"], folder: true,
+        yield return Conv("pdf.to.jpg", "JPG", "jpg", null, ["image", "jpeg", "pages to images"], folder: true,
             [new("dpi", "Resolution (DPI)", OptionType.Choice, "150", Choices: ["72", "150", "300"]), Pages]);
 
         yield return T("pdf.merge", "Merge PDFs", "Merged", "merge", [], ["combine", "join"], combine: true);
@@ -38,7 +38,7 @@ public sealed class PdfProvider(ToolLocator tools) : IOperationProvider
         yield return T("pdf.compress", "Compress", "Compressed", "compress",
             [new("level", "Compression", OptionType.Choice, "ebook", Choices: ["printer", "ebook", "screen"], Help: "screen is smallest; printer keeps the most quality."),
              new("targetMB", "Target size (MB, 0 = off)", OptionType.Number, "0", 0, 100000, Help: "Orange tries printer → ebook → screen → 72 dpi and keeps the best one that fits.")],
-            ["smaller", "reduce", "optimize", "size"], tool: "ghostscript");
+            ["smaller", "reduce", "optimize", "size"]);   // Ghostscript when installed, built-in picture re-encoding otherwise
         yield return T("pdf.extract-images", "Extract images", "Images", "images", [], ["pictures", "photos", "embedded"], folder: true);
         yield return T("pdf.strip-metadata", "Remove metadata", "Clean", "metadata", [], ["author", "privacy", "properties"]);
     }
@@ -197,6 +197,30 @@ public sealed class PdfProvider(ToolLocator tools) : IOperationProvider
                 if (count == 0) throw new OrangeException("No extractable images were found in this PDF.");
                 return OperationResult.Ok(CommitDir(dir));
             }
+            case "pdf.compress" when !tools.Has("ghostscript"):
+            {
+                // Built in: re-encode the pictures; for a target size, step down the levels until it fits.
+                var targetMB = r.OptDouble("targetMB");
+                string[] levels = targetMB > 0 ? ["printer", "ebook", "screen", "tiny"] : [r.Opt("level")];
+                string? best = null; long bestLen = long.MaxValue; int i = 0;
+                foreach (var lvl in levels)
+                {
+                    ct.ThrowIfCancellationRequested();
+                    var t = tmp.File("pdf");
+                    Office.PdfCompress.Compress(input, t, lvl, ct);
+                    progress?.Report(0.1 + 0.2 * ++i);
+                    var len = new FileInfo(t).Length;
+                    if (len < bestLen) { best = t; bestLen = len; }
+                    if (targetMB > 0 && len <= targetMB * 1048576) break;
+                }
+                ValidatePdf(best!);
+                if (targetMB > 0 && bestLen > targetMB * 1048576)
+                    throw new OrangeException($"Orange couldn't get this PDF under {targetMB:0.##} MB.", $"The smallest it got was {bestLen / 1048576.0:0.##} MB. Text and vector pages don't shrink much; installing Ghostscript can help.");
+                if (bestLen >= new FileInfo(input).Length)
+                    throw new OrangeException("This PDF is already as small as Orange can make it.", "Its pictures are already compressed. Installing Ghostscript can shrink fonts too.");
+                var c0 = CommitFile(best!, "pdf");
+                return new OperationResult(true, [c0], Detail: $"{new FileInfo(input).Length / 1048576.0:0.##} MB → {bestLen / 1048576.0:0.##} MB");
+            }
             case "pdf.compress":
             {
                 var o = tmp.File("pdf");
@@ -241,6 +265,23 @@ public sealed class PdfProvider(ToolLocator tools) : IOperationProvider
                 var dev = op.Id == "pdf.to.png" ? "png16m" : "jpeg";
                 var ext = op.OutputExtension!;
                 int done = 0;
+                if (!tools.Has("ghostscript"))
+                {   // Built in: PDFium (bundled) renders the pages.
+                    var bytes = await File.ReadAllBytesAsync(input, ct);
+                    var opts = new PDFtoImage.RenderOptions(Dpi: int.Parse(r.Opt("dpi")), WithAnnotations: true, WithFormFill: true);
+                    foreach (var p in pages)
+                    {
+                        ct.ThrowIfCancellationRequested();
+                        var file = Path.Combine(dir, $"page {p.ToString().PadLeft(total.ToString().Length, '0')}.{ext}");
+                        await using (var fs = File.Create(file))
+                        {
+                            if (ext == "png") PDFtoImage.Conversion.SavePng(fs, bytes, page: (Index)(p - 1), options: opts);
+                            else PDFtoImage.Conversion.SaveJpeg(fs, bytes, page: (Index)(p - 1), options: opts);
+                        }
+                        progress?.Report(0.05 + 0.9 * ++done / pages.Count);
+                    }
+                    return OperationResult.Ok(CommitDir(dir, stem));
+                }
                 foreach (var p in pages)
                 {
                     ct.ThrowIfCancellationRequested();

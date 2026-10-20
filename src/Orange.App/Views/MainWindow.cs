@@ -22,6 +22,9 @@ public sealed class MainWindow : Window
     private readonly List<string> _files = new();
     private readonly TextBox _search = new() { PlaceholderText = L.T("Search: webp, compress, to mp3, merge pdf…") };
     private readonly ComboBox _category = new() { MinWidth = 150 };
+    private readonly CheckBox _showUnavailable = new() { Content = L.T("Show unavailable"), MinWidth = 0 };
+    private HashSet<string> _applicable = new();
+    private bool _fillingCategories;
     private readonly ListView _ops = new() { SelectionMode = ListViewSelectionMode.None };
     private readonly TextBlock _filesText = new() { TextWrapping = TextWrapping.Wrap, Opacity = 0.8 };
     private readonly bool _ready;
@@ -51,7 +54,8 @@ public sealed class MainWindow : Window
         _category.Items.Add("All");
         foreach (var k in Enum.GetValues<FileKind>().Where(k => k != FileKind.Unknown)) _category.Items.Add(k.ToString());
         _category.SelectedIndex = 0;
-        _category.SelectionChanged += (_, _) => RefreshOps();
+        _category.SelectionChanged += (_, _) => { if (!_fillingCategories) RefreshOps(); };
+        _showUnavailable.Click += (_, _) => RefreshOps();
         _search.TextChanged += (_, _) => RefreshOps();
         AutomationProperties.SetName(_search, "Search operations");
         AutomationProperties.SetName(_category, "Category");
@@ -133,8 +137,11 @@ public sealed class MainWindow : Window
         var filters = new Grid { ColumnSpacing = 8 };
         filters.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         filters.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        filters.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         filters.Children.Add(_search);
         Grid.SetColumn(_category, 1); filters.Children.Add(_category);
+        Detach(_showUnavailable);
+        Grid.SetColumn(_showUnavailable, 2); filters.Children.Add(_showUnavailable);
 
         var page = new Grid { Padding = new Thickness(24), RowSpacing = 12 };
         page.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -157,9 +164,14 @@ public sealed class MainWindow : Window
         var reg = ConversionService.Instance.Registry;
         _filesText.Text = _files.Count == 0 ? "No files chosen. Operations below show what Orange can do on this PC."
             : _files.Count == 1 ? Path.GetFileName(_files[0]) : $"{_files.Count} files: {string.Join(", ", _files.Take(4).Select(Path.GetFileName))}{(_files.Count > 4 ? "…" : "")}";
-        IEnumerable<OperationDescriptor> pool = _files.Count > 0
-            ? reg.ForFiles(_files, OperationGroup.Convert, includeUnavailable: true).Concat(reg.ForFiles(_files, OperationGroup.Tool, includeUnavailable: true))
-            : reg.All;
+        // Detect the files once per refresh (ForFiles reads each file's header); rows reuse the result.
+        var forFiles = _files.Count > 0
+            ? reg.ForFiles(_files, OperationGroup.Convert, includeUnavailable: true).Concat(reg.ForFiles(_files, OperationGroup.Tool, includeUnavailable: true)).ToList()
+            : null;
+        _applicable = forFiles?.Where(reg.IsAvailable).Select(o => o.Id).ToHashSet() ?? new();
+        IEnumerable<OperationDescriptor> pool = forFiles ?? (IEnumerable<OperationDescriptor>)reg.All;
+        if (_showUnavailable.IsChecked != true) pool = pool.Where(reg.IsAvailable);
+        FillCategories(forFiles);
         if (!string.IsNullOrWhiteSpace(_search.Text))
         {
             var hits = reg.Search(_search.Text).Select(o => o.Id).ToHashSet();
@@ -196,6 +208,21 @@ public sealed class MainWindow : Window
         return sp;
     }
 
+    /// <summary>With files chosen, the filter only offers the kinds those files are (no empty "Video" list for a JPG).</summary>
+    private void FillCategories(List<OperationDescriptor>? forFiles)
+    {
+        var wanted = (forFiles?.Select(o => o.Category).Distinct() ?? Enum.GetValues<FileKind>().Where(k => k != FileKind.Unknown)).Select(k => k.ToString()).ToList();
+        var current = _category.Items.Skip(1).Cast<string>().ToList();
+        if (current.SequenceEqual(wanted)) return;
+        var selected = _category.SelectedItem as string;
+        _fillingCategories = true;
+        _category.Items.Clear();
+        _category.Items.Add("All");
+        foreach (var w in wanted) _category.Items.Add(w);
+        _category.SelectedIndex = selected is not null && wanted.Contains(selected) ? wanted.IndexOf(selected) + 1 : 0;
+        _fillingCategories = false;
+    }
+
     private static bool Matches(OperationDescriptor o, string q) =>
         q.Split(' ', StringSplitOptions.RemoveEmptyEntries).All(t => (o.Title + " " + o.Id + " " + string.Join(' ', o.Keywords)).Contains(t, StringComparison.OrdinalIgnoreCase));
 
@@ -226,7 +253,7 @@ public sealed class MainWindow : Window
         if (!available) sub = op.RequiresTool is { } t && !ToolLocator.Default.Has(t) ? $"Needs {ToolNames.Friendly(t)} (not installed)" : "Not supported on this PC";
         text.Children.Add(new TextBlock { Text = sub, FontSize = 12, Opacity = available ? 0.65 : 0.9, Foreground = available ? null : new SolidColorBrush(Colors.IndianRed) });
         Grid.SetColumn(text, 1); g.Children.Add(text);
-        var applicable = _files.Count > 0 && available && reg.ForFiles(_files, op.Group).Any(o => o.Id == op.Id);
+        var applicable = available && _applicable.Contains(op.Id);
         var run = new Button { Content = op.Group == OperationGroup.Convert ? "Convert" : "Run", IsEnabled = applicable };
         AutomationProperties.SetName(run, $"{op.Title} for the chosen files");
         run.Click += async (_, _) =>

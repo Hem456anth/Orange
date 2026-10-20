@@ -28,6 +28,12 @@
     <NoWarn>$(NoWarn);CA1416</NoWarn>
     <!-- Ship only the UI languages Orange is translated into (cuts the Windows App SDK resource folders). -->
     <SatelliteResourceLanguages>en;hi;te</SatelliteResourceLanguages>
+    <!-- Trim unused framework code (our own and third-party assemblies are kept whole: partial mode). -->
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>partial</TrimMode>
+    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+    <!-- Smaller and faster to start: no debug symbols in the release. -->
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260921001" />
