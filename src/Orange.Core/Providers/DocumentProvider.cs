@@ -48,16 +48,25 @@ public sealed class DocumentProvider(ToolLocator tools) : IOperationProvider
         };
     }
 
-    public bool IsAvailable(OperationDescriptor op) => op.Id switch
-    {
-        "doc.to.pdf" or "ppt.to.pdf" => tools.Has("libreoffice"),
-        "doc.word-count" => true,
-        _ => tools.Has("pandoc"),
-    };
+    // Always available: when Pandoc or LibreOffice isn't installed, Orange's own engine does the job (same ids,
+    // so presets and scripts keep working). The external program is used when present, for its exact layout.
+    public bool IsAvailable(OperationDescriptor op) => true;
+
+    private static readonly OfficeProvider Native = new();
 
     public async Task<OperationResult> ExecuteAsync(OperationRequest r, IProgress<double>? progress, CancellationToken ct)
     {
         var op = r.Operation;
+        var needs = op.Id switch { "doc.to.pdf" or "ppt.to.pdf" => "libreoffice", "doc.word-count" => null, _ => "pandoc" };
+        if (needs is not null && !tools.Has(needs))
+        {
+            var nativeId = op.Id == "ppt.to.pdf" ? "slides.to.pdf" : "doc.native." + op.OutputExtension;
+            var nativeOp = Native.Describe().First(d => d.Id == nativeId);
+            return await Native.ExecuteAsync(new OperationRequest
+            {
+                Operation = nativeOp, Inputs = r.Inputs, OutputDirectory = r.OutputDirectory, Options = r.Options, Overwrite = r.Overwrite,
+            }, progress, ct);
+        }
         var input = r.Inputs[0];
         var stem = Path.GetFileNameWithoutExtension(input);
         var srcExt = OperationRegistry.Normalize(FileTypeDetector.Ext(input));

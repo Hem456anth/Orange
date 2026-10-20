@@ -98,7 +98,7 @@ public class EngineManagerTests : IDisposable
         {
             var u = new Uri(s.Url);
             Assert.Equal("https", u.Scheme);
-            Assert.Contains(u.Host, EngineManager.AllowedHosts);
+            if (!s.Mirrors) Assert.Contains(u.Host, EngineManager.AllowedHosts);   // mirrored downloads are trusted by their pinned SHA-256
             Assert.Matches("^[0-9a-f]{64}$", s.Sha256);
             Assert.True(s.SizeBytes > 0);
         }

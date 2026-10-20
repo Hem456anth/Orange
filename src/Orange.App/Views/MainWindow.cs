@@ -447,10 +447,9 @@ public sealed class MainWindow : Window
             card.Children.Add(status); card.Children.Add(bar); card.Children.Add(buttons);
             p.Children.Add(card);
         }
-        foreach (var (name, url, why) in new[] {
-            ("LibreOffice", "https://www.libreoffice.org/download/", "legacy DOC, XLS and PPT files"),
-            ("Ghostscript", "https://ghostscript.com/releases/gsdnld.html", "stronger PDF compression"),
-            ("7-Zip", "https://www.7-zip.org/", "RAR and 7z extraction") })
+        p.Children.Add(new TextBlock { Text = L.T("Orange converts documents, PDFs and old Office files with its own built-in engine. These helpers are optional: install one only if you want its exact layout."), FontSize = 12, Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+        if (!ToolLocator.Default.Has("7zip"))
+        foreach (var (name, url, why) in new[] { ("7-Zip", "https://www.7-zip.org/", "RAR and 7z extraction") })
             p.Children.Add(new TextBlock { Text = $"{name} ({why}): install it from {url} and Orange finds it automatically.", FontSize = 12, Opacity = 0.7, TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true });
         p = Section("Language", "Language");
         p.Children.Add(LanguageSection());

@@ -12,14 +12,20 @@ public sealed class OfficeProvider : IOperationProvider
 {
     public string Name => "Office (built in)";
 
+    // Orange's own document engine (no Pandoc, no LibreOffice): every reader feeds DocModel, every writer reads it.
+    private static readonly string[] DocIn = ["docx", "odt", "rtf", "md", "txt", "html", "epub", "doc"];
     private static readonly (string Ext, string Title, string[] From)[] DocTargets =
     [
-        ("pdf", "PDF", ["docx", "md", "txt", "html"]),
-        ("docx", "DOCX", ["md", "txt", "html"]),
-        ("html", "HTML", ["docx", "md", "txt"]),
-        ("md", "Markdown", ["docx", "html", "txt"]),
-        ("txt", "TXT", ["docx", "html", "md"]),
+        ("pdf", "PDF", DocIn),
+        ("docx", "DOCX", DocIn),
+        ("odt", "ODT", DocIn),
+        ("rtf", "RTF", DocIn),
+        ("html", "HTML", DocIn),
+        ("md", "Markdown", DocIn),
+        ("txt", "TXT", DocIn),
+        ("epub", "EPUB", DocIn),
     ];
+    private static readonly HashSet<string> SlidesIn = ["pptx", "ppt"];
     private static readonly string[] SheetIn = ["xlsx", "xls", "ods", "csv", "tsv"];
     private static readonly (string Ext, string Title)[] SheetOut = [("xlsx", "XLSX"), ("ods", "ODS"), ("csv", "CSV"), ("tsv", "TSV"), ("pdf", "PDF")];
 
@@ -39,13 +45,18 @@ public sealed class OfficeProvider : IOperationProvider
             };
         yield return new OperationDescriptor
         {
-            Id = "slides.to.pdf", Title = "PDF", Category = FileKind.Presentation, Group = OperationGroup.Convert, InputExtensions = new HashSet<string> { "pptx" },
+            Id = "slides.to.pdf", Title = "PDF", Category = FileKind.Presentation, Group = OperationGroup.Convert, InputExtensions = SlidesIn,
             OutputExtension = "pdf", Keywords = ["powerpoint", "slides", "pdf", "handout"],
         };
         yield return new OperationDescriptor
         {
-            Id = "slides.to.png", Title = "PNG", Category = FileKind.Presentation, Group = OperationGroup.Convert, InputExtensions = new HashSet<string> { "pptx" },
+            Id = "slides.to.png", Title = "PNG", Category = FileKind.Presentation, Group = OperationGroup.Convert, InputExtensions = SlidesIn,
             OutputExtension = "png", ProducesFolder = true, Keywords = ["powerpoint", "slides", "images", "pictures"],
+        };
+        yield return new OperationDescriptor
+        {
+            Id = "slides.to.pptx", Title = "PPTX", Category = FileKind.Presentation, Group = OperationGroup.Convert, InputExtensions = new HashSet<string> { "ppt" },
+            OutputExtension = "pptx", Keywords = ["powerpoint", "upgrade", "legacy", "pptx"],
         };
         yield return new OperationDescriptor
         {
@@ -75,7 +86,7 @@ public sealed class OfficeProvider : IOperationProvider
         if (op.Id == "slides.to.png")
         {
             var pdf = tmp.File("pdf");
-            Slides.PptxToPdf(input, pdf);
+            SlidesToPdf(input, src, stem, pdf);
             var dir = tmp.Dir("slides");
             int n = 0;
             foreach (var png in PdfIO.RenderPages(pdf, dpi: 144))
@@ -113,7 +124,16 @@ public sealed class OfficeProvider : IOperationProvider
                 }
                 break;
             }
-            case "slides.to.pdf": Slides.PptxToPdf(input, o); break;
+            case "slides.to.pdf": SlidesToPdf(input, src, stem, o); break;
+            case "slides.to.pptx":
+            {
+                var pdf = tmp.File("pdf");
+                SlidesToPdf(input, src, stem, pdf);
+                var pages = new List<byte[]>();
+                foreach (var png in PdfIO.RenderPages(pdf, dpi: 150, maxPages: 1000)) { ct.ThrowIfCancellationRequested(); pages.Add(png); }
+                Slides.PicturesToPptx(pages, o);
+                break;
+            }
             case "pdf.to.docx": DocxIO.Write(PdfIO.Read(input), o); break;
             case "pdf.to.pptx":
             {
@@ -133,11 +153,22 @@ public sealed class OfficeProvider : IOperationProvider
     private static async Task<DocModel> ReadDocAsync(string input, string src, string stem, CancellationToken ct) => src switch
     {
         "docx" => DocxIO.Read(input),
+        "odt" => OdtIO.Read(input),
+        "rtf" => RtfIO.Read(input),
+        "doc" => LegacyDoc.Read(input),
+        "epub" => Ebooks.ReadEpub(input),
         "md" => TextFormats.FromMarkdown(await ReadTextAsync(input, ct), stem),
         "html" => TextFormats.FromHtml(await ReadTextAsync(input, ct), stem),
         "txt" => TextFormats.FromText(await ReadTextAsync(input, ct), stem),
         _ => throw new OrangeException($"Orange can't read .{src} files natively."),
     };
+
+    /// <summary>PPTX through the slide renderer; legacy PPT through Orange's own record reader (text and structure).</summary>
+    private static void SlidesToPdf(string input, string src, string stem, string pdf)
+    {
+        if (src == "ppt") PdfIO.Write(LegacyPpt.ToModel(LegacyPpt.Read(input), stem), pdf);
+        else Slides.PptxToPdf(input, pdf);
+    }
 
     private static async Task<string> ReadTextAsync(string path, CancellationToken ct)
     {
@@ -155,6 +186,9 @@ public sealed class OfficeProvider : IOperationProvider
             case "html": await File.WriteAllTextAsync(o, TextFormats.ToHtml(m), utf8, ct); break;
             case "md": await File.WriteAllTextAsync(o, TextFormats.ToMarkdown(m), utf8, ct); break;
             case "txt": await File.WriteAllTextAsync(o, TextFormats.ToText(m), utf8, ct); break;
+            case "odt": OdtIO.Write(m, o); break;
+            case "rtf": RtfIO.Write(m, o); break;
+            case "epub": Ebooks.WriteEpub(m, o); break;
         }
     }
 
@@ -170,6 +204,9 @@ public sealed class OfficeProvider : IOperationProvider
                 case "xlsx": using (var d = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(path, false)) _ = d.WorkbookPart!.Workbook; break;
                 case "pptx": using (var d = DocumentFormat.OpenXml.Packaging.PresentationDocument.Open(path, false)) _ = d.PresentationPart!.Presentation; break;
                 case "ods": Sheets.ReadOds(path); break;
+                case "odt": OdtIO.Read(path); break;
+                case "rtf": RtfIO.Read(path); break;
+                case "epub": Ebooks.ReadEpub(path); break;
             }
         }
         catch (Exception e) { throw new OrangeException("The converted file didn't validate, so it wasn't saved.", e.Message); }

@@ -38,7 +38,7 @@ public static class SelfTest
         var fixtures = Environment.GetEnvironmentVariable("ORANGE_FIXTURES") ?? FindFixtures();
         var work = Path.Combine(outDir, "work");
         Directory.CreateDirectory(work);
-        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg", "sample.xlsx", "sample.pptx", "sample.epub", "sample.csv", "qr.png" })
+        foreach (var f in new[] { "sample.png", "sample.jpg", "sample.mp4", "sample.wav", "sample.pdf", "with-image.pdf", "sample.docx", "sample-alpha.png", "sample-meta.jpg", "sample.mp3", "sample.svg", "sample.xlsx", "sample.pptx", "sample.epub", "sample.csv", "qr.png", "sample.doc", "sample.ppt" })
             if (File.Exists(Path.Combine(fixtures, f))) File.Copy(Path.Combine(fixtures, f), Path.Combine(work, f), true);
         string W(string n) => Path.Combine(work, n);
         AppSettings.Current.RevealWhenDone = false;
@@ -232,7 +232,10 @@ public static class SelfTest
         await Try("MP3 → OGG/Opus via app service", true, () => Convert("audio.to.opus", W("sample.mp3")));
         await Try("PDF → PNG without Ghostscript (PDFium)", true, () => Convert("pdf.to.png", W("sample.pdf")));
         await Try("PDF compress without Ghostscript", false, () => Convert("pdf.compress", W("with-image.pdf")));
-        await Try("DOCX → PDF (LibreOffice)", false, () => Convert("doc.to.pdf", W("sample.docx")));
+        await Try("DOCX → PDF via doc.to.pdf (LibreOffice id, built-in engine when it's missing)", true, () => Convert("doc.to.pdf", W("sample.docx")));
+        await Try("DOC (Word 97) → DOCX built in", true, () => Convert("doc.native.docx", W("sample.doc")));
+        await Try("PPT → PDF built in", true, () => Convert("slides.to.pdf", W("sample.ppt")));
+        await Try("DOCX → ODT and RTF built in", true, async () => $"{await Convert("doc.native.odt", W("sample.docx"))} {await Convert("doc.native.rtf", W("sample.docx"))}");
         await Try("DOCX → PDF built in (no LibreOffice)", true, () => Convert("doc.native.pdf", W("sample.docx")));
         await Try("XLSX → CSV built in", true, () => Convert("sheet.to.csv", W("sample.xlsx")));
         await Try("PPTX → PDF built in", true, () => Convert("slides.to.pdf", W("sample.pptx")));

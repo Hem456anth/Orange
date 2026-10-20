@@ -234,6 +234,36 @@ jobs:
             Where-Object { $_.ProviderName -in 'Application Error','.NET Runtime','Windows Error Reporting' } |
             Select-Object -First 12 | ForEach-Object { "[$($_.TimeCreated)] $($_.ProviderName)`n$($_.Message)`n" } | Out-File evidence/selftest/windows-events.txt
           if ($p.ExitCode -ne 0) { exit 1 }
+      - name: End-to-end converter sweep (installed app, bundled tools only)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force evidence/sweep | Out-Null
+          $env:ORANGE_BUNDLED_ONLY = "1"
+          $p = Start-Process out/Orange/Orange.exe -ArgumentList '--cli','sweep',"$PWD\tests\fixtures",'--json',"$PWD\evidence\sweep\bundled.json",'--work',"$env:RUNNER_TEMP\sweep-bundled" `
+                 -RedirectStandardOutput evidence/sweep/bundled.log -RedirectStandardError evidence/sweep/bundled.err.log -PassThru -Wait -NoNewWindow
+          $r = (Get-Content evidence/sweep/bundled.json -Raw | ConvertFrom-Json).results
+          "sweep bundled exit=$($p.ExitCode) $(($r | Group-Object Status | ForEach-Object { "$($_.Name)=$($_.Count)" }) -join ' ')" | Tee-Object -Append evidence/summary.txt
+          $r | Where-Object { $_.Status -ne 'pass' } | ForEach-Object { "  $($_.Status) $($_.Op) $($_.Error)" } | Tee-Object -Append evidence/summary.txt
+          if (@($r | Where-Object { $_.Status -in 'fail','no-input' }).Count) { exit 1 }
+      - name: Optional engines (Pandoc, Ghostscript, LibreOffice) via orange engines install, then sweep again
+        if: always()
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force evidence/sweep | Out-Null
+          $env:ORANGE_BUNDLED_ONLY = "1"
+          $t0 = Get-Date
+          $p = Start-Process out/Orange/Orange.exe -ArgumentList '--cli','engines','install','all' -RedirectStandardOutput evidence/sweep/engines-install.log -RedirectStandardError evidence/sweep/engines-install.err.log -PassThru -Wait -NoNewWindow
+          "engines install exit=$($p.ExitCode) in $([int]((Get-Date)-$t0).TotalSeconds)s" | Tee-Object -Append evidence/summary.txt
+          Start-Process out/Orange/Orange.exe -ArgumentList '--cli','tools' -RedirectStandardOutput evidence/sweep/tools-after-engines.log -Wait -NoNewWindow
+          Get-Content evidence/sweep/tools-after-engines.log | Select-String 'pandoc|ghostscript|gs|libreoffice|soffice' | ForEach-Object { "tool $($_.Line.Trim())" } | Tee-Object -Append evidence/summary.txt
+          Get-ChildItem "$env:LOCALAPPDATA\Orange\engines" -Directory | ForEach-Object { "engine $($_.Name) MB=$([math]::Round((Get-ChildItem $_.FullName -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" } | Tee-Object -Append evidence/summary.txt
+          $p = Start-Process out/Orange/Orange.exe -ArgumentList '--cli','sweep',"$PWD\tests\fixtures",'--json',"$PWD\evidence\sweep\engines.json",'--work',"$env:RUNNER_TEMP\sweep-engines" `
+                 -RedirectStandardOutput evidence/sweep/engines.log -RedirectStandardError evidence/sweep/engines.err.log -PassThru -Wait -NoNewWindow
+          $r = (Get-Content evidence/sweep/engines.json -Raw | ConvertFrom-Json).results
+          "sweep engines exit=$($p.ExitCode) $(($r | Group-Object Status | ForEach-Object { "$($_.Name)=$($_.Count)" }) -join ' ')" | Tee-Object -Append evidence/summary.txt
+          $r | Where-Object { $_.Status -ne 'pass' } | ForEach-Object { "  $($_.Status) $($_.Op) $($_.Error)" } | Tee-Object -Append evidence/summary.txt
+          if (@($r | Where-Object { $_.Status -in 'fail','no-input' }).Count) { exit 1 }
       - name: Real drag probe (SendInput + OLE + File Explorer)
         if: always()
         shell: pwsh
@@ -269,6 +299,7 @@ jobs:
           Get-ChildItem out/Orange -Directory | ForEach-Object { "dir $($_.Name) MB=$([math]::Round((Get-ChildItem $_.FullName -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" } | Tee-Object -Append evidence/summary.txt
           Get-ChildItem out/Orange -File | Sort-Object Length -Descending | Select-Object -First 15 | ForEach-Object { "file $($_.Name) MB=$([math]::Round($_.Length/1MB,1))" } | Tee-Object -Append evidence/summary.txt
           "root files MB=$([math]::Round((Get-ChildItem out/Orange -File | Measure-Object Length -Sum).Sum/1MB,1))" | Tee-Object -Append evidence/summary.txt
+          "app total MB=$([math]::Round((Get-ChildItem out/Orange -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1)) (target < 400)" | Tee-Object -Append evidence/summary.txt
       - name: Sign the installer (skipped without secrets)
         shell: pwsh
         run: |

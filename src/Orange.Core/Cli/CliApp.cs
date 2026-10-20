@@ -24,6 +24,7 @@ public static class CliApp
 
     public static async Task<int> RunAsync(string[] args, TextWriter output, TextWriter error, CancellationToken ct = default)
     {
+        Orange.Core.Engines.EngineManager.ForCurrentUser().Register();   // engines installed from Settings work from the command line too
         var registry = OperationRegistry.CreateDefault();
         if (args.Length == 0 || args[0] is "-h" or "--help" or "help") { PrintUsage(output); return args.Length == 0 ? Usage : Ok; }
         try
@@ -38,6 +39,8 @@ public static class CliApp
                 "search" => Search(args[1..], registry, output),
                 "matrix" => Matrix(registry, output),
                 "run" => await RunOpAsync(args[1..], registry, output, error, ct),
+                "sweep" => await SweepAsync(args[1..], registry, output, ct),
+                "engines" => await EnginesAsync(args[1..], output, error, ct),
                 "--version" or "version" => Version(output),
                 _ => Bad(error, $"Unknown command \"{args[0]}\"."),
             };
@@ -270,6 +273,47 @@ public static class CliApp
         foreach (var op in reg.All.OrderBy(x => x.Category).ThenBy(x => x.Group).ThenBy(x => x.Id))
             o.WriteLine($"| `{op.Id}` | {op.Category} | {op.Group} | {op.Title} | {(op.ProducesFolder ? "folder" : op.OutputExtension ?? "same as input")} | {(op.RequiresTool is null ? "built in" : ToolNames.Friendly(op.RequiresTool))} | {(reg.IsAvailable(op) ? "yes" : "no")} |");
         return Ok;
+    }
+
+    /// <summary>"orange sweep <fixtures> [--json report.json] [--work dir]": runs every operation end to end.</summary>
+    private static async Task<int> SweepAsync(string[] a, OperationRegistry reg, TextWriter o, CancellationToken ct)
+    {
+        var p = Parse(a);
+        if (p.Positional.Count != 1) throw new UsageException("Usage: orange sweep <fixtures-folder> [--json report.json] [--work dir]");
+        var work = p.Get("--work") is { } w ? Path.GetFullPath(w) : Path.Combine(Path.GetTempPath(), "orange-sweep-" + Guid.NewGuid().ToString("N")[..8]);
+        var results = await Orange.Core.Testing.ConverterSweep.RunAsync(reg, Path.GetFullPath(p.Positional[0]), work,
+            r => o.WriteLine($"{r.Status,-8} {r.Op,-28} {r.Seconds,6:0.0}s {r.Input} {(r.Error is null ? "→ " + r.Output : "· " + r.Error)}"), ct);
+        var summary = results.GroupBy(r => r.Status).ToDictionary(g => g.Key, g => g.Count());
+        o.WriteLine("summary: " + string.Join(", ", summary.Select(kv => $"{kv.Key}={kv.Value}")));
+        if (p.Get("--json") is { } json) File.WriteAllText(json, JsonSerializer.Serialize(new { summary, results }, Json));
+        return results.Any(r => r.Status == "fail") ? SomeFailed : Ok;
+    }
+
+    /// <summary>"orange engines list | install <id>|all | uninstall <id>" (same verified downloads as Settings → Engines).</summary>
+    private static async Task<int> EnginesAsync(string[] a, TextWriter o, TextWriter e, CancellationToken ct)
+    {
+        var mgr = Orange.Core.Engines.EngineManager.ForCurrentUser();
+        switch (a.FirstOrDefault())
+        {
+            case null or "list":
+                var inst = mgr.Installed();
+                foreach (var s in Orange.Core.Engines.EngineManager.Catalog)
+                    o.WriteLine($"{s.Id,-12} {s.Version,-8} {(inst.FirstOrDefault(i => i.Id == s.Id) is { } i ? "installed " + i.ExePath : "not installed")}  ({s.SizeBytes / 1048576} MB, {s.License})");
+                return Ok;
+            case "install" when a.Length == 2:
+                var specs = a[1] == "all" ? Orange.Core.Engines.EngineManager.Catalog.ToList() : Orange.Core.Engines.EngineManager.Catalog.Where(s => s.Id == a[1]).ToList();
+                if (specs.Count == 0) throw new UsageException($"No engine called \"{a[1]}\". Try \"orange engines list\".");
+                foreach (var s in specs)
+                {
+                    o.WriteLine($"Installing {s.Name} {s.Version}…");
+                    var r = await mgr.InstallAsync(s, null, ct);
+                    o.WriteLine($"  {r.ExePath}");
+                }
+                return Ok;
+            case "uninstall" when a.Length == 2:
+                return mgr.Uninstall(a[1]) ? Ok : NothingToDo;
+            default: throw new UsageException("Usage: orange engines list | install <id>|all | uninstall <id>");
+        }
     }
 
     private static async Task<int> RunOpAsync(string[] a, OperationRegistry reg, TextWriter o, TextWriter e, CancellationToken ct)

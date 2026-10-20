@@ -23,3 +23,9 @@ Blocked = waiting on something outside the repo. Updated with every merged PR.
 | 16 | Onboarding | Not started | — | See PLAN.md |
 | 17 | Progress summary | Not started | — | See PLAN.md |
 | 18 | CI self-test coverage | Not started | — | See PLAN.md |
+
+## Built-in engines (PR #14, CI run 59)
+- Orange's own clean-room engines now cover the Pandoc, LibreOffice and Ghostscript features it uses: DOCX/ODT/RTF/EPUB/HTML/Markdown/TXT/DOC between each other and to PDF, legacy .doc/.ppt reading, PDF compression and rendering. See docs/native-engines.md.
+- Windows CI, installed app with bundled tools only: end-to-end sweep 121 pass, 1 skip (HEIC encode, not in the Windows ImageMagick build), 0 fail. After `orange engines install all` (Pandoc 3.5, Ghostscript 10.08.0, LibreOffice 26.8.1, 66 s): 121 pass, 1 skip.
+- App on disk 389.1 MB (limit 400), installer 101.4 MB. Optional engines live outside the app: LibreOffice 1,504 MB, Pandoc 209 MB, Ghostscript 88 MB.
+- Not reproduced natively: pixel-exact Office layout, legacy .doc/.ppt pictures and formatting, footnotes/citations/maths, PostScript, OCR. Unverified on a real PC.
