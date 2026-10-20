@@ -37,6 +37,11 @@ public sealed class AppSettings
     public bool WelcomeShown { get; set; }
     /// <summary>Local troubleshooting log in %LOCALAPPDATA%\Orange\logs. Off by default; never uploaded.</summary>
     public bool DebugLog { get; set; }
+    /// <summary>"" follows Windows; otherwise en-US, hi-IN or te-IN.</summary>
+    public string? Language { get; set; }
+    /// <summary>Opt-in; off by default so Orange makes no network request unless the user asks.</summary>
+    public bool CheckForUpdates { get; set; }
+    public DateTimeOffset? LastUpdateCheck { get; set; }
     [JsonIgnore] public static string LogFolder => Path.Combine(Folder, "logs");
     [JsonIgnore] public static string EngineFolder => Path.Combine(Folder, "engines");
     [JsonIgnore] public static Orange.Core.Engines.EngineManager Engines { get; } = new(EngineFolder);

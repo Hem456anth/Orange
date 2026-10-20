@@ -20,7 +20,7 @@ public sealed class MainWindow : Window
     private readonly NavigationView _nav = new() { IsBackButtonVisible = NavigationViewBackButtonVisible.Collapsed, IsSettingsVisible = true, PaneDisplayMode = NavigationViewPaneDisplayMode.Left, OpenPaneLength = 200 };
     private readonly Frame _host = new();
     private readonly List<string> _files = new();
-    private readonly TextBox _search = new() { PlaceholderText = "Search: webp, compress, to mp3, merge pdf…" };
+    private readonly TextBox _search = new() { PlaceholderText = L.T("Search: webp, compress, to mp3, merge pdf…") };
     private readonly ComboBox _category = new() { MinWidth = 150 };
     private readonly ListView _ops = new() { SelectionMode = ListViewSelectionMode.None };
     private readonly TextBlock _filesText = new() { TextWrapping = TextWrapping.Wrap, Opacity = 0.8 };
@@ -34,10 +34,10 @@ public sealed class MainWindow : Window
         ExtendsContentIntoTitleBar = false;
         AppWindow.SetIcon(Path.Combine(AppContext.BaseDirectory, "Assets", "orange.ico"));
         SystemBackdrop = new MicaBackdrop();
-        _nav.MenuItems.Add(Item("Convert", "\uE8AB", "convert"));
-        _nav.MenuItems.Add(Item("Favorites", "\uE734", "favorites"));
-        _nav.MenuItems.Add(Item("Recent", "\uE81C", "recent"));
-        _nav.FooterMenuItems.Add(Item("About & privacy", "\uE946", "about"));
+        _nav.MenuItems.Add(Item(L.T("Convert"), "\uE8AB", "convert"));
+        _nav.MenuItems.Add(Item(L.T("Favorites"), "\uE734", "favorites"));
+        _nav.MenuItems.Add(Item(L.T("Recent"), "\uE81C", "recent"));
+        _nav.FooterMenuItems.Add(Item(L.T("About & privacy"), "\uE946", "about"));
         _nav.Content = _host;
         _nav.SelectionChanged += (_, e) =>
         {
@@ -109,9 +109,9 @@ public sealed class MainWindow : Window
             BorderBrush = new SolidColorBrush(WheelControl.OrangeAccent), Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0x18, 0xFF, 0x7A, 0x00)),
         };
         var dropText = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Spacing = 6 };
-        dropText.Children.Add(new TextBlock { Text = "Drop files here", Style = (Style)Application.Current.Resources["SubtitleTextBlockStyle"], HorizontalAlignment = HorizontalAlignment.Center });
-        dropText.Children.Add(new TextBlock { Text = "Or anywhere: drag files in File Explorer and tap Shift.", Opacity = 0.7, HorizontalAlignment = HorizontalAlignment.Center });
-        var browse = new Button { Content = "Choose files…", HorizontalAlignment = HorizontalAlignment.Center };
+        dropText.Children.Add(new TextBlock { Text = L.T("Drop files here"), Style = (Style)Application.Current.Resources["SubtitleTextBlockStyle"], HorizontalAlignment = HorizontalAlignment.Center });
+        dropText.Children.Add(new TextBlock { Text = L.T("Or anywhere: drag files in File Explorer and tap Shift."), Opacity = 0.7, HorizontalAlignment = HorizontalAlignment.Center });
+        var browse = new Button { Content = L.T("Choose files…"), HorizontalAlignment = HorizontalAlignment.Center };
         browse.Click += async (_, _) =>
         {
             var p = new FileOpenPicker(); p.FileTypeFilter.Add("*");
@@ -218,8 +218,8 @@ public sealed class MainWindow : Window
     {
         var reg = ConversionService.Instance.Registry;
         var list = new StackPanel { Spacing = 4, Padding = new Thickness(24) };
-        list.Children.Add(new TextBlock { Text = "Favorites", Style = (Style)Application.Current.Resources["TitleTextBlockStyle"] });
-        list.Children.Add(new TextBlock { Text = "Favorites appear first on the wheel. Star operations on the Convert page.", Opacity = 0.7 });
+        list.Children.Add(new TextBlock { Text = L.T("Favorites"), Style = (Style)Application.Current.Resources["TitleTextBlockStyle"] });
+        list.Children.Add(new TextBlock { Text = L.T("Favorites appear first on the wheel. Star operations on the Convert page."), Opacity = 0.7 });
         foreach (var id in AppSettings.Current.Favorites)
         {
             try { list.Children.Add(Row(reg.Get(id))); } catch (OrangeException) { }
@@ -230,8 +230,8 @@ public sealed class MainWindow : Window
     private UIElement RecentPage()
     {
         var list = new StackPanel { Spacing = 8, Padding = new Thickness(24) };
-        list.Children.Add(new TextBlock { Text = "Recent", Style = (Style)Application.Current.Resources["TitleTextBlockStyle"] });
-        if (AppSettings.Current.Recent.Count == 0) list.Children.Add(new TextBlock { Text = "Nothing yet. Your last 50 conversions appear here.", Opacity = 0.7 });
+        list.Children.Add(new TextBlock { Text = L.T("Recent"), Style = (Style)Application.Current.Resources["TitleTextBlockStyle"] });
+        if (AppSettings.Current.Recent.Count == 0) list.Children.Add(new TextBlock { Text = L.T("Nothing yet. Your last 50 conversions appear here."), Opacity = 0.7 });
         foreach (var r in AppSettings.Current.Recent)
         {
             var row = new Grid { ColumnSpacing = 12 };
@@ -241,12 +241,12 @@ public sealed class MainWindow : Window
             t.Children.Add(new TextBlock { Text = $"{r.Category} → {r.Title} · {r.Files} file{(r.Files == 1 ? "" : "s")}", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
             t.Children.Add(new TextBlock { Text = $"{r.When.LocalDateTime:g} · {string.Join(", ", r.Outputs.Select(Path.GetFileName))}", FontSize = 12, Opacity = 0.7, TextTrimming = TextTrimming.CharacterEllipsis });
             row.Children.Add(t);
-            var show = new Button { Content = "Show", IsEnabled = r.Outputs.Any(o => File.Exists(o) || Directory.Exists(o)) };
+            var show = new Button { Content = L.T("Show"), IsEnabled = r.Outputs.Any(o => File.Exists(o) || Directory.Exists(o)) };
             show.Click += (_, _) => Native.RevealInExplorer(r.Outputs.Where(o => File.Exists(o) || Directory.Exists(o)).ToList());
             Grid.SetColumn(show, 1); row.Children.Add(show);
             list.Children.Add(row);
         }
-        var clear = new Button { Content = "Clear history", Margin = new Thickness(0, 12, 0, 0) };
+        var clear = new Button { Content = L.T("Clear history"), Margin = new Thickness(0, 12, 0, 0) };
         clear.Click += (_, _) => { AppSettings.Current.Recent.Clear(); AppSettings.Current.Save(); Show("recent"); };
         list.Children.Add(clear);
         return new ScrollViewer { Content = list };
@@ -256,16 +256,23 @@ public sealed class MainWindow : Window
     private UIElement SettingsPage()
     {
         var s = AppSettings.Current;
-        var p = new StackPanel { Spacing = 14, Padding = new Thickness(24), MaxWidth = 760, HorizontalAlignment = HorizontalAlignment.Left };
-        p.Children.Add(new TextBlock { Text = "Settings", Style = (Style)Application.Current.Resources["TitleTextBlockStyle"] });
+        var groups = new Dictionary<string, StackPanel>();
+        StackPanel Section(string group, string header)
+        {
+            if (!groups.TryGetValue(group, out var g))
+                groups[group] = g = new StackPanel { Spacing = 14, Padding = new Thickness(24), MaxWidth = 760, HorizontalAlignment = HorizontalAlignment.Left };
+            g.Children.Add(Header(L.T(header)));
+            return g;
+        }
+        StackPanel p;
 
-        p.Children.Add(Header("Activation"));
-        p.Children.Add(Toggle("Open the wheel while dragging files", s.DragActivation, v => { s.DragActivation = v; if (App.Watcher != null) App.Watcher.Enabled = v; }));
-        p.Children.Add(Choice("Convert wheel key", s.ConvertKey, v => s.ConvertKey = v));
-        p.Children.Add(Choice("Tools wheel key", s.ToolsKey, v => s.ToolsKey = v));
-        p.Children.Add(Choice("Actions wheel key", s.ActionsKey, v => s.ActionsKey = v));
-        p.Children.Add(Choice("Drags that open the wheel", s.DragSources, v => s.DragSources = v, "Explorer and the desktop only, or drags from any app"));
-        var hk = new TextBox { Header = "Shortcut for the selected files in File Explorer", Text = s.Hotkey, Width = 260, HorizontalAlignment = HorizontalAlignment.Left };
+        p = Section("Activation", "Activation");
+        p.Children.Add(Toggle(L.T("Open the wheel while dragging files"), s.DragActivation, v => { s.DragActivation = v; if (App.Watcher != null) App.Watcher.Enabled = v; }));
+        p.Children.Add(Choice(L.T("Convert wheel key"), s.ConvertKey, v => s.ConvertKey = v));
+        p.Children.Add(Choice(L.T("Tools wheel key"), s.ToolsKey, v => s.ToolsKey = v));
+        p.Children.Add(Choice(L.T("Actions wheel key"), s.ActionsKey, v => s.ActionsKey = v));
+        p.Children.Add(Choice(L.T("Drags that open the wheel"), s.DragSources, v => s.DragSources = v, "Explorer and the desktop only, or drags from any app"));
+        var hk = new TextBox { Header = L.T("Shortcut for the selected files in File Explorer"), Text = s.Hotkey, Width = 260, HorizontalAlignment = HorizontalAlignment.Left };
         var hkStatus = new TextBlock { FontSize = 12, Opacity = 0.75, Text = App.Tray?.HotkeyError ?? "Select files in Explorer, press the shortcut, then use the arrow keys and Enter." };
         hk.LostFocus += (_, _) =>
         {
@@ -275,16 +282,16 @@ public sealed class MainWindow : Window
         };
         p.Children.Add(hk); p.Children.Add(hkStatus);
 
-        p.Children.Add(Header("File Explorer"));
+        p = Section("Activation", "File Explorer");
         p.Children.Add(Toggle("\"Convert with Orange\" in the right-click menu", ExplorerIntegration.ContextMenuInstalled, ExplorerIntegration.SetContextMenu,
             "On Windows 11 it's under \"Show more options\" (Shift+F10)."));
-        p.Children.Add(Toggle("Orange in the Send to menu", ExplorerIntegration.SendToInstalled, ExplorerIntegration.SetSendTo));
-        p.Children.Add(Toggle("Start Orange when I sign in", ExplorerIntegration.AutostartInstalled, v => { s.StartWithWindows = v; ExplorerIntegration.SetAutostart(v); }));
+        p.Children.Add(Toggle(L.T("Orange in the Send to menu"), ExplorerIntegration.SendToInstalled, ExplorerIntegration.SetSendTo));
+        p.Children.Add(Toggle(L.T("Start Orange when I sign in"), ExplorerIntegration.AutostartInstalled, v => { s.StartWithWindows = v; ExplorerIntegration.SetAutostart(v); }));
 
-        p.Children.Add(Header("Output"));
-        var outBox = new TextBox { Header = "Save results to", Text = s.OutputFolder ?? "", PlaceholderText = "Next to the original file", IsReadOnly = true, Width = 420, HorizontalAlignment = HorizontalAlignment.Left };
+        p = Section("Output", "Output");
+        var outBox = new TextBox { Header = L.T("Save results to"), Text = s.OutputFolder ?? "", PlaceholderText = L.T("Next to the original file"), IsReadOnly = true, Width = 420, HorizontalAlignment = HorizontalAlignment.Left };
         var outButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        var pick = new Button { Content = "Choose folder…" };
+        var pick = new Button { Content = L.T("Choose folder…") };
         pick.Click += async (_, _) =>
         {
             var fp = new FolderPicker(); fp.FileTypeFilter.Add("*");
@@ -292,39 +299,39 @@ public sealed class MainWindow : Window
             var f = await fp.PickSingleFolderAsync();
             if (f != null) { s.OutputFolder = f.Path; outBox.Text = f.Path; s.Save(); }
         };
-        var reset = new Button { Content = "Next to the original" };
+        var reset = new Button { Content = L.T("Next to the original") };
         reset.Click += (_, _) => { s.OutputFolder = null; outBox.Text = ""; s.Save(); };
         outButtons.Children.Add(pick); outButtons.Children.Add(reset);
         p.Children.Add(outBox); p.Children.Add(outButtons);
-        p.Children.Add(Choice("When a file with that name exists", s.Overwrite, v => s.Overwrite = v, "Keep both adds \" 2\". Orange never overwrites the original."));
-        p.Children.Add(Toggle("Show results in File Explorer", s.RevealWhenDone, v => s.RevealWhenDone = v));
-        p.Children.Add(Toggle("Notify when done", s.NotifyWhenDone, v => s.NotifyWhenDone = v));
-        p.Children.Add(Toggle("Ask for settings before running tools (trim, crop…)", s.AskOptionsForTools, v => s.AskOptionsForTools = v));
-        p.Children.Add(Toggle("Sounds", s.PlaySounds, v => s.PlaySounds = v));
+        p.Children.Add(Choice(L.T("When a file with that name exists"), s.Overwrite, v => s.Overwrite = v, "Keep both adds \" 2\". Orange never overwrites the original."));
+        p.Children.Add(Toggle(L.T("Show results in File Explorer"), s.RevealWhenDone, v => s.RevealWhenDone = v));
+        p.Children.Add(Toggle(L.T("Notify when done"), s.NotifyWhenDone, v => s.NotifyWhenDone = v));
+        p.Children.Add(Toggle(L.T("Ask for settings before running tools (trim, crop…)"), s.AskOptionsForTools, v => s.AskOptionsForTools = v));
+        p.Children.Add(Toggle(L.T("Sounds"), s.PlaySounds, v => s.PlaySounds = v));
 
-        p.Children.Add(Header("Appearance"));
-        p.Children.Add(Choice("Theme", s.Theme, v => { s.Theme = v; if (Content is FrameworkElement fe) fe.RequestedTheme = App.ThemeFor(v); }));
+        p = Section("Output", "Appearance");
+        p.Children.Add(Choice(L.T("Theme"), s.Theme, v => { s.Theme = v; if (Content is FrameworkElement fe) fe.RequestedTheme = App.ThemeFor(v); }));
 
-        p.Children.Add(Header("Performance and limits"));
-        p.Children.Add(Number("Files converted at the same time", s.MaxParallelJobs, 1, 16, v => s.MaxParallelJobs = (int)v));
-        p.Children.Add(Number("Largest input file (GB)", s.MaxInputGigabytes, 0.1, 200, v => s.MaxInputGigabytes = v));
+        p = Section("Output", "Performance and limits");
+        p.Children.Add(Number(L.T("Files converted at the same time"), s.MaxParallelJobs, 1, 16, v => s.MaxParallelJobs = (int)v));
+        p.Children.Add(Number(L.T("Largest input file (GB)"), s.MaxInputGigabytes, 0.1, 200, v => s.MaxInputGigabytes = v));
 
-        p.Children.Add(Header("Presets"));
+        p = Section("Presets", "Presets");
         p.Children.Add(PresetsSettings.Build(Hwnd, () => Show("settings")));
-        p.Children.Add(Header("Watch folders"));
+        p = Section("Presets", "Watch folders");
         p.Children.Add(WatchFoldersSection());
-        p.Children.Add(Header("Wheel editor"));
+        p = Section("Presets", "Wheel editor");
         p.Children.Add(PresetsSettings.WheelEditor(() => Show("settings")));
 
-        p.Children.Add(Header("Troubleshooting"));
-        p.Children.Add(Toggle("Write a debug log", s.DebugLog, v => s.DebugLog = v,
+        p = Section("Privacy", "Troubleshooting");
+        p.Children.Add(Toggle(L.T("Write a debug log"), s.DebugLog, v => s.DebugLog = v,
             "Records drag, key and drop events and conversion results in a text file on this PC. Nothing is sent anywhere. Turn it off when you're done."));
-        var openLogs = new Button { Content = "Open logs folder" };
+        var openLogs = new Button { Content = L.T("Open logs folder") };
         openLogs.Click += (_, _) => { Directory.CreateDirectory(AppSettings.LogFolder); System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("explorer.exe") { ArgumentList = { AppSettings.LogFolder }, UseShellExecute = false }); };
         p.Children.Add(openLogs);
 
-        p.Children.Add(Header("Converters"));
-        p.Children.Add(new TextBlock { Text = "Orange uses these programs on your PC. Missing ones only hide the operations that need them.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+        p = Section("Engines", "Converters");
+        p.Children.Add(new TextBlock { Text = L.T("Orange uses these programs on your PC. Missing ones only hide the operations that need them."), Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
         foreach (var tool in new[] { "ffmpeg", "ffprobe", "pandoc", "ghostscript", "libreoffice" })
         {
             var path = ToolLocator.Default.Find(tool);
@@ -332,7 +339,7 @@ public sealed class MainWindow : Window
             row.Children.Add(new FontIcon { Glyph = path is null ? "\uE783" : "\uE73E", Foreground = new SolidColorBrush(path is null ? Colors.IndianRed : Colors.SeaGreen) });
             row.Children.Add(new TextBlock { Text = $"{ToolNames.Friendly(tool)} ({tool})", Width = 200, VerticalAlignment = VerticalAlignment.Center });
             row.Children.Add(new TextBlock { Text = path ?? "Not found", Opacity = 0.7, VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, MaxWidth = 340 });
-            var b = new Button { Content = "Locate…" };
+            var b = new Button { Content = L.T("Locate…") };
             var t = tool;
             b.Click += async (_, _) =>
             {
@@ -345,8 +352,8 @@ public sealed class MainWindow : Window
             p.Children.Add(row);
         }
 
-        p.Children.Add(Header("Engines"));
-        p.Children.Add(new TextBlock { Text = "Optional helpers Orange can download for you. Downloads happen only when you press Install, come from the project's official release page, and are checked against a fingerprint built into Orange before anything is installed.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+        p = Section("Engines", "Engines");
+        p.Children.Add(new TextBlock { Text = L.T("Optional helpers Orange can download for you. Downloads happen only when you press Install, come from the project's official release page, and are checked against a fingerprint built into Orange before anything is installed."), Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
         var installed = AppSettings.Engines.Installed();
         foreach (var spec in Orange.Core.Engines.EngineManager.Catalog)
         {
@@ -358,8 +365,8 @@ public sealed class MainWindow : Window
             var status = new TextBlock { FontSize = 12, Text = have is null ? "Not installed" : $"Installed in {Path.GetDirectoryName(have.ExePath)}" };
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
             var install = new Button { Content = have is null ? "Install" : "Reinstall" };
-            var remove = new Button { Content = "Uninstall", IsEnabled = have is not null };
-            var cancel = new Button { Content = "Cancel", Visibility = Visibility.Collapsed };
+            var remove = new Button { Content = L.T("Uninstall"), IsEnabled = have is not null };
+            var cancel = new Button { Content = L.T("Cancel"), Visibility = Visibility.Collapsed };
             CancellationTokenSource? cts = null;
             var sp = spec;
             install.Click += async (_, _) =>
@@ -372,7 +379,7 @@ public sealed class MainWindow : Window
                     bar.IsIndeterminate = pr.Total <= 0; if (pr.Total > 0) bar.Value = (double)pr.Done / pr.Total;
                 });
                 try { await Task.Run(() => AppSettings.Engines.InstallAsync(sp, prog, cts.Token)); Diagnostics.Event($"engine-installed {sp.Id}"); Show("settings"); }
-                catch (OperationCanceledException) { status.Text = "Cancelled. Nothing was installed."; }
+                catch (OperationCanceledException) { status.Text = L.T("Cancelled. Nothing was installed."); }
                 catch (Exception e) { status.Text = e.Message; Diagnostics.Event($"engine-failed {sp.Id} {e.Message}"); }
                 finally { install.IsEnabled = true; cancel.Visibility = bar.Visibility = Visibility.Collapsed; }
             };
@@ -387,19 +394,94 @@ public sealed class MainWindow : Window
             ("Ghostscript", "https://ghostscript.com/releases/gsdnld.html", "stronger PDF compression"),
             ("7-Zip", "https://www.7-zip.org/", "RAR and 7z extraction") })
             p.Children.Add(new TextBlock { Text = $"{name} ({why}): install it from {url} and Orange finds it automatically.", FontSize = 12, Opacity = 0.7, TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true });
-        return new ScrollViewer { Content = p };
+        p = Section("Language", "Language");
+        p.Children.Add(LanguageSection());
+        p = Section("Updates", "Updates");
+        p.Children.Add(UpdatesSection());
+        p = Section("Privacy", "Your data");
+        p.Children.Add(new TextBlock { TextWrapping = TextWrapping.Wrap, Text = L.T("Your files stay on this PC. Orange converts everything locally, never uploads files, has no account, no analytics and no telemetry. It only goes online when you install an engine or turn on update checks.") });
+        var wipe = new Button { Content = L.T("Delete settings and history") };
+        wipe.Click += (_, _) => { try { Directory.Delete(AppSettings.Folder, true); } catch { } ProgressWindow.ShowInfo(L.T("Settings and history deleted. They'll be recreated with defaults.")); };
+        p.Children.Add(wipe);
+        var about = AboutPage();
+        var viewers = groups.ToDictionary(kv => kv.Key, kv => (UIElement)new ScrollViewer { Content = kv.Value });
+        viewers["About"] = about;
+
+        // Left: the sections; right: the chosen one. The choice survives refreshes (Show("settings")).
+        string[] order = ["Activation", "Output", "Presets", "Engines", "Language", "Updates", "Privacy", "About"];
+        var list = new ListView { SelectionMode = ListViewSelectionMode.Single, Width = 190, Margin = new Thickness(12, 24, 0, 0) };
+        foreach (var o in order) list.Items.Add(new ListViewItem { Content = L.T(o), Tag = o });
+        Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(list, L.T("Settings sections"));
+        var host = new ContentControl { HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch };
+        void Pick(string key) { _settingsSection = key; host.Content = viewers.TryGetValue(key, out var v) ? v : viewers["Activation"]; }
+        list.SelectionChanged += (_, _) => { if (list.SelectedItem is ListViewItem li) Pick((string)li.Tag); };
+        list.SelectedIndex = Math.Max(0, Array.IndexOf(order, _settingsSection));
+        Pick(order[Math.Max(0, Array.IndexOf(order, _settingsSection))]);
+        var grid = new Grid();
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        var title = new StackPanel();
+        title.Children.Add(new TextBlock { Text = L.T("Settings"), Style = (Style)Application.Current.Resources["TitleTextBlockStyle"], Margin = new Thickness(16, 16, 0, 0) });
+        title.Children.Add(list);
+        grid.Children.Add(title);
+        Grid.SetColumn(host, 1); grid.Children.Add(host);
+        return grid;
     }
+
+    private string _settingsSection = "Activation";
+
+    /// <summary>Opens Settings at one section (used by the self-test and the tray).</summary>
+    public void ShowSettings(string section) { _settingsSection = section; _host.Content = SettingsPage(); }
+
+    private UIElement LanguageSection()
+    {
+        var s = AppSettings.Current;
+        var p = new StackPanel { Spacing = 8 };
+        (string Code, string Name)[] langs = [("", L.T("Same as Windows")), ("en-US", "English"), ("hi-IN", "हिन्दी (Hindi)"), ("te-IN", "తెలుగు (Telugu)")];
+        var cb = new ComboBox { Header = L.T("Language"), ItemsSource = langs.Select(x => x.Name).ToList(), SelectedIndex = Math.Max(0, Array.FindIndex(langs, x => x.Code == (s.Language ?? ""))), MinWidth = 260 };
+        var note = new TextBlock { FontSize = 12, Opacity = 0.7, TextWrapping = TextWrapping.Wrap, Text = L.T("Orange uses the new language the next time it starts. Hindi and Telugu translations are new; corrections are welcome.") };
+        cb.SelectionChanged += (_, _) => { s.Language = langs[cb.SelectedIndex].Code; s.Save(); note.Text = L.T("Restart Orange to switch language."); };
+        p.Children.Add(cb); p.Children.Add(note);
+        return p;
+    }
+
+    private UIElement UpdatesSection()
+    {
+        var s = AppSettings.Current;
+        var p = new StackPanel { Spacing = 8 };
+        p.Children.Add(new TextBlock { TextWrapping = TextWrapping.Wrap, Opacity = 0.75, Text = L.T("Off by default. When on, Orange asks GitHub once a day whether a newer version exists. Nothing about you or your files is sent, and nothing is downloaded automatically.") });
+        var notes = new TextBlock { TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true, FontSize = 12 };
+        var link = new HyperlinkButton { Visibility = Visibility.Collapsed };
+        async Task Check()
+        {
+            notes.Text = L.T("Checking…");
+            try
+            {
+                var info = await new Orange.Core.Updates.UpdateChecker().CheckAsync(typeof(App).Assembly.GetName().Version ?? new Version(0, 0));
+                s.LastUpdateCheck = DateTimeOffset.Now; s.Save();
+                notes.Text = info.IsNewer ? L.F("Orange {0} is available.", info.Version) + "\n\n" + info.Notes : L.T("You have the latest version.");
+                if (info.IsNewer) { link.Content = L.T("Open the download page"); link.NavigateUri = new Uri(info.Url); link.Visibility = Visibility.Visible; }
+            }
+            catch (Exception e) { notes.Text = e.Message; }
+        }
+        p.Children.Add(Toggle(L.T("Check for updates"), s.CheckForUpdates, v => s.CheckForUpdates = v));
+        var now = new Button { Content = L.T("Check now") };
+        now.Click += async (_, _) => await Check();
+        p.Children.Add(now); p.Children.Add(notes); p.Children.Add(link);
+        return p;
+    }
+
 
     private UIElement WatchFoldersSection()
     {
         var p = new StackPanel { Spacing = 8 };
-        p.Children.Add(new TextBlock { Text = "New files dropped into a watched folder are converted with a preset while Orange runs in the tray. Orange waits until a file has finished copying or downloading, and never re-converts its own results.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
+        p.Children.Add(new TextBlock { Text = L.T("New files dropped into a watched folder are converted with a preset while Orange runs in the tray. Orange waits until a file has finished copying or downloading, and never re-converts its own results."), Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
         if (WatchService.LastError is { } err) p.Children.Add(new TextBlock { Text = err, Foreground = new SolidColorBrush(Colors.IndianRed), TextWrapping = TextWrapping.Wrap });
         foreach (var spec in WatchService.Specs)
         {
             var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
             row.Children.Add(new TextBlock { Text = $"{spec.Folder}  →  {spec.Preset}{(spec.MoveOriginals ? " (originals moved to Originals)" : "")}", VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis, MaxWidth = 520 });
-            var remove = new Button { Content = "Remove" };
+            var remove = new Button { Content = L.T("Remove") };
             var folder = spec.Folder;
             remove.Click += (_, _) => { WatchService.Remove(folder); Show("settings"); };
             row.Children.Add(remove);
@@ -407,9 +489,9 @@ public sealed class MainWindow : Window
         }
         var presets = ConversionService.Instance.Presets.Select(x => x.Name).ToList();
         var add = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        var presetBox = new ComboBox { ItemsSource = presets, SelectedIndex = presets.Count > 0 ? 0 : -1, MinWidth = 200, PlaceholderText = "Preset" };
-        var move = new CheckBox { Content = "Move originals to an Originals folder" };
-        var pick = new Button { Content = "Add folder…" };
+        var presetBox = new ComboBox { ItemsSource = presets, SelectedIndex = presets.Count > 0 ? 0 : -1, MinWidth = 200, PlaceholderText = L.T("Preset") };
+        var move = new CheckBox { Content = L.T("Move originals to an Originals folder") };
+        var pick = new Button { Content = L.T("Add folder…") };
         pick.Click += async (_, _) =>
         {
             if (presetBox.SelectedIndex < 0) return;
@@ -423,7 +505,7 @@ public sealed class MainWindow : Window
         add.Children.Add(presetBox); add.Children.Add(move); add.Children.Add(pick);
         p.Children.Add(add);
         if (WatchService.Count > 0)
-            p.Children.Add(Toggle("Pause all watch folders", WatchService.Paused, WatchService.SetPaused));
+            p.Children.Add(Toggle(L.T("Pause all watch folders"), WatchService.Paused, WatchService.SetPaused));
         return p;
     }
 
@@ -473,7 +555,7 @@ public sealed class MainWindow : Window
             "and makes no network requests. Settings and history are stored in %LOCALAPPDATA%\\Orange and can be deleted at any time." });
         p.Children.Add(new TextBlock { TextWrapping = TextWrapping.Wrap, Opacity = 0.8, Text =
             "Orange is an independent Windows app inspired by the workflow of Tangerine for Mac. It is not affiliated with Tangerine or Leap Studio." });
-        var clear = new Button { Content = "Delete settings and history" };
+        var clear = new Button { Content = L.T("Delete settings and history") };
         clear.Click += (_, _) =>
         {
             try { Directory.Delete(AppSettings.Folder, true); } catch { }

@@ -81,7 +81,7 @@ public abstract class EditorWindow : Window
     protected readonly string File;
     protected readonly Grid Body = new();
     protected readonly TextBlock Status = new() { FontSize = 12, Opacity = 0.8, TextWrapping = TextWrapping.Wrap, VerticalAlignment = VerticalAlignment.Center };
-    protected readonly Button ApplyButton = new() { Content = "Apply", MinWidth = 96 };
+    protected readonly Button ApplyButton = new() { Content = L.T("Apply"), MinWidth = 96 };
     private readonly string _previewDir = System.IO.Path.Combine(AppSettings.Folder, "preview", Guid.NewGuid().ToString("N"));
     private int _previewN;
 
@@ -109,7 +109,7 @@ public abstract class EditorWindow : Window
         footer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         footer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         footer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        var cancel = new Button { Content = "Cancel", MinWidth = 80 };
+        var cancel = new Button { Content = L.T("Cancel"), MinWidth = 80 };
         cancel.Click += (_, _) => Cancel();
         ApplyButton.Style = (Style)Application.Current.Resources["AccentButtonStyle"];
         ApplyButton.Click += (_, _) => TryApply();
@@ -212,7 +212,7 @@ public sealed class PhotoEditor : EditorWindow
 {
     private readonly Image _preview = new() { Stretch = Stretch.Uniform };
     private readonly Dictionary<string, Slider> _sliders = new();
-    private readonly ToggleButton _compare = new() { Content = "Show original" };
+    private readonly ToggleButton _compare = new() { Content = L.T("Show original") };
     private MagickImage? _base;
     private BitmapImage? _original, _edited;
     private int _rotate;
@@ -226,9 +226,9 @@ public sealed class PhotoEditor : EditorWindow
         Body.Children.Add(Canvasy(_preview));
 
         var tools = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Margin = new Thickness(0, 10, 0, 6) };
-        var rot = new Button { Content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, Children = { new FontIcon { Glyph = "\uE7AD", FontSize = 14 }, new TextBlock { Text = "Rotate" } } } };
+        var rot = new Button { Content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, Children = { new FontIcon { Glyph = "\uE7AD", FontSize = 14 }, new TextBlock { Text = L.T("Rotate") } } } };
         rot.Click += (_, _) => { _rotate = (_rotate + 90) % 360; _render.Start(); };
-        var resetAll = new Button { Content = "Reset all" };
+        var resetAll = new Button { Content = L.T("Reset all") };
         resetAll.Click += (_, _) => { foreach (var s in _sliders.Values) s.Value = 0; _rotate = 0; _render.Start(); };
         _compare.Checked += (_, _) => _preview.Source = _original;
         _compare.Unchecked += (_, _) => _preview.Source = _edited ?? _original;
@@ -241,7 +241,7 @@ public sealed class PhotoEditor : EditorWindow
         light.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         light.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(64) });
         light.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(32) });
-        var heading = new TextBlock { Text = "Light", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = new SolidColorBrush(WheelControl.Coral), Margin = new Thickness(0, 4, 0, 4) };
+        var heading = new TextBlock { Text = L.T("Light"), FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = new SolidColorBrush(WheelControl.Coral), Margin = new Thickness(0, 4, 0, 4) };
         light.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         light.Children.Add(heading);
         int row = 1;
@@ -326,7 +326,7 @@ public sealed class BackgroundEditor : EditorWindow
         Body.Children.Add(Canvasy(_preview));
 
         var controls = new StackPanel { Spacing = 8, Margin = new Thickness(0, 12, 0, 0) };
-        controls.Children.Add(new TextBlock { Text = "Background", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = new SolidColorBrush(WheelControl.Coral) });
+        controls.Children.Add(new TextBlock { Text = L.T("Background"), FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Foreground = new SolidColorBrush(WheelControl.Coral) });
         var gradRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
         foreach (var (name, (a, bb)) in ImageStudioProvider.Gradients)
         {
@@ -342,10 +342,10 @@ public sealed class BackgroundEditor : EditorWindow
         controls.Children.Add(gradRow);
         var colRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
         foreach (var c in Colours) colRow.Children.Add(Swatch(new SolidColorBrush(ParseColor(c)), c, c));
-        var custom = new Button { Content = "Custom…", Height = 32 };
+        var custom = new Button { Content = L.T("Custom…"), Height = 32 };
         var picker = new ColorPicker { IsAlphaEnabled = false, IsMoreButtonVisible = false, ColorSpectrumShape = ColorSpectrumShape.Ring };
         var flyoutPanel = new StackPanel { Spacing = 8 };
-        var useColour = new Button { Content = "Use colour", HorizontalAlignment = HorizontalAlignment.Right };
+        var useColour = new Button { Content = L.T("Use colour"), HorizontalAlignment = HorizontalAlignment.Right };
         flyoutPanel.Children.Add(picker); flyoutPanel.Children.Add(useColour);
         var flyout = new Flyout { Content = flyoutPanel };
         useColour.Click += (_, _) => { Choose(Editors.Hex(picker.Color)); flyout.Hide(); };
@@ -453,7 +453,7 @@ public sealed class RegionEditor : EditorWindow
     private Color _colour = Color.FromArgb(255, 0xFF, 0x6A, 0x00);
     private readonly ComboBox _style = new() { ItemsSource = new[] { "black", "pixelate", "blur" }, SelectedIndex = 0, MinWidth = 120 };
     private readonly ComboBox _aspect = new() { ItemsSource = new[] { "free", "1:1", "4:3", "3:2", "16:9", "9:16", "4:5" }, SelectedIndex = 0, MinWidth = 100 };
-    private readonly TextBox _textBox = new() { PlaceholderText = "Text to add", MinWidth = 220 };
+    private readonly TextBox _textBox = new() { PlaceholderText = L.T("Text to add"), MinWidth = 220 };
     private readonly Slider _size = new() { Minimum = 12, Maximum = 200, Value = 48, Width = 140 };
     private bool IsCrop => Op.Id == "image.crop";
     private bool IsAnnotate => Op.Id == "image.annotate";
@@ -493,8 +493,8 @@ public sealed class RegionEditor : EditorWindow
         {
             bar.Children.Add(Label("Drag the area to keep.", 13, 0.9)); bar.Children.Add(Label("Aspect")); bar.Children.Add(_aspect);
         }
-        var undo = new Button { Content = "Undo" }; undo.Click += (_, _) => Undo();
-        var clear = new Button { Content = "Clear" }; clear.Click += (_, _) => { while (_rects.Count + _arrows.Count > 0 || _text != null) Undo(); };
+        var undo = new Button { Content = L.T("Undo") }; undo.Click += (_, _) => Undo();
+        var clear = new Button { Content = L.T("Clear") }; clear.Click += (_, _) => { while (_rects.Count + _arrows.Count > 0 || _text != null) Undo(); };
         bar.Children.Add(undo); bar.Children.Add(clear);
         Body.Children.Add(new ScrollViewer { Content = bar, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Disabled });
 
@@ -652,8 +652,8 @@ public sealed class AudioEditor : EditorWindow
     private readonly List<(double S, double E, Rectangle R)> _bleeps = new();
     private readonly TextBlock _bleepCount = Label("Bleeps 0", 13, 0.9);
     private readonly ComboBox _sound = new() { ItemsSource = new[] { "beep", "silence" }, SelectedIndex = 0 };
-    private readonly ToggleButton _mono = new() { Content = "Mono" }, _stereo = new() { Content = "Stereo" };
-    private readonly CheckBox _autoSilence = new() { Content = "Trim silent ends automatically" };
+    private readonly ToggleButton _mono = new() { Content = L.T("Mono") }, _stereo = new() { Content = L.T("Stereo") };
+    private readonly CheckBox _autoSilence = new() { Content = L.T("Trim silent ends automatically") };
     private float[] _peaks = [];
     private double _duration, _start, _end;
     private int _drag;   // 0 none, 1 left handle, 2 right handle, 3 bleep range
@@ -687,7 +687,7 @@ public sealed class AudioEditor : EditorWindow
         else if (op.Id == "audio.bleep")
         {
             var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
-            var undo = new Button { Content = "Undo" };
+            var undo = new Button { Content = L.T("Undo") };
             undo.Click += (_, _) => { if (_bleeps.Count > 0) { _wave.Children.Remove(_bleeps[^1].R); _bleeps.RemoveAt(_bleeps.Count - 1); Count(); } };
             row.Children.Add(_bleepCount); row.Children.Add(Label("Replace with")); row.Children.Add(_sound); row.Children.Add(undo);
             AutomationProperties.SetName(_sound, "Replace bleeped sections with");
@@ -924,7 +924,7 @@ public sealed class MetadataEditor : EditorWindow
         {
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             var l = Label(spec.Label, 13, 0.9); Grid.SetRow(l, r); grid.Children.Add(l);
-            var tb = new TextBox { PlaceholderText = "unchanged" }; AutomationProperties.SetName(tb, spec.Label);
+            var tb = new TextBox { PlaceholderText = L.T("unchanged") }; AutomationProperties.SetName(tb, spec.Label);
             Grid.SetRow(tb, r); Grid.SetColumn(tb, 1); grid.Children.Add(tb);
             _fields[spec.Name] = tb; r++;
         }
@@ -951,7 +951,7 @@ public sealed class MetadataEditor : EditorWindow
                 row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(14) });
                 row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(170) });
                 row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                if (e.Sensitive) row.Children.Add(new TextBlock { Text = "●", Foreground = new SolidColorBrush(WheelControl.OrangeAccent), FontSize = 10, VerticalAlignment = VerticalAlignment.Center });
+                if (e.Sensitive) row.Children.Add(new TextBlock { Text = L.T("●"), Foreground = new SolidColorBrush(WheelControl.OrangeAccent), FontSize = 10, VerticalAlignment = VerticalAlignment.Center });
                 var k = Label($"{e.Group} · {e.Key}", 12, 0.75); Grid.SetColumn(k, 1); row.Children.Add(k);
                 var v = new TextBlock { Text = e.Value, FontSize = 12, TextTrimming = TextTrimming.CharacterEllipsis, IsTextSelectionEnabled = true }; Grid.SetColumn(v, 2); row.Children.Add(v);
                 AutomationProperties.SetName(row, $"{(e.Sensitive ? "Sensitive. " : "")}{e.Key}: {e.Value}");
@@ -1068,7 +1068,7 @@ public sealed class QrResultWindow : Window
     private QrResultWindow(string file, string text)
     {
         var panel = new StackPanel { Spacing = 12, Padding = new Thickness(20) };
-        panel.Children.Add(new TextBlock { Text = "QR code", FontSize = 18, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
+        panel.Children.Add(new TextBlock { Text = L.T("QR code"), FontSize = 18, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
         panel.Children.Add(new TextBlock { Text = System.IO.Path.GetFileName(file), Opacity = 0.7, TextTrimming = TextTrimming.CharacterEllipsis });
         var box = new TextBox { Text = text, IsReadOnly = true, TextWrapping = TextWrapping.Wrap, AcceptsReturn = true, MaxHeight = 220, FontFamily = new FontFamily("Cascadia Mono,Consolas") };
         AutomationProperties.SetName(box, "Decoded QR content");
@@ -1081,13 +1081,13 @@ public sealed class QrResultWindow : Window
             TextWrapping = TextWrapping.Wrap, FontSize = 12, Opacity = 0.8,
         });
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, HorizontalAlignment = HorizontalAlignment.Right };
-        var copy = new Button { Content = "Copy", Style = (Style)Application.Current.Resources["AccentButtonStyle"] };
+        var copy = new Button { Content = L.T("Copy"), Style = (Style)Application.Current.Resources["AccentButtonStyle"] };
         copy.Click += (_, _) =>
         {
             var p = new Windows.ApplicationModel.DataTransfer.DataPackage(); p.SetText(text);
-            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(p); copy.Content = "Copied";
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(p); copy.Content = L.T("Copied");
         };
-        var close = new Button { Content = "Close" }; close.Click += (_, _) => Close();
+        var close = new Button { Content = L.T("Close") }; close.Click += (_, _) => Close();
         buttons.Children.Add(close); buttons.Children.Add(copy);
         panel.Children.Add(buttons);
         Content = panel;

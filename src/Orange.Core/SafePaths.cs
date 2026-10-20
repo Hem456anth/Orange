@@ -115,8 +115,16 @@ public static class SafePaths
             if (policy != OverwritePolicy.Replace) finalPath = PlanOutput(finalPath, null, Path.GetFileNameWithoutExtension(finalPath), null, FileTypeDetector.Ext(finalPath), OverwritePolicy.KeepBoth);
             else { System.IO.File.Move(tempFile, finalPath, overwrite: true); return finalPath; }
         }
-        System.IO.File.Move(tempFile, finalPath, overwrite: false);
-        return finalPath;
+        // Parallel jobs can pick the same free name (photo.png and photo.bmp → photo.jpg). Moving without overwrite
+        // is the atomic claim; if another job won, take the next " 2" name and try again.
+        for (int attempt = 0; ; attempt++)
+        {
+            try { System.IO.File.Move(tempFile, finalPath, overwrite: false); return finalPath; }
+            catch (IOException) when (attempt < 50 && System.IO.File.Exists(finalPath) && System.IO.File.Exists(tempFile))
+            {
+                finalPath = PlanOutput(finalPath, null, Path.GetFileNameWithoutExtension(finalPath), null, FileTypeDetector.Ext(finalPath), OverwritePolicy.KeepBoth);
+            }
+        }
     }
 
     public static string CommitFolder(string tempDir, string finalDir)
