@@ -69,6 +69,7 @@
   <data name="SA89BFE49DB" xml:space="preserve"><value>వీల్ తెరువు</value><comment>Open wheel</comment></data>
   <data name="S430D32076E" xml:space="preserve"><value>ఆపరేషన్</value><comment>Operation</comment></data>
   <data name="S70E0A39308" xml:space="preserve"><value>లేదా ఎక్కడైనా: ఫైల్ ఎక్స్‌ప్లోరర్‌లో ఫైళ్లను లాగి Shift నొక్కండి.</value><comment>Or anywhere: drag files in File Explorer and tap Shift.</comment></data>
+  <data name="S33637999CE" xml:space="preserve"><value>Orange తన అంతర్నిర్మిత ఇంజిన్‌తో డాక్యుమెంట్లు, PDFలు, పాత Office ఫైళ్లను మారుస్తుంది. ఈ సహాయకాలు ఐచ్ఛికం: ఖచ్చితమైన లేఅవుట్ కావాలంటేనే ఇన్‌స్టాల్ చేయండి.</value><comment>Orange converts documents, PDFs and old Office files with its own built-in engine. These helpers are optional: install one only if you want its exact layout.</comment></data>
   <data name="S9A0F8A6EAD" xml:space="preserve"><value>Orange {0} అందుబాటులో ఉంది.</value><comment>Orange {0} is available.</comment></data>
   <data name="S4BED336194" xml:space="preserve"><value>అవుట్‌పుట్</value><comment>Output</comment></data>
   <data name="S314D642E91" xml:space="preserve"><value>అన్ని వాచ్ ఫోల్డర్‌లను ఆపు</value><comment>Pause all watch folders</comment></data>

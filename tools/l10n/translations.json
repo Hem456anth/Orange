@@ -502,5 +502,9 @@
  "Show unavailable": [
   "अनुपलब्ध भी दिखाएँ",
   "అందుబాటులో లేనివీ చూపించు"
+ ],
+ "Orange converts documents, PDFs and old Office files with its own built-in engine. These helpers are optional: install one only if you want its exact layout.": [
+  "Orange अपने बिल्ट-इन इंजन से दस्तावेज़, PDF और पुरानी Office फ़ाइलें बदलता है। ये सहायक वैकल्पिक हैं: इन्हें केवल सटीक लेआउट चाहिए तो इंस्टॉल करें।",
+  "Orange తన అంతర్నిర్మిత ఇంజిన్‌తో డాక్యుమెంట్లు, PDFలు, పాత Office ఫైళ్లను మారుస్తుంది. ఈ సహాయకాలు ఐచ్ఛికం: ఖచ్చితమైన లేఅవుట్ కావాలంటేనే ఇన్‌స్టాల్ చేయండి."
  ]
 }

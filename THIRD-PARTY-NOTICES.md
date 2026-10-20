@@ -22,3 +22,8 @@ Orange's own code is MIT-licensed (see LICENSE). It uses these components. Versi
 
 FFmpeg and Pandoc (when installed) are independent programs that Orange starts with arguments; Orange does not link to them.
 Their licenses and the corresponding source locations are included in `tools\*\LICENSE*` in every build.
+
+## Test fixtures (not shipped in the app)
+
+* `tests/fixtures/sample.ttf` — DejaVu Sans Mono Oblique, Bitstream Vera / DejaVu licence (free redistribution).
+* `tests/fixtures/sample.doc`, `tests/fixtures/sample.ppt` — Apache POI test data (`SampleDoc.doc`, `SampleShow.ppt`), Apache-2.0.

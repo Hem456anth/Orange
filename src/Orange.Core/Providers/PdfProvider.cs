@@ -250,7 +250,14 @@ public sealed class PdfProvider(ToolLocator tools) : IOperationProvider
                 await Gs(["-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.6", $"-dPDFSETTINGS=/{r.Opt("level")}", "-dDetectDuplicateImages=true",
                           "-dCompressFonts=true", "-o", o, input], ct);
                 ValidatePdf(o);
-                // Never hand back a "compressed" file that's bigger.
+                // Never hand back a "compressed" file that's bigger. Ghostscript rewrites everything; Orange's own engine
+                // only re-encodes pictures, which sometimes wins on already-optimised files, so try it before giving up.
+                if (new FileInfo(o).Length >= new FileInfo(input).Length)
+                {
+                    var alt = tmp.File("pdf");
+                    try { Office.PdfCompress.Compress(input, alt, r.Opt("level"), ct); } catch { }
+                    if (File.Exists(alt) && new FileInfo(alt).Length > 0 && new FileInfo(alt).Length < new FileInfo(input).Length) { ValidatePdf(alt); o = alt; }
+                }
                 if (new FileInfo(o).Length >= new FileInfo(input).Length)
                     throw new OrangeException("This PDF is already as small as Orange can make it.", "Try the 'screen' level for a smaller, lower-quality file.");
                 return OperationResult.Ok(CommitFile(o, "pdf"));
