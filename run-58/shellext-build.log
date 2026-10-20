@@ -1,0 +1,28 @@
+OrangeShellExt.cpp
+   Creating library out\shellext\OrangeShellExt.lib and object out\shellext\OrangeShellExt.exp
+Microsoft (R) MakeAppx Tool
+
+Version 10.0.26100.8249
+
+Copyright (C) Microsoft. All rights reserved.
+
+
+
+The path (/p) parameter is: "\\?\D:\a\Orange\Orange\out\Orange\Orange-ContextMenu.msix"
+
+The content directory (/d) parameter is: "\\?\D:\a\Orange\Orange\out\msix"
+
+Enumerating files from directory "\\?\D:\a\Orange\Orange\out\msix"
+
+Packing 3 file(s) in "\\?\D:\a\Orange\Orange\out\msix" (content directory) to "\\?\D:\a\Orange\Orange\out\Orange\Orange-ContextMenu.msix" (output file name).
+
+Memory limit defaulting to 8587180032 bytes.
+
+Using "\\?\D:\a\Orange\Orange\out\msix\AppxManifest.xml" as the manifest for the package.
+
+Processing "\\?\D:\a\Orange\Orange\out\msix\Assets\orange-44.png" as a payload file.  Its path in the package will be "Assets\orange-44.png".
+
+Processing "\\?\D:\a\Orange\Orange\out\msix\Assets\orange-150.png" as a payload file.  Its path in the package will be "Assets\orange-150.png".
+
+Package creation succeeded.
+
