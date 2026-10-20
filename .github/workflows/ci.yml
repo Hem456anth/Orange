@@ -241,7 +241,7 @@ jobs:
           $env:ORANGE_BUNDLED_ONLY = "1"
           $p = Start-Process out/Orange/Orange.exe -ArgumentList '--cli','sweep',"$PWD\tests\fixtures",'--json',"$PWD\evidence\sweep\bundled.json",'--work',"$env:RUNNER_TEMP\sweep-bundled" `
                  -RedirectStandardOutput evidence/sweep/bundled.log -RedirectStandardError evidence/sweep/bundled.err.log -PassThru -Wait -NoNewWindow
-          $r = Get-Content evidence/sweep/bundled.json -Raw | ConvertFrom-Json
+          $r = (Get-Content evidence/sweep/bundled.json -Raw | ConvertFrom-Json).results
           "sweep bundled exit=$($p.ExitCode) $(($r | Group-Object Status | ForEach-Object { "$($_.Name)=$($_.Count)" }) -join ' ')" | Tee-Object -Append evidence/summary.txt
           $r | Where-Object { $_.Status -ne 'pass' } | ForEach-Object { "  $($_.Status) $($_.Op) $($_.Error)" } | Tee-Object -Append evidence/summary.txt
           if (@($r | Where-Object { $_.Status -in 'fail','no-input' }).Count) { exit 1 }
@@ -260,7 +260,7 @@ jobs:
           Get-ChildItem "$env:LOCALAPPDATA\Orange\engines" -Directory | ForEach-Object { "engine $($_.Name) MB=$([math]::Round((Get-ChildItem $_.FullName -Recurse -File | Measure-Object Length -Sum).Sum/1MB,1))" } | Tee-Object -Append evidence/summary.txt
           $p = Start-Process out/Orange/Orange.exe -ArgumentList '--cli','sweep',"$PWD\tests\fixtures",'--json',"$PWD\evidence\sweep\engines.json",'--work',"$env:RUNNER_TEMP\sweep-engines" `
                  -RedirectStandardOutput evidence/sweep/engines.log -RedirectStandardError evidence/sweep/engines.err.log -PassThru -Wait -NoNewWindow
-          $r = Get-Content evidence/sweep/engines.json -Raw | ConvertFrom-Json
+          $r = (Get-Content evidence/sweep/engines.json -Raw | ConvertFrom-Json).results
           "sweep engines exit=$($p.ExitCode) $(($r | Group-Object Status | ForEach-Object { "$($_.Name)=$($_.Count)" }) -join ' ')" | Tee-Object -Append evidence/summary.txt
           $r | Where-Object { $_.Status -ne 'pass' } | ForEach-Object { "  $($_.Status) $($_.Op) $($_.Error)" } | Tee-Object -Append evidence/summary.txt
           if (@($r | Where-Object { $_.Status -in 'fail','no-input' }).Count) { exit 1 }
