@@ -139,6 +139,17 @@ jobs:
           & out/Orange/orange-cli.exe convert tests/fixtures/sample.png --to webp -o $env:RUNNER_TEMP --json | Tee-Object evidence/cli-convert.json
           "cli convert exit=$LASTEXITCODE" | Tee-Object -Append evidence/summary.txt
           if ($LASTEXITCODE -ne 0) { exit 1 }
+      - name: Bundle 7-Zip (7z.exe + 7z.dll, LGPL with unRAR restriction) and drop unused Windows ML binaries
+        shell: pwsh
+        run: |
+          $src = "$env:ProgramFiles\7-Zip"
+          if (-not (Test-Path "$src\7z.exe")) { choco install -y --no-progress 7zip | Out-Null }
+          New-Item -ItemType Directory -Force out/Orange/tools/7zip | Out-Null
+          Copy-Item "$src\7z.exe","$src\7z.dll","$src\License.txt" out/Orange/tools/7zip/
+          "7-Zip $((Get-Item "$src\7z.exe").VersionInfo.ProductVersion). Source: https://www.7-zip.org (LGPL-2.1; unRAR code under the unRAR licence restriction)" | Out-File out/Orange/tools/7zip/SOURCE.txt
+          # Windows App SDK 1.8 ships ONNX Runtime + DirectML for Windows ML; Orange doesn't use Windows ML (~38 MB).
+          Remove-Item out/Orange/onnxruntime.dll, out/Orange/DirectML.dll -ErrorAction SilentlyContinue
+          Remove-Item out/Orange/NpuDetect -Recurse -ErrorAction SilentlyContinue
       - name: Bundle FFmpeg (LGPL shared build, licence + source offer)
         shell: pwsh
         run: |

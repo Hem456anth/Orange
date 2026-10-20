@@ -16,6 +16,7 @@ public static class FileActions
     [
         new("share", "Share", "\uE72D"),
         new("zip", "Zip", "\uF012"),
+        new("7z", "7z", "\uE7B8"),
         new("copy", "Copy", "\uE8C8"),
         new("move", "Move to…", "\uE8DE"),
         new("copy-path", "Copy path", "\uE71B"),
@@ -32,6 +33,12 @@ public static class FileActions
                 var zip = await Orange.Core.Providers.ArchiveProvider.CreateZipAsync(paths, null, CancellationToken.None);
                 Native.RevealInExplorer([zip]);
                 return $"Saved {Path.GetFileName(zip)}";
+            }
+            case "7z":
+            {
+                var a7 = await Orange.Core.Providers.ArchiveProvider.Create7zFromSelectionAsync(paths, CancellationToken.None);
+                Native.RevealInExplorer([a7]);
+                return $"Saved {Path.GetFileName(a7)}";
             }
             case "copy-path":
             {

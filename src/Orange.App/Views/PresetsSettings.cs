@@ -159,7 +159,7 @@ public static class PresetsSettings
     {
         var p = new StackPanel { Spacing = 8 };
         p.Children.Add(new TextBlock { Text = "Choose which petals each kind of file shows, and their order. Favourites and pinned presets still come first.", Opacity = 0.7, TextWrapping = TextWrapping.Wrap });
-        var kinds = new[] { FileKind.Image, FileKind.Video, FileKind.Audio, FileKind.Pdf, FileKind.Document, FileKind.Subtitle, FileKind.Archive, FileKind.Spreadsheet, FileKind.Presentation };
+        var kinds = new[] { FileKind.Image, FileKind.Video, FileKind.Audio, FileKind.Pdf, FileKind.Document, FileKind.Subtitle, FileKind.Archive, FileKind.Spreadsheet, FileKind.Presentation, FileKind.Font };
         var kindBox = new ComboBox { Header = "File type", ItemsSource = kinds.Select(k => k.ToString()).ToList(), SelectedIndex = 0, MinWidth = 200 };
         var groupBox = new ComboBox { Header = "Wheel", ItemsSource = new List<string> { "Convert", "Tools" }, SelectedIndex = 0, MinWidth = 200 };
         var pickers = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 12 };
