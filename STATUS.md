@@ -5,24 +5,24 @@ Blocked = waiting on something outside the repo. Updated with every merged PR.
 
 | # | Item | Status | Evidence | Next step |
 |---|---|---|---|---|
-| 1 | Real-PC drag-and-drop + debug log + checklist | Partial | PR #3, CI run 29 green: button-up fallback + cursor-poll highlight, opt-in log (`LocalLogTests`), `Run-OrangeChecklist.ps1` parses in CI and ships in the zip/installer | Owner runs the checklist on Win11 and Win10 and sends the report |
-| 2 | Key scheme (Shift / Shift×2 / Shift+Ctrl) | Partial | PR #4, CI run 30 green: `WheelKeyInterpreter` + 12 `WheelKeyTests`, v3 migration, hub hint (self-test `wheel-key-hint.png`); drop target answers Copy only | Real-PC check of double-tap and Shift+Ctrl mid-drag (checklist steps 3-4) |
-| 3 | LGPL FFmpeg, installer < 90 MB, on-demand engines | Partial | `EngineManager` (HTTPS allow-list, size cap, pinned SHA-256, safe extract, uninstall) with 7 `EngineManagerTests`; Pandoc 3.5 pinned. Installer still 190 MB (run 30) | Swap CI to BtbN LGPL shared FFmpeg, drop Pandoc from the bundle, Settings > Engines UI, measure size |
-| 4 | Code signing | Blocked | No certificate or Azure Trusted Signing account in repo secrets | Wire skip-when-absent signing; owner adds secrets |
-| 5 | Presets + wheel editor | Not started | — | See PLAN.md |
-| 6 | CLI + watch folders | Not started | — | See PLAN.md |
-| 7 | Office without LibreOffice | Not started | — | See PLAN.md |
-| 8 | More formats | Not started | — | See PLAN.md |
-| 9 | Win11 top-level context menu | Not started | — | See PLAN.md |
-| 10 | Updates + languages | Not started | — | See PLAN.md |
-| 11 | Offline AI tools | Not started | — | See PLAN.md |
-| 12 | Float shelf | Not started | — | See PLAN.md |
-| 13 | Wheel polish | Not started | — | See PLAN.md |
-| 14 | Main window grouping | Not started | — | See PLAN.md |
-| 15 | Settings sections | Not started | — | See PLAN.md |
-| 16 | Onboarding | Not started | — | See PLAN.md |
-| 17 | Progress summary | Not started | — | See PLAN.md |
-| 18 | CI self-test coverage | Not started | — | See PLAN.md |
+| 1 | Real-PC drag-and-drop + debug log + checklist | Partial | PR #3, CI run 29: button-up fallback + cursor-poll highlight, opt-in log (`LocalLogTests`), `Run-OrangeChecklist.ps1` parses in CI and ships | Owner runs the checklist on Win11 (and Win10) and sends the report |
+| 2 | Key scheme (Shift / Shift×2 / Shift+Ctrl) | Partial | PR #4, CI run 30: `WheelKeyInterpreter` + `WheelKeyTests`, v3 migration, hub hint (`wheel-key-hint.png`); drop target answers Copy only | Real-PC check mid-drag (checklist steps 3-4) |
+| 3 | LGPL FFmpeg, installer < 90 MB, on-demand engines | Partial | PRs #5, #13, #14: LGPL shared FFmpeg (CI fails on GPL), Pandoc unbundled, Settings > Engines, Ghostscript/LibreOffice engines; installer 101.4 MB, app 389.1 MB (run 59) | Finish `build-ffmpeg.yml` small build to get under 90 MB |
+| 4 | Code signing | Blocked | Wiring merged in PR #10 (skips without secrets) | Owner adds a PFX or Azure Trusted Signing secrets |
+| 5 | Presets + wheel editor | Partial | PR #6: `PresetTests`, settings-presets.png | Real-PC check |
+| 6 | CLI + watch folders | Partial | PR #7: `CliTests`, `WatchTests`; CLI runs in CI as `Orange.exe --cli` | Real-PC check of tray watch folders |
+| 7 | Office without LibreOffice | Partial | PRs #8, #14: `OfficeTests`, `NativeEngineTests`, sweep 121/122 on Windows CI | Real-PC spot check of output quality |
+| 8 | More formats | Partial | PR #9: `FormatTests`, sweep; HEIC write unsupported (D-9) | — |
+| 9 | Win11 top-level context menu | Blocked | PR #10: DLL + sparse MSIX built in CI | Needs signing (item 4) |
+| 10 | Updates + languages | Partial | PR #11: `UpdateTests`, `LocalisationTests`, settings-telugu.png | Native-speaker review of hi-IN/te-IN |
+| 11 | Offline AI tools | Not started | — | See ROADMAP.md |
+| 12 | Float shelf | Partial | PR #12: shelf.png | Real-PC drag in/out |
+| 13 | Wheel polish | Partial | PR #12: wheel-*.png | Real-PC check (HC, DPI, Narrator) |
+| 14 | Main window grouping | Partial | PR #12: main-*.png | — |
+| 15 | Settings sections | Partial | PR #11: settings-*.png | — |
+| 16 | Onboarding | Partial | PR #12: welcome.png | Real-PC check of practice drop zone |
+| 17 | Progress summary | Partial | PR #12: progress-errors.png | — |
+| 18 | CI self-test coverage | Done | PR #12: self-test screenshots of tray menu, progress, QR card, shelf, settings sections and panels; sweep in CI (PR #14) | — |
 
 ## Built-in engines (PR #14, CI run 59)
 - Orange's own clean-room engines now cover the Pandoc, LibreOffice and Ghostscript features it uses: DOCX/ODT/RTF/EPUB/HTML/Markdown/TXT/DOC between each other and to PDF, legacy .doc/.ppt reading, PDF compression and rendering. See docs/native-engines.md.

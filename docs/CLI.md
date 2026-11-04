@@ -12,7 +12,12 @@ orange ops <files>          # what Orange offers for these files
 orange search <words>       # search every operation
 orange matrix               # every operation and whether it's available on this PC
 orange run <op-id> <files> [--opt name=value]... [-o <dir>]
+orange sweep <fixtures-dir> [--work <dir>] [--json <file>]   # run every operation end to end
+orange engines list | install <id>|all | uninstall <id>     # optional Pandoc, Ghostscript, LibreOffice
+orange version
 ```
+
+`sweep` and `engines` are implemented in `src/Orange.Core/Cli/CliApp.cs` but not yet listed in `orange --help`.
 
 ## Examples
 

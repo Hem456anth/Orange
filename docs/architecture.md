@@ -1,12 +1,14 @@
 # Orange for Windows — architecture and Windows constraints
 
+> Deep background on the Windows drag mechanism. The current component map is [ARCHITECTURE.md](../ARCHITECTURE.md); where this file and the code differ, the code wins.
+
 ## 1. What Orange reproduces, and how
 
 | Tangerine (macOS, observed) | Orange (Windows) | Windows mechanism |
 |---|---|---|
 | Menu-bar app that waits for a drag | Notification-area (tray) app, starts at sign-in (opt-in) | `Shell_NotifyIcon`, `HKCU\…\Run` |
 | Drag a file, tap **Shift** → convert wheel | Drag in File Explorer or on the desktop, tap (or hold) **Shift** → convert wheel | `WH_MOUSE_LL` + `WH_KEYBOARD_LL` observe-only hooks; wheel = top-most, non-activating WinUI 3 window that is an OLE drop target |
-| **Command** → tools, **Control** → actions | **Ctrl** → tools, **Alt** → actions (all three remappable) | same hooks; keys switch wheels while it's open |
+| **Command** → tools, **Control** → actions | 0.2 defaults: **Shift twice** → tools, **Shift+Ctrl** → actions (0.1 used Ctrl/Alt; all remappable) | same hooks, decoded by `WheelKeyInterpreter`; keys switch wheels while it's open |
 | Wheel stays open after the key is released, until drop/cancel | Same; Esc closes; a drop outside the wheel just closes it | `DragEnded` from the mouse hook + drop timeout |
 | Drop on a petal runs it | Drop on a wedge runs it with remembered settings; tools with settings show a settings sheet first (switchable) | `DragOver` hit-testing by angle and radius; `Drop` reads `StorageItems` |
 | Enter on a focused file → wheel; arrows/Enter/Esc | **Ctrl+Alt+O** (configurable) on the Explorer selection → wheel; ←/→, Home/End, Enter/Space, 1–9, Tab switches wheels, Esc; typing jumps to search | `RegisterHotKey`; selection read through `Shell.Application` automation |
@@ -44,8 +46,8 @@ Orange.sln
 │  ├─ FileTypeDetector    content signature first, extension second; mismatch → refuse
 │  ├─ SafePaths           input checks, Windows-safe names, output planning, temp workspaces, atomic commit, zip-slip guard
 │  ├─ Tools               ToolLocator (bundled → PATH, absolute dirs only), ProcessRunner (no shell, ArgumentList, timeouts, kill tree)
-│  └─ Providers           Image (Magick.NET) · Media (FFmpeg) · Pdf (PDFsharp, PdfPig, Ghostscript) · Document (Pandoc, LibreOffice) · Subtitle · Archive
-├─ src/Orange.Cli         orange-cli: same engine for scripts/CI (ops, search, run, matrix, tools)
+│  └─ Providers           Image · ImageStudio · Media (FFmpeg) · Pdf (PDFsharp, PdfPig, PDFium, built-in compress; Ghostscript optional) · Office (built-in) · Ebook · Font · Document (optional Pandoc/LibreOffice, built-in fallback) · Subtitle · Archive (7-Zip)
+├─ src/Orange.Cli         dev host for the CLI (shipped CLI is Orange.exe --cli); see ARCHITECTURE.md
 ├─ src/Orange.App         WinUI 3 (Windows App SDK 1.8), unpackaged, self-contained
 │  ├─ Program             single instance + activation redirection
 │  ├─ App                 tray, hotkey, drag watcher, argument queue
