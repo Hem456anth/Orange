@@ -1,6 +1,6 @@
 # Orange — security, privacy and compatibility audit
 
-Scope: Orange 0.1 (engine, CLI, WinUI app, installer). Each claim is tied to code and to a test; "verified" means an automated test passed on the stated platform. CI evidence for every run (logs, self-test JSON, drag-probe JSON, screenshots) is pushed to the `ci-evidence` branch.
+Scope: Orange 0.1, updated through 0.2 (PR #14). Current per-item status: [STATUS.md](../STATUS.md). Note: §3's "no network code" predates the opt-in update check and engine downloads (see [API.md](../API.md) §5); §6's GPL FFmpeg note predates the LGPL switch. Each claim is tied to code and to a test; "verified" means an automated test passed on the stated platform. CI evidence for every run (logs, self-test JSON, drag-probe JSON, screenshots) is pushed to the `ci-evidence` branch.
 
 ## 1. Threat model
 

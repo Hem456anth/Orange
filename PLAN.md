@@ -1,5 +1,7 @@
 # Orange 0.2.0 plan
 
+> Historical brief from 2026-10-20. Current priorities: [ROADMAP.md](ROADMAP.md); next steps: [TASKS.md](TASKS.md); per-item status: [STATUS.md](STATUS.md).
+
 Baseline: 0.1.0 at commit 75c19ca (CI run 25 green). Status per item lives in [STATUS.md](STATUS.md); evidence in
 `docs/audit.md` §4 and the `ci-evidence` branch. One PR per item, merged only on green CI.
 

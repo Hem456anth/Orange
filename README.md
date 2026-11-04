@@ -12,11 +12,11 @@ Orange is an independent project inspired by the workflow of [Tangerine for Mac]
 | …tap **Shift twice** quickly | Tools wheel: Compress, Metadata, Edit, Annotate, Add BG, Crop, Redact, Trim, Bleep, Merge… |
 | …press **Shift+Ctrl** | Actions wheel: Share, Zip, Copy, Move to…, Copy path, Terminal, Show in folder |
 | Drag a **folder** and tap Shift | ZIP |
-
-All keys can be changed in Settings → Activation. Orange always accepts a drop as a *copy*, so Explorer's Shift = move never moves your file.
 | Select files, press **Ctrl+Alt+O** | The same wheel, keyboard-driven: ←/→, Enter, Tab to switch wheels, Esc |
 | Right-click → *Convert with Orange* (Windows 11: *Show more options*), or *Send to → Orange* | The wheel for the selection |
 | Open Orange from the tray | Search every operation, favourites, recent conversions, settings |
+
+All keys can be changed in Settings → Activation. Orange always accepts a drop as a *copy*, so Explorer's Shift = move never moves your file.
 
 Keys, output folder, overwrite behaviour, theme, parallelism and size limits are in Settings. Holding the key before you start dragging works too.
 
@@ -29,39 +29,40 @@ Compress takes a **target size** (KB/MB) for images, video, audio and PDFs: Oran
 
 ## What it converts
 
-`orange matrix` (see [docs/CLI.md](docs/CLI.md)) prints the exact list for your PC. In a standard build:
+`orange matrix` (see [docs/CLI.md](docs/CLI.md)) prints the exact list for your PC: 122 operations in a standard
+build. Everything below works without installing anything else; the full table is in [FEATURES.md](FEATURES.md).
 
-- **Images** (PNG, JPG, WebP, HEIC\*, TIFF, BMP, GIF, AVIF, ICO, SVG in) → each other and PDF; compress (or to a target size), resize, crop, rotate/flip, grayscale, edit light, add background, redact, annotate, metadata view/edit/remove, read QR; several images → one PDF or a collage. SVGs are rendered only when self-contained (no DOCTYPE, external links or scripts). \*HEIC is read everywhere; writing HEIC isn't supported by the bundled image library and is hidden.
+- **Images** (PNG, JPG, WebP, HEIC in, TIFF, BMP, GIF, AVIF, ICO, JPEG XL, camera RAW in, self-contained SVG in) → each other and PDF; compress (or to a target size), resize, crop, rotate, grayscale, edit light, add background, redact, annotate, metadata view/edit/remove, read QR; several images → one PDF or a collage. Writing HEIC isn't supported and is hidden.
 - **Video** (MP4, MOV, MKV, WebM, AVI, WMV) → MP4, MOV, MKV, WebM, AVI, GIF, MP3, M4A, WAV; compress, trim, mute, resize, crop, speed, snapshot, split, join, remove metadata.
-- **Audio** (MP3, WAV, FLAC, AAC, M4A, OGG, Opus, AIFF, WMA) → each other; trim, bleep, trim silence, split, speed, merge, normalize, mono/stereo, compress (or to a target size), edit/remove tags.
-- **PDF**: merge, split, extract pages, reorder, rotate, compress\*\* (or to a target size), extract images, remove metadata; → TXT, Markdown, PNG/JPG pages\*\*.
-- **Documents** (DOCX, ODT, RTF, TXT, Markdown, HTML, EPUB) → DOCX, ODT, Markdown, HTML, TXT, RTF, EPUB; → PDF\*\*\*.
-- **Subtitles** SRT ⇄ VTT, → TXT, shift timing. **Archives** ZIP/TAR/GZIP: extract, repack; any files or folders → ZIP; RAR/7z extract when [7-Zip](https://www.7-zip.org) is installed.
+- **Audio** (MP3, WAV, FLAC, AAC, M4A, OGG, Opus, AIFF, WMA) → each other; trim, bleep, trim silence, split, speed, merge, normalize, mono/stereo, visualize, compress (or to a target size), edit/remove tags.
+- **PDF**: merge, split, extract pages, reorder, rotate, compress (or to a target size), extract images, remove metadata; → TXT, Markdown, DOCX, PPTX, PNG/JPG pages.
+- **Documents** (DOCX, ODT, RTF, TXT, Markdown, HTML, EPUB, Word 97 DOC) → DOCX, ODT, RTF, Markdown, HTML, TXT, EPUB, PDF. **Spreadsheets** (XLSX, XLS, ODS, CSV, TSV) → each other and PDF. **Slides** (PPTX, PowerPoint 97 PPT) → PDF, PNG, PPTX. **E-books** (EPUB, MOBI, FB2, CBZ) → EPUB, PDF, TXT. **Fonts** TTF/OTF ⇄ WOFF, → WOFF2.
+- **Subtitles** SRT ⇄ VTT, → TXT, shift timing. **Archives** ZIP/TAR/GZIP/RAR/7z: extract; files or folders → ZIP, TAR, 7z.
 
-\*\* needs [Ghostscript](https://ghostscript.com) installed (AGPL, not bundled). \*\*\* needs [LibreOffice](https://www.libreoffice.org) installed.
-Not supported: PDF → DOCX/PPTX/XLSX, OCR of scanned PDFs, creating RAR, writing HEIC, Apple Pages/Keynote, spreadsheets and slides.
+Documents, Office files and PDFs are handled by Orange's own clean-room engines ([docs/native-engines.md](docs/native-engines.md)): layout is "structure, not pixels". For exact layout, Settings → Engines can download Pandoc, Ghostscript or LibreOffice (optional, checked against a pinned SHA-256, never bundled).
+Not supported: OCR of scanned PDFs, creating RAR, writing HEIC, Apple Pages/Keynote.
 
 ## Install
 
 - **Installer**: `Orange-x.y.z-win-x64-setup.exe` — per-user, no admin rights. Choose Send To, right-click menu and start-at-sign-in during setup.
 - **Portable**: unzip `Orange-x.y.z-win-x64-portable.zip` anywhere and run `Orange.exe`.
 
-Builds come from GitHub Actions (`CI` workflow → *orange-win-x64* artifact). Unsigned builds trigger SmartScreen; see `docs/build-and-release.md` for signing.
+Builds come from GitHub Actions; the latest is the [nightly pre-release](https://github.com/Hem456anth/Orange/releases/tag/nightly). Unsigned builds trigger SmartScreen; see `docs/build-and-release.md` for signing.
 
 ## Build
 
 ```powershell
-dotnet test tests/Orange.Core.Tests                         # engine tests (needs ffmpeg, pandoc, gs on PATH, or they skip)
+dotnet test tests/Orange.Core.Tests                         # engine tests (tool-dependent ones skip without ffmpeg/pandoc/gs)
 dotnet publish src/Orange.App -c Release -r win-x64 -p:Platform=x64 --self-contained -o out/Orange
-out\Orange\Orange.exe --selftest out\selftest               # real-Windows self-test, writes selftest.json + wheel screenshots
+out\Orange\Orange.exe --selftest out\selftest               # real-Windows self-test, writes selftest.json + screenshots
 ```
 
-More: [architecture](docs/architecture.md) · [reverse-engineering report](docs/reverse-engineering-report.md) · [build, install, sign, release](docs/build-and-release.md) · [security, privacy and compatibility audit](docs/audit.md) · [third-party licenses](THIRD-PARTY-NOTICES.md)
+Developers and Claude Code: start with [CLAUDE.md](CLAUDE.md). More: [project context](PROJECT_CONTEXT.md) · [architecture](ARCHITECTURE.md) · [features](FEATURES.md) · [setup](SETUP.md) · [tasks](TASKS.md) · [roadmap](ROADMAP.md) · [decisions](DECISIONS.md) · [contributing](CONTRIBUTING.md) · [security, privacy and verification audit](docs/audit.md) · [build, sign, release](docs/build-and-release.md) · [third-party licences](THIRD-PARTY-NOTICES.md)
 
 ## Privacy
 
-Orange runs entirely on your PC: no account, no analytics, no telemetry, no update checks, no network requests. Settings and history live in `%LOCALAPPDATA%\Orange`.
+Orange runs entirely on your PC: no account, no analytics, no telemetry. It makes no network request unless you turn on the update check (off by default) or press Install on an optional engine. Settings and history live in `%LOCALAPPDATA%\Orange`.
 
 ## License
 
-MIT for Orange's code. Bundled FFmpeg and Pandoc are separate GPL programs; see THIRD-PARTY-NOTICES.md.
+MIT for Orange's code. Bundled FFmpeg (LGPL build) and 7-Zip (LGPL) are separate programs; optional engines are downloaded separately under their own licences. See THIRD-PARTY-NOTICES.md and docs/licensing.md.

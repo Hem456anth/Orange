@@ -13,11 +13,13 @@ Orange's own code: MIT (see `LICENSE`). Third-party components and their exact u
 | PDFsharp **6.2.4** | MIT | linked | yes. 6.5+ is AGPL, so the version is pinned `[6.2.4]` |
 | PdfPig 0.1.16 | Apache-2.0 | linked | yes |
 | ZXing.Net 0.16.9 | Apache-2.0 | linked, decode only | yes |
-| FFmpeg (BtbN "gpl" build) | GPL-3.0 | separate executables, run as child processes, unmodified; source links in notices | yes (aggregation, not linking) |
-| Pandoc | GPL-2.0+ | separate executable, child process | yes (aggregation) |
-| Ghostscript | AGPL-3.0 | **not bundled**; used only if the user installs it | n/a |
-| LibreOffice | MPL-2.0 | **not bundled**; optional | n/a |
-| 7-Zip | LGPL-2.1 + unRAR restriction | **not bundled**; optional, for RAR/7z extraction | n/a |
+| FFmpeg (LGPL shared build; CI rejects GPL builds) | LGPL-2.1+ | separate executables + DLLs, child processes, unmodified; source links in `tools/ffmpeg/SOURCE.txt` | yes |
+| Pandoc | GPL-2.0+ | **not bundled**; optional engine the user downloads | n/a |
+| Ghostscript | AGPL-3.0 | **not bundled**; optional engine or user install | n/a |
+| LibreOffice | MPL-2.0 | **not bundled**; optional engine or user install | n/a |
+| PDFtoImage / PDFium | MIT / BSD-3 + Apache-2.0 | linked / native DLL | yes |
+| DocumentFormat.OpenXml, ExcelDataReader | MIT | linked | yes |
+| 7-Zip (7z.exe, 7z.dll) | LGPL-2.1 + unRAR restriction | bundled in `tools\7zip`, child process | yes |
 | Inno Setup (installer build tool) | Inno Setup licence | build-time only | yes |
 
 Checks done: no AGPL/GPL code is linked into Orange's process; GPL tools are invoked as independent programs with
