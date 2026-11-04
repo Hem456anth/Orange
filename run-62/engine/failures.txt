@@ -1,0 +1,18 @@
+  Skipped Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "heic") [1 ms]
+  Passed Orange.Core.Tests.SubtitleArchiveTests.Extracts_zip_and_targz [167 ms]
+  Passed Orange.Core.Tests.ImageConversionTests.Png_converts_to_every_supported_format(ext: "avif") [133 ms]
+  Passed Orange.Core.Tests.StudioTests.Qr_reader_returns_the_text_without_acting_on_it [571 ms]
+  Passed Orange.Core.Tests.FormatTests.Multi_size_ico_create_and_extract [223 ms]
+  Passed Orange.Core.Tests.FormatTests.Seven_zip_ops_are_registered_and_need_7zip [4 ms]
+  Passed Orange.Core.Tests.FormatTests.PalmDoc_decompression [2 ms]
+  Passed Orange.Core.Tests.SecurityTests.Tar_symlinks_are_skipped [8 ms]
+  Passed Orange.Core.Tests.SecurityTests.Damaged_pdf_is_an_actionable_error [7 ms]
+  Passed Orange.Core.Tests.SecurityTests.Temp_workspaces_are_removed [2 ms]
+  Passed Orange.Core.Tests.OfficeTests.Native_document_conversions(fixture: "sample.md", op: "doc.native.docx") [37 ms]
+  Passed Orange.Core.Tests.StudioTests.Redact_changes_only_the_marked_area(style: "blur") [270 ms]
+  Passed Orange.Core.Tests.OfficeTests.Native_document_conversions(fixture: "sample.html", op: "doc.native.md") [12 ms]
+  Passed Orange.Core.Tests.OfficeTests.Native_document_conversions(fixture: "sample.md", op: "doc.native.pdf") [28 ms]
+Total tests: 257
+     Passed: 256
+    Skipped: 1
+ Total time: 26.3443 Seconds
