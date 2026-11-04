@@ -1,0 +1,332 @@
+[
+  {
+    "Name": "low-level mouse\u002Bkeyboard hooks install",
+    "Passed": true,
+    "Required": true,
+    "Detail": "SetWindowsHookEx WH_MOUSE_LL/WH_KEYBOARD_LL ok"
+  },
+  {
+    "Name": "hooks receive injected mouse input (needs an active input desktop)",
+    "Passed": false,
+    "Required": false,
+    "Detail": "System.Exception: hook installed but received no mouse events\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eb__3\u003Ed.MoveNext()\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext()"
+  },
+  {
+    "Name": "global hotkey registers",
+    "Passed": true,
+    "Required": false,
+    "Detail": "RegisterHotKey ok"
+  },
+  {
+    "Name": "tray icon",
+    "Passed": true,
+    "Required": false,
+    "Detail": "Shell_NotifyIcon ok"
+  },
+  {
+    "Name": "context menu verb (HKCU) install/remove",
+    "Passed": true,
+    "Required": true,
+    "Detail": "\u0022D:\\a\\Orange\\Orange\\out\\Orange\\Orange.exe\u0022 --wheel \u0022%1\u0022"
+  },
+  {
+    "Name": "Send To shortcut install/remove",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "wheel: PNG convert items",
+    "Passed": true,
+    "Required": true,
+    "Detail": "convert=Web image,JPG,WebP,TIFF,BMP,GIF,AVIF,More tools=Compress,Metadata,Edit,Annotate,Add BG,Crop,Redact,More"
+  },
+  {
+    "Name": "wheel: hit-testing maps wedge centres back to wedges",
+    "Passed": true,
+    "Required": true,
+    "Detail": "8 wedges"
+  },
+  {
+    "Name": "wheel: MP4 and two-PDF selections are context-aware",
+    "Passed": true,
+    "Required": true,
+    "Detail": "mp4=WhatsApp video,Discord video,MOV,MKV,WebM,AVI,GIF,More | 2 pdf tools=Merge PDFs,Compress,Split,Rotate,Extract images,Remove metadata"
+  },
+  {
+    "Name": "main window renders (convert, settings, about)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "localisation: Hindi and Telugu resources load from resources.pri",
+    "Passed": true,
+    "Required": true,
+    "Detail": "hi=\u0938\u0947\u091F\u093F\u0902\u0917\u094D\u0938 te=\u0C38\u0C46\u0C1F\u0C4D\u0C1F\u0C3F\u0C02\u0C17\u0C4D\u200C\u0C32\u0C41"
+  },
+  {
+    "Name": "options sheet renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "panel image.edit renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "320 \u00D7 200. Changes are previewed here and saved as a copy."
+  },
+  {
+    "Name": "panel image.add-background renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "panel image.redact renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "320 \u00D7 200 px"
+  },
+  {
+    "Name": "panel image.annotate renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "320 \u00D7 200 px"
+  },
+  {
+    "Name": "panel image.crop renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "320 \u00D7 200 px"
+  },
+  {
+    "Name": "panel image.metadata renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "2 entries, 0 sensitive."
+  },
+  {
+    "Name": "panel pdf.reorder renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "3 pages"
+  },
+  {
+    "Name": "panel audio.trim renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "0:02.00 long"
+  },
+  {
+    "Name": "panel audio.bleep renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "0:02.00 long"
+  },
+  {
+    "Name": "panel audio.channels renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "0:02.00 long"
+  },
+  {
+    "Name": "welcome window renders",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "convert PNG \u2192 WebP via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample.webp"
+  },
+  {
+    "Name": "convert JPG \u2192 HEIC (Magick.NET on Windows)",
+    "Passed": false,
+    "Required": false,
+    "Detail": "System.Exception\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Convert|15\u003Ed.MoveNext()\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext()"
+  },
+  {
+    "Name": "merge PDFs via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample and 1 more Merged.pdf"
+  },
+  {
+    "Name": "bundled FFmpeg and ffprobe are both found (no PATH)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "D:\\a\\Orange\\Orange\\out\\Orange\\tools\\ffmpeg\\bin\\ffmpeg.exe | D:\\a\\Orange\\Orange\\out\\Orange\\tools\\ffmpeg\\bin\\ffprobe.exe"
+  },
+  {
+    "Name": "MP4 \u2192 MP3 via app service (bundled FFmpeg)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 2.mp3"
+  },
+  {
+    "Name": "MP4 \u2192 GIF via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample.gif"
+  },
+  {
+    "Name": "WAV \u2192 MP3 via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 3.mp3"
+  },
+  {
+    "Name": "MP3 \u2192 OGG/Opus via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample.opus"
+  },
+  {
+    "Name": "PDF \u2192 PNG without Ghostscript (PDFium)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample"
+  },
+  {
+    "Name": "PDF compress without Ghostscript",
+    "Passed": true,
+    "Required": false,
+    "Detail": "with-image Compressed.pdf"
+  },
+  {
+    "Name": "DOCX \u2192 PDF via doc.to.pdf (LibreOffice id, built-in engine when it\u0027s missing)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 2.pdf"
+  },
+  {
+    "Name": "DOC (Word 97) \u2192 DOCX built in",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 2.docx"
+  },
+  {
+    "Name": "PPT \u2192 PDF built in",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 3.pdf"
+  },
+  {
+    "Name": "DOCX \u2192 ODT and RTF built in",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample.odt sample.rtf"
+  },
+  {
+    "Name": "DOCX \u2192 PDF built in (no LibreOffice)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 4.pdf"
+  },
+  {
+    "Name": "XLSX \u2192 CSV built in",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample Fruit.csv"
+  },
+  {
+    "Name": "PPTX \u2192 PDF built in",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 5.pdf"
+  },
+  {
+    "Name": "PDF \u2192 PPTX built in (PDFium)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 2.pptx"
+  },
+  {
+    "Name": "EPUB \u2192 PDF built in",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample 6.pdf"
+  },
+  {
+    "Name": "RAR/7z: 7-Zip bundled",
+    "Passed": true,
+    "Required": true,
+    "Detail": "D:\\a\\Orange\\Orange\\out\\Orange\\tools\\7zip\\7z.exe"
+  },
+  {
+    "Name": "PNG \u2192 JPEG XL",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample.jxl"
+  },
+  {
+    "Name": "progress window: finished with errors summary",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "QR result card",
+    "Passed": true,
+    "Required": true,
+    "Detail": "ok"
+  },
+  {
+    "Name": "float shelf",
+    "Passed": true,
+    "Required": true,
+    "Detail": "3 files"
+  },
+  {
+    "Name": "tray menu (screen capture)",
+    "Passed": true,
+    "Required": false,
+    "Detail": "captured"
+  },
+  {
+    "Name": "Preset \u0027Web image\u0027 via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample web.png"
+  },
+  {
+    "Name": "Edit photo via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample Edited.png"
+  },
+  {
+    "Name": "Add BG via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample-alpha Background.png"
+  },
+  {
+    "Name": "Redact via app service",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample Redacted.png"
+  },
+  {
+    "Name": "Bleep via app service (FFmpeg)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "sample Bleeped.wav"
+  },
+  {
+    "Name": "Zip a folder (Actions wheel)",
+    "Passed": true,
+    "Required": true,
+    "Detail": "zip-me.zip"
+  },
+  {
+    "Name": "read File Explorer selection",
+    "Passed": false,
+    "Required": false,
+    "Detail": "System.Exception: Explorer window didn\u0027t report the selection (no interactive shell on this machine?)\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eb__48\u003Ed.MoveNext()\r\n--- End of stack trace from previous location ---\r\n   at Orange.App.SelfTest.\u003C\u003Ec__DisplayClass1_0.\u003C\u003CRunAsync\u003Eg__Try|1\u003Ed.MoveNext()"
+  }
+]
