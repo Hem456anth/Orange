@@ -1,0 +1,14 @@
+ffmpeg       D:\a\Orange\Orange\out\Orange\tools\ffmpeg\bin\ffmpeg.exe
+ffprobe      D:\a\Orange\Orange\out\Orange\tools\ffmpeg\bin\ffprobe.exe
+pandoc       C:\Users\runneradmin\AppData\Local\Orange\engines\pandoc\3.5\pandoc-3.5\pandoc.exe
+ghostscript  C:\Users\runneradmin\AppData\Local\Orange\engines\ghostscript\10.08.0\bin\gswin64c.exe
+libreoffice  C:\Users\runneradmin\AppData\Local\Orange\engines\libreoffice\26.8.1\program\soffice.exe
+7zip         D:\a\Orange\Orange\out\Orange\tools\7zip\7z.exe
+
+Image     Compress, Resize, Crop, Rotate, Remove metadata, Extract icons, Grayscale, Create PDF, Edit, Add BG, Redact, Annotate, Metadata, Collage, Read QR
+Video     Compress, Trim, Mute, Resize, Crop, Speed, Snapshot, Split, Remove metadata, Metadata, Join videos
+Audio     Trim, Normalize, Channels, Compress, Bleep, Trim silence, Split, Speed, Visualize, Metadata, Remove metadata, Merge audio
+Pdf       Merge PDFs, Split, Extract pages, Rotate, Reorder pages, Compress, Extract images, Remove metadata
+Document  Word count
+Subtitle  Shift timing
+Archive   Extract, Extract
